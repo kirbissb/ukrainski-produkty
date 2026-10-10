@@ -1128,6 +1128,9 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       E.saveCustomer({ name: order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment });
       state.lastOrder = order; state.orderNonce = null; state.orderKey = null; cart = []; E.saveCart(cart);
       state.view = 'done'; renderSheet(); $('#sheetBody').scrollTop = 0;
+      /* CEO 10.10: on a phone the bot chat opens by itself after the order, so the customer only taps Start (Telegram requires
+         that one tap before a bot may write). Desktop keeps the done screen and the button: t.me would replace the page there. */
+      if (d.tg && window.matchMedia && matchMedia('(pointer: coarse)').matches) setTimeout(function () { location.href = d.tg; }, 1200);
     });
   }
   function renderDone(body, foot) {
