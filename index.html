@@ -158,7 +158,6 @@
       </ul>
     </div>
     <p class="owner"><a href="#owner" id="ownerLink"><svg class="ico" style="width:18px;height:18px"><use href="#i-phone"/></svg><span data-i18n="owner_link"></span></a></p>
-    <p class="note" id="footNote"></p>
     <p class="legal">2026 · <span data-i18n="brand_full"></span></p>
   </div>
 </footer>
@@ -246,7 +245,6 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       nb_none: 'день пока не назначен', nb_day: 'ближайшая: {d}',
       foot_phone: 'Телефон', foot_wa: 'WhatsApp', demo_word: '(демо)', legal_dlv_link: 'Доставка и оплата', legal_data_link: 'Персональные данные', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Вопросы',
       owner_link: 'Как это видит владелец', owner_cap: 'Так заказы, наличие и цены ведёт Марго: чат в Telegram, без кабинета',
-      foot_note: 'Демо. Цены - из прайса Instagram от 08.10.2026 и сообщений Марго в группе. Цена {ph} стоит у позиций без подтверждённой цены ({n} из {N}) - это заполнитель. Товары с ценой в долларах считаются в долларах, отдельной суммой. Стоимость доставки, способы оплаты, телефон, WhatsApp и адрес самовывоза - заполнители до разговора с владельцами.',
       usd_note: 'цена в $, в корзине - отдельной суммой в $',
       producer: 'Производитель: {b}',
       cb_few: 'Осталось {q}', cb_items: ['товар', 'товара', 'товаров'], cb_sections: 'Разделы', cb_all: 'Все товары', cb_in_cart_cap: 'В корзине', cb_live_in: 'В корзине: {q}', cb_live_out: 'Удалено из корзины', cb_switch: 'Карточки', cb_add: 'В корзину', cb_next_batch: 'Ближайшая поставка', cb_in_cart: 'В корзине: {q}. Открыть корзину',
@@ -318,7 +316,6 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       nb_none: 'день поки не призначено', nb_day: 'найближча: {d}',
       foot_phone: 'Номер телефону', foot_wa: 'WhatsApp', demo_word: '(демо)', legal_dlv_link: 'Доставка та оплата', legal_data_link: 'Персональні дані', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Питання',
       owner_link: 'Як це бачить власник', owner_cap: 'Так замовлення, наявність і ціни веде Марго: чат у Telegram, без кабінету',
-      foot_note: 'Демо. Ціни - з прайсу Instagram від 08.10.2026 і повідомлень Марго в групі. Ціна {ph} стоїть у позицій без підтвердженої ціни ({n} із {N}) - це заповнювач. Товари з ціною в доларах рахуються в доларах, окремою сумою. Вартість доставки, способи оплати, номер телефону, WhatsApp та адреса самовивозу - заповнювачі до розмови з власниками.',
       usd_note: 'ціна в $, у кошику - окремою сумою в $',
       producer: 'Виробник: {b}',
       cb_few: 'Залишилось {q}', cb_items: ['товар', 'товари', 'товарів'], cb_sections: 'Розділи', cb_all: 'Усі товари', cb_in_cart_cap: 'У кошику', cb_live_in: 'У кошику: {q}', cb_live_out: 'Видалено з кошика', cb_switch: 'Картки', cb_add: 'У кошик', cb_next_batch: 'Найближча поставка', cb_in_cart: 'У кошику: {q}. Відкрити кошик',
@@ -390,7 +387,6 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       nb_none: 'no day set yet', nb_day: 'next: {d}',
       foot_phone: 'Phone', foot_wa: 'WhatsApp', demo_word: '(demo)', legal_dlv_link: 'Delivery and payment', legal_data_link: 'Personal data', nav_catalog: 'Catalog', nav_delivery: 'Delivery', nav_faq: 'Questions',
       owner_link: 'How the owner sees it', owner_cap: 'This is how Margo runs orders, stock and prices: a Telegram chat, no back office',
-      foot_note: 'Demo. Prices come from the Instagram price list of 08.10.2026 and Margo\'s messages in the group. The price {ph} marks items without a confirmed price ({n} of {N}) - it is a placeholder. Dollar-priced goods are totalled in dollars, as a separate sum. Delivery costs, payment methods, phone, WhatsApp and pickup address are placeholders until we talk to the owners. TRY = Turkish lira (₺).',
       usd_note: 'price in $, totalled separately in $ in the cart',
       producer: 'Producer: {b}',
       cb_few: 'Only {q} left', cb_items: ['item', 'items', 'items'], cb_sections: 'Sections', cb_all: 'All products', cb_in_cart_cap: 'In your cart', cb_live_in: 'In your cart: {q}', cb_live_out: 'Removed from cart', cb_switch: 'Cards', cb_add: 'Add to cart', cb_next_batch: 'With the next batch', cb_in_cart: 'In your cart: {q}. Open cart',
@@ -537,8 +533,6 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     document.querySelectorAll('[data-i18n-html]').forEach(function (n) { n.innerHTML = t(n.getAttribute('data-i18n-html')); });
     document.querySelectorAll('[data-i18n-aria]').forEach(function (n) { n.setAttribute('aria-label', t(n.getAttribute('data-i18n-aria'))); });
     $('#heroImg').alt = t('hero_alt');
-    var nDemo = C.items.filter(function (it) { return it.demo; }).length;
-    $('#footNote').textContent = t('foot_note', { ph: fm(999), n: String(nDemo), N: String(C.items.length) });
     $('#storyImg').alt = '';
     document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang)); });
     $('#sheetClose').setAttribute('aria-label', t('n_close'));
