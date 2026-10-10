@@ -1,0 +1,1254 @@
+<!doctype html>
+<html lang="ru" class="boot">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>Украинские продукты Алания · C</title>
+<meta name="description" content="Привозим из Украины три раза в неделю: сало, колбасы, икра, рыба. Алания сегодня, вся Турция карго. Заказ онлайн за минуту.">
+<meta name="theme-color" content="#0b0b0b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<!-- LCP = hero photo: fetched at top priority before CSS/JS discovery; same srcset/sizes as #heroImg (img/w from assets/make-images.py) -->
+<link rel="preload" as="image" href="img/hero.jpg" imagesrcset="img/w/hero-480.webp 480w, img/w/hero-800.webp 800w, img/w/hero-1200.webp 1200w" imagesizes="(min-width: 900px) 64vw, 128vw" fetchpriority="high">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230b0b0b'/%3E%3Cpolygon points='256.0,16.0 310.0,114.0 256.0,212.0 202.0,114.0' fill='none' stroke='%23c9a86a' stroke-width='14' stroke-linejoin='miter'/%3E%3Cpolygon points='256.0,53.2 289.5,114.0 256.0,174.8 222.5,114.0' fill='none' stroke='%23c9a86a' stroke-width='14' stroke-linejoin='miter'/%3E%3Cpolygon points='256.0,88.5 270.0,114.0 256.0,139.5 242.0,114.0' fill='%23c9a86a'/%3E%3Cpolygon points='496.0,256.0 398.0,310.0 300.0,256.0 398.0,202.0' fill='none' stroke='%23c9a86a' stroke-width='14' stroke-linejoin='miter'/%3E%3Cpolygon points='458.8,256.0 398.0,289.5 337.2,256.0 398.0,222.5' fill='none' stroke='%23c9a86a' stroke-width='14' stroke-linejoin='miter'/%3E%3Cpolygon points='423.5,256.0 398.0,270.0 372.5,256.0 398.0,242.0' fill='%23c9a86a'/%3E%3Cpolygon points='256.0,496.0 202.0,398.0 256.0,300.0 310.0,398.0' fill='none' stroke='%23c9a86a' stroke-width='14' stroke-linejoin='miter'/%3E%3Cpolygon points='256.0,458.8 222.5,398.0 256.0,337.2 289.5,398.0' fill='none' stroke='%23c9a86a' stroke-width='14' stroke-linejoin='miter'/%3E%3Cpolygon points='256.0,423.5 242.0,398.0 256.0,372.5 270.0,398.0' fill='%23c9a86a'/%3E%3Cpolygon points='16.0,256.0 114.0,202.0 212.0,256.0 114.0,310.0' fill='none' stroke='%23c9a86a' stroke-width='14' stroke-linejoin='miter'/%3E%3Cpolygon points='53.2,256.0 114.0,222.5 174.8,256.0 114.0,289.5' fill='none' stroke='%23c9a86a' stroke-width='14' stroke-linejoin='miter'/%3E%3Cpolygon points='88.5,256.0 114.0,242.0 139.5,256.0 114.0,270.0' fill='%23c9a86a'/%3E%3Cg stroke='%23c9a86a' stroke-width='14' stroke-linecap='butt'%3E%3Cline x1='299.8' y1='169.7' x2='359.2' y2='110.3'/%3E%3Cline x1='305.5' y1='206.5' x2='407.3' y2='104.7'/%3E%3Cline x1='342.3' y1='212.2' x2='401.7' y2='152.8'/%3E%3Cline x1='342.3' y1='299.8' x2='401.7' y2='359.2'/%3E%3Cline x1='305.5' y1='305.5' x2='407.3' y2='407.3'/%3E%3Cline x1='299.8' y1='342.3' x2='359.2' y2='401.7'/%3E%3Cline x1='212.2' y1='342.3' x2='152.8' y2='401.7'/%3E%3Cline x1='206.5' y1='305.5' x2='104.7' y2='407.3'/%3E%3Cline x1='169.7' y1='299.8' x2='110.3' y2='359.2'/%3E%3Cline x1='169.7' y1='212.2' x2='110.3' y2='152.8'/%3E%3Cline x1='206.5' y1='206.5' x2='104.7' y2='104.7'/%3E%3Cline x1='212.2' y1='169.7' x2='152.8' y2='110.3'/%3E%3C/g%3E%3Cpolygon points='256.0,222.0 290.0,256.0 256.0,290.0 222.0,256.0' fill='%23c9a86a'/%3E%3C/svg%3E%0A">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M4 7h16M6 7l-3 7a3 3 0 0 0 6 0L6 7zM18 7l-3 7a3 3 0 0 0 6 0l-3-7zM8 21h8"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></symbol>
+  <symbol id="i-basket" viewBox="0 0 24 24"><path d="M4 10h16l-1.5 9h-13L4 10zM8 10l3-6M16 10l-3-6M9 14v2M12 14v2M15 14v2"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s6-6.2 6-11a6 6 0 0 0-12 0c0 4.8 6 11 6 11z"/><circle cx="12" cy="10" r="2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="1"/><path d="M4 10h16M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M3.5 7.5L12 3.5l8.5 4v9L12 20.5l-8.5-4v-9zM3.5 7.5L12 11.5l8.5-4M12 11.5v9M7.8 5.5l8.4 4"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 17h2"/></symbol>
+  <!-- logo mark "Zorya" (CEO pick 10.10, logo/c1-zorya-mark-gold.svg, inlined without its black plate) -->
+  <symbol id="logo-zorya" viewBox="0 0 512 512"><polygon points="256.0,16.0 310.0,114.0 256.0,212.0 202.0,114.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,53.2 289.5,114.0 256.0,174.8 222.5,114.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,88.5 270.0,114.0 256.0,139.5 242.0,114.0" fill="#c9a86a"/><polygon points="496.0,256.0 398.0,310.0 300.0,256.0 398.0,202.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="458.8,256.0 398.0,289.5 337.2,256.0 398.0,222.5" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="423.5,256.0 398.0,270.0 372.5,256.0 398.0,242.0" fill="#c9a86a"/><polygon points="256.0,496.0 202.0,398.0 256.0,300.0 310.0,398.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,458.8 222.5,398.0 256.0,337.2 289.5,398.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,423.5 242.0,398.0 256.0,372.5 270.0,398.0" fill="#c9a86a"/><polygon points="16.0,256.0 114.0,202.0 212.0,256.0 114.0,310.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="53.2,256.0 114.0,222.5 174.8,256.0 114.0,289.5" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="88.5,256.0 114.0,242.0 139.5,256.0 114.0,270.0" fill="#c9a86a"/><g stroke="#c9a86a" stroke-width="14" stroke-linecap="butt"><line x1="299.8" y1="169.7" x2="359.2" y2="110.3"/><line x1="305.5" y1="206.5" x2="407.3" y2="104.7"/><line x1="342.3" y1="212.2" x2="401.7" y2="152.8"/><line x1="342.3" y1="299.8" x2="401.7" y2="359.2"/><line x1="305.5" y1="305.5" x2="407.3" y2="407.3"/><line x1="299.8" y1="342.3" x2="359.2" y2="401.7"/><line x1="212.2" y1="342.3" x2="152.8" y2="401.7"/><line x1="206.5" y1="305.5" x2="104.7" y2="407.3"/><line x1="169.7" y1="299.8" x2="110.3" y2="359.2"/><line x1="169.7" y1="212.2" x2="110.3" y2="152.8"/><line x1="206.5" y1="206.5" x2="104.7" y2="104.7"/><line x1="212.2" y1="169.7" x2="152.8" y2="110.3"/></g><polygon points="256.0,222.0 290.0,256.0 256.0,290.0 222.0,256.0" fill="#c9a86a"/></symbol>
+  <!-- footer contact icons: monochrome line icons, same 24 grid, stroke = gold -->
+  <symbol id="c-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor"/></symbol>
+  <symbol id="c-tg" viewBox="0 0 24 24"><path d="M21 4.5L2.8 11.4l5.6 2 2.1 6.6 3.2-4 5.1 3.8L21 4.5z"/><path d="M8.4 13.4L18.5 7l-8 8.5"/></symbol>
+  <symbol id="c-phone" viewBox="0 0 24 24"><path d="M5 3.8h3.4l1.7 4.3-2.2 1.4a11.5 11.5 0 0 0 6.6 6.6l1.4-2.2 4.3 1.7V19a1.8 1.8 0 0 1-1.9 1.8A16.6 16.6 0 0 1 3.2 5.7 1.8 1.8 0 0 1 5 3.8z"/></symbol>
+  <symbol id="c-wa" viewBox="0 0 24 24"><path d="M3.5 20.5l1.3-4.4A8.6 8.6 0 1 1 8 19.3l-4.5 1.2z"/><path d="M9 8.2c.3-.6.9-.6 1.1-.1l.7 1.6c.1.3 0 .6-.2.8l-.5.5a6 6 0 0 0 2.9 2.9l.5-.5c.2-.2.5-.3.8-.2l1.6.7c.5.2.5.8-.1 1.1-1.1.7-2.3.7-4.2-.6-1.8-1.3-3-3-3.1-4.3 0-.7.2-1.3.5-1.9z"/></symbol>
+</svg>
+
+<header class="hdr">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <svg class="mark" viewBox="0 0 512 512" aria-hidden="true"><use href="#logo-zorya"/></svg>
+      <span><b data-i18n="brand"></b><small data-i18n="brand_sub"></small></span>
+    </a>
+    <button class="btn spbtn" id="specialBtn" type="button"><svg class="ico" aria-hidden="true"><use href="#i-box"/></svg><span data-i18n="cta_special"></span></button>
+    <div class="hdr-right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="ru" aria-pressed="true">RU</button><button type="button" data-lang="uk" aria-pressed="false">UA</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="btn cartbtn" id="cartBtn" type="button" data-i18n-aria="cart">
+        <svg class="ico" style="width:18px;height:18px"><use href="#i-basket"/></svg>
+        <span class="n" id="cartCount"></span>
+        <span class="sum" id="cartSum"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- vyshyvanka ornament (round 4, CEO ref 10.10 refs/hero/ceo-ref-vyshyvanka-tone-on-tone-2026-10-10.png): tone-on-tone satin line work drawn in code.
+     placket tile = central column of parallel lines, nested rhombuses, X-stars with a rhombus centre, side columns of small rhombuses; divider = same motifs in a row.
+     Two patterns per tile: thread colour (barely lighter than the black) and a gold copy used only under the moving sheen mask. -->
+<svg class="vy-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>
+<g id="vy-tile"><path fill="none" stroke-width="1.6" d="M140 0L140 200M146 0L146 200M154 0L154 200M160 0L160 200M76 12L116 52L76 92L36 52ZM76 20L108 52L76 84L44 52ZM76 28L100 52L76 76L52 52ZM26 26L26 78M126 26L126 78M89.65 156.74L108.53 175.62M86.68 159.71L108.53 181.56M83.71 162.68L105.56 184.53M80.74 165.65L99.62 184.53M80.74 138.35L99.62 119.47M83.71 141.32L105.56 119.47M86.68 144.29L108.53 122.44M89.65 147.26L108.53 128.38M71.26 165.65L52.38 184.53M68.29 162.68L46.44 184.53M65.32 159.71L43.47 181.56M62.35 156.74L43.47 175.62M62.35 147.26L43.47 128.38M65.32 144.29L43.47 122.44M68.29 141.32L46.44 119.47M71.26 138.35L52.38 119.47M14 3.5L23 12.5L14 21.5L5 12.5ZM14 28.5L23 37.5L14 46.5L5 37.5ZM14 53.5L23 62.5L14 71.5L5 62.5ZM14 78.5L23 87.5L14 96.5L5 87.5ZM14 103.5L23 112.5L14 121.5L5 112.5ZM14 128.5L23 137.5L14 146.5L5 137.5ZM14 153.5L23 162.5L14 171.5L5 162.5ZM14 178.5L23 187.5L14 196.5L5 187.5ZM224 12L264 52L224 92L184 52ZM224 20L256 52L224 84L192 52ZM224 28L248 52L224 76L200 52ZM174 26L174 78M274 26L274 78M237.65 156.74L256.53 175.62M234.68 159.71L256.53 181.56M231.71 162.68L253.56 184.53M228.74 165.65L247.62 184.53M228.74 138.35L247.62 119.47M231.71 141.32L253.56 119.47M234.68 144.29L256.53 122.44M237.65 147.26L256.53 128.38M219.26 165.65L200.38 184.53M216.29 162.68L194.44 184.53M213.32 159.71L191.47 181.56M210.35 156.74L191.47 175.62M210.35 147.26L191.47 128.38M213.32 144.29L191.47 122.44M216.29 141.32L194.44 119.47M219.26 138.35L200.38 119.47M286 3.5L295 12.5L286 21.5L277 12.5ZM286 28.5L295 37.5L286 46.5L277 37.5ZM286 53.5L295 62.5L286 71.5L277 62.5ZM286 78.5L295 87.5L286 96.5L277 87.5ZM286 103.5L295 112.5L286 121.5L277 112.5ZM286 128.5L295 137.5L286 146.5L277 137.5ZM286 153.5L295 162.5L286 171.5L277 162.5ZM286 178.5L295 187.5L286 196.5L277 187.5Z"/><path stroke="none" d="M76 42L86 52L76 62L66 52ZM76 145L83 152L76 159L69 152ZM120 148L124 152L120 156L116 152ZM120 48L124 52L120 56L116 52ZM14 8.5L18 12.5L14 16.5L10 12.5ZM14 33.5L18 37.5L14 41.5L10 37.5ZM14 58.5L18 62.5L14 66.5L10 62.5ZM14 83.5L18 87.5L14 91.5L10 87.5ZM14 108.5L18 112.5L14 116.5L10 112.5ZM14 133.5L18 137.5L14 141.5L10 137.5ZM14 158.5L18 162.5L14 166.5L10 162.5ZM14 183.5L18 187.5L14 191.5L10 187.5ZM224 42L234 52L224 62L214 52ZM224 145L231 152L224 159L217 152ZM180 148L184 152L180 156L176 152ZM180 48L184 52L180 56L176 52ZM286 8.5L290 12.5L286 16.5L282 12.5ZM286 33.5L290 37.5L286 41.5L282 37.5ZM286 58.5L290 62.5L286 66.5L282 62.5ZM286 83.5L290 87.5L286 91.5L282 87.5ZM286 108.5L290 112.5L286 116.5L282 112.5ZM286 133.5L290 137.5L286 141.5L282 137.5ZM286 158.5L290 162.5L286 166.5L282 162.5ZM286 183.5L290 187.5L286 191.5L282 187.5Z"/></g>
+<g id="vy-tile-div"><path fill="none" stroke-width="1.3" d="M0 3L160 3M0 7L160 7M0 37L160 37M0 41L160 41M40 9L53 22L40 35L27 22ZM40 13L49 22L40 31L31 22ZM126.36 22L129.9 25.54M124.24 24.12L129.9 29.78M122.12 26.24L127.78 31.9M120 28.36L123.54 31.9M120 15.64L123.54 12.1M122.12 17.76L127.78 12.1M124.24 19.88L129.9 14.22M126.36 22L129.9 18.46M120 28.36L116.46 31.9M117.88 26.24L112.22 31.9M115.76 24.12L110.1 29.78M113.64 22L110.1 25.54M113.64 22L110.1 18.46M115.76 19.88L110.1 14.22M117.88 17.76L112.22 12.1M120 15.64L116.46 12.1"/><path stroke="none" d="M40 18L44 22L40 26L36 22ZM120 19L123 22L120 25L117 22ZM80 19.5L82.5 22L80 24.5L77.5 22ZM0 19.5L2.5 22L0 24.5L-2.5 22ZM160 19.5L162.5 22L160 24.5L157.5 22Z"/></g>
+<pattern id="vy-pat" patternUnits="userSpaceOnUse" width="300" height="200"><use href="#vy-tile" class="vy-thread"/></pattern>
+<pattern id="vy-pat-sheen" patternUnits="userSpaceOnUse" width="300" height="200"><use href="#vy-tile" class="vy-gold"/></pattern>
+<pattern id="vy-pat-div" patternUnits="userSpaceOnUse" width="160" height="44"><use href="#vy-tile-div" class="vy-thread"/></pattern>
+<pattern id="vy-pat-div-sheen" patternUnits="userSpaceOnUse" width="160" height="44"><use href="#vy-tile-div" class="vy-gold"/></pattern>
+</defs></svg>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-photo"><img id="heroImg" src="img/hero.jpg" srcset="img/w/hero-480.webp 480w, img/w/hero-800.webp 800w, img/w/hero-1200.webp 1200w" sizes="(min-width: 900px) 64vw, 128vw" width="1200" height="896" alt="" loading="eager" fetchpriority="high" decoding="async"></div>
+    <div class="hero-text">
+      <div class="vy-placket" aria-hidden="true"><svg class="vy-l" focusable="false"><rect width="100%" height="100%" fill="url(#vy-pat)"/></svg><svg class="vy-l vy-sheen" focusable="false"><rect width="100%" height="100%" fill="url(#vy-pat-sheen)"/></svg></div>
+      <div class="wrap">
+        <h1 data-i18n="hero_h1"></h1>
+        <p data-i18n-html="hero_p"></p>
+        <div class="cta">
+          <a class="btn fill" href="#catalog" data-i18n="cta_catalog"></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="how">
+    <div class="how">
+      <div><svg class="ico"><use href="#i-basket"/></svg><span data-i18n-html="how1"></span></div>
+      <div><svg class="ico"><use href="#i-chat"/></svg><span data-i18n-html="how2"></span></div>
+      <div><svg class="ico"><use href="#i-check"/></svg><span data-i18n-html="how3"></span></div>
+    </div>
+  </section>
+
+  <section class="wrap" id="catalog">
+    <div class="sec"><h2><span data-i18n="cat_title"></span><small data-i18n="cat_sub"></small></h2></div>
+    <div class="cb-switch" id="cards-b" role="group" aria-labelledby="cbSwLbl" hidden><span id="cbSwLbl" data-i18n="cb_switch"></span><button type="button" data-cv="a" aria-pressed="true">A</button><button type="button" data-cv="b" aria-pressed="false">B</button></div>
+    <div class="chips-wrap"><div class="chips" id="chips" role="tablist"></div></div>
+    <p class="cb-note" id="cbNote" hidden><svg class="ico"><use href="#i-clock"/></svg><span></span></p>
+    <div class="grid" id="grid"></div>
+    <div class="cb-secbar" id="cbSecbar" hidden><div class="wrap"><span><b></b><small></small></span><button type="button" id="cbSecBtn"><span data-i18n="cb_sections"></span><svg class="ico" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5l5 5 5-5"/></svg></button></div></div>
+  </section>
+
+  <section class="wrap" id="about">
+    <div class="sec"><h2 data-i18n="about_title"></h2></div>
+    <div class="about">
+      <p data-i18n="about_p"></p>
+      <p class="muted" data-i18n="about_market"></p>
+      <p class="tag" data-i18n="about_demo"></p>
+    </div>
+  </section>
+
+  <section class="wrap" id="reviews">
+    <div class="sec"><h2><span data-i18n="rev_title"></span><small data-i18n="rev_sub"></small></h2></div>
+    <div class="rv-wrap" id="rvWrap">
+      <button class="rv-nav prev" type="button" id="rvPrev" data-i18n-aria="rev_prev"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="reviews" id="reviewBox"></div>
+      <button class="rv-nav next" type="button" id="rvNext" data-i18n-aria="rev_next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <p class="rv-hint" aria-hidden="true"><span data-i18n="rev_hint"></span> <span class="rv-arrow">&rarr;</span></p>
+  </section>
+
+  <section class="wrap" id="delivery">
+    <div class="sec"><h2 data-i18n="dlv_title"></h2></div>
+    <div class="split">
+      <figure><img src="img/story.jpg" srcset="img/w/story-480.webp 480w, img/w/story-800.webp 800w, img/w/story-1200.webp 1200w" sizes="(min-width: 1212px) 620px, (min-width: 820px) 52vw, calc(100vw - 32px)" width="1200" height="896" alt="" loading="lazy" decoding="async" id="storyImg"></figure>
+      <ol class="steps" id="dlvSteps"></ol>
+    </div>
+  </section>
+
+  <section class="wrap" id="faq">
+    <div class="sec"><h2 data-i18n="faq_title"></h2></div>
+    <div class="faq" id="faqBox"></div>
+  </section>
+</main>
+
+<div class="wrap vy-div-wrap"><div class="vy-div" aria-hidden="true"><svg class="vy-l" focusable="false"><rect width="100%" height="100%" fill="url(#vy-pat-div)"/></svg><svg class="vy-l vy-sheen" focusable="false"><rect width="100%" height="100%" fill="url(#vy-pat-div-sheen)"/></svg></div></div>
+<footer class="ftr">
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="#top">
+        <svg class="mark" viewBox="0 0 512 512" aria-hidden="true"><use href="#logo-zorya"/></svg>
+        <span><b data-i18n="brand_full"></b><small style="display:block" data-i18n="foot_tag"></small></span>
+      </a>
+      <ul>
+        <li><a class="ct" href="https://www.instagram.com/ukr.product.alanya/" target="_blank" rel="noopener"><svg class="ci" aria-hidden="true"><use href="#c-ig"/></svg><span>Instagram <b>@ukr.product.alanya</b></span></a></li>
+        <li><a class="ct" href="https://t.me/ukrtovari" target="_blank" rel="noopener"><svg class="ci" aria-hidden="true"><use href="#c-tg"/></svg><span>Telegram <b>@ukrtovari</b></span></a></li>
+        <li><a class="ct" href="tel:+905xxxxxxxxx" data-demo="1"><svg class="ci" aria-hidden="true"><use href="#c-phone"/></svg><span><span data-i18n="foot_phone"></span> <b>+90 5xx xxx xx xx</b> <i class="dm" data-i18n="demo_word"></i></span></a></li>
+        <li><a class="ct" href="https://wa.me/905xxxxxxxxx" target="_blank" rel="noopener" data-demo="1"><svg class="ci" aria-hidden="true"><use href="#c-wa"/></svg><span><span data-i18n="foot_wa"></span> <b>+90 5xx xxx xx xx</b> <i class="dm" data-i18n="demo_word"></i></span></a></li>
+        <li><a href="#delivery-terms" id="legalDlvLink" data-i18n="legal_dlv_link"></a></li>
+        <li><a href="#personal-data" id="legalDataLink" data-i18n="legal_data_link"></a></li>
+      </ul>
+      <ul>
+        <li><a href="#catalog" data-i18n="nav_catalog"></a></li>
+        <li><a href="#delivery" data-i18n="nav_delivery"></a></li>
+        <li><a href="#faq" data-i18n="nav_faq"></a></li>
+      </ul>
+    </div>
+    <p class="owner"><a href="#owner" id="ownerLink"><svg class="ico" style="width:18px;height:18px"><use href="#i-phone"/></svg><span data-i18n="owner_link"></span></a></p>
+    <p class="note" id="footNote"></p>
+    <p class="legal">2026 · <span data-i18n="brand_full"></span></p>
+  </div>
+</footer>
+
+<button class="qn-btn" id="qnBtn" type="button" hidden aria-haspopup="dialog" aria-controls="qnSheet"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span data-i18n="cb_sections"></span></button>
+<div class="qn" id="qnSheet" role="dialog" aria-modal="true" aria-labelledby="qnTitle" hidden><div class="qn-back" data-qn-close></div><div class="qn-panel" id="qnPanel"><div class="qn-head"><h2 id="qnTitle" data-i18n="cb_sections"></h2><button class="xbtn" type="button" data-qn-close data-i18n-aria="n_close">&times;</button></div><ul class="qn-list" id="qnList"></ul></div></div>
+<p class="cb-live" id="cbLive" aria-live="polite" role="status"></p>
+<div class="bar" id="bar"><button class="btn fill" type="button" id="barBtn"><span id="barLeft"></span><span id="barRight"></span></button></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="sheet" id="sheet" aria-hidden="true">
+  <div class="head"><h2 id="sheetTitle"></h2><button class="xbtn" type="button" id="sheetClose" aria-label="x">&times;</button></div>
+  <div class="scroll" id="sheetBody"></div>
+  <div class="foot" id="sheetFoot"></div>
+</aside>
+
+<div class="ovl" id="ovlBot" aria-hidden="true">
+  <div class="frame">
+    <button class="close" type="button" data-close aria-label="x">&times;</button>
+    <iframe id="botFrame" title="Telegram" loading="lazy"></iframe>
+    <p class="cap" data-i18n="owner_cap"></p>
+  </div>
+</div>
+<div class="ovl rv-lb" id="ovlRev" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="frame">
+    <button class="close" type="button" id="rvClose" data-i18n-aria="n_close">&times;</button>
+    <div class="rv-lb-body" id="rvLbBody" tabindex="-1"></div>
+  </div>
+</div>
+<div class="ovl doc" id="ovlLegal" aria-hidden="true">
+  <div class="frame">
+    <button class="close" type="button" data-close aria-label="x">&times;</button>
+    <div class="doc-body" id="legalBody"></div>
+  </div>
+</div>
+
+<script>
+/* catalog = data/catalog-v2.json, site:true items only (46), built by assets/build-catalog.py and inlined here */
+var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські продукти · Аланія","handle":"ukr.product.alanya","telegram":"https://t.me/ukrtovari","instagram":"https://www.instagram.com/ukr.product.alanya/"},"categories":[{"id":"salo","name_ru":"Сало","name_uk":"Сало","name_en":"Salo (pork fat)"},{"id":"kovbasy","name_ru":"Колбасы","name_uk":"Ковбаси","name_en":"Sausages"},{"id":"sosysky","name_ru":"Сосиски и сардельки","name_uk":"Сосиски та сардельки","name_en":"Frankfurters and sardelki"},{"id":"balyk","name_ru":"Балык и мясные деликатесы","name_uk":"Балик і м'ясні делікатеси","name_en":"Balyk and cured meats"},{"id":"kabanosy","name_ru":"Кабаносы","name_uk":"Кабаноси","name_en":"Kabanosy"},{"id":"ikra_ryba","name_ru":"Икра и рыба","name_uk":"Ікра та риба","name_en":"Caviar and fish"},{"id":"syr_molochne","name_ru":"Сыр и молочное","name_uk":"Сир і молочне","name_en":"Cheese and dairy"},{"id":"miaso","name_ru":"Мясо свежее","name_uk":"М'ясо свіже","name_en":"Fresh meat"},{"id":"solodke","name_ru":"Сладкое","name_uk":"Солодке","name_en":"Sweets"},{"id":"inshe","name_ru":"Другое","name_uk":"Інше","name_en":"Other"}],"items":[{"id":"salo-solene","cat":"salo","name_ru":"Сало солёное","name_uk":"Сало солоне","name_en":"Salted pork fat (salo)","unit":"kg","price":1650,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/salo-solene.jpg","keys":["сало","сало соленое","сало солоне","сало","сало солене","белое домашнее сало","сало соленое с прослойкой","малосольное","сало соленое"],"state":"new_batch","desc_ru":"Белое домашнее сало","desc_uk":"Біле домашнє сало","desc_en":"White homemade salo","day":null,"qty":null},{"id":"salo-kopchene-na-vyshni","cat":"salo","name_ru":"Сало копчёное на вишне","name_uk":"Сало копчене на вишні","name_en":"Cherry-wood smoked pork fat (salo)","unit":"kg","price":1700,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/salo-kopchene-na-vyshni.jpg","keys":["сало копченое","сало копчене","сало копченое","копченое на вишне сало","бочок копченый","сало копченое на вишне"],"state":"in_stock","desc_ru":"Сало копченое на вишне - хит продаж","desc_uk":"Сало копчене на вишні - хіт продажів","desc_en":"Cherry-wood smoked salo - a best seller"},{"id":"salo-zapechene","cat":"salo","name_ru":"Сало запечённое (рулет)","name_uk":"Сало запечене (рулет)","name_en":"Oven-baked pork belly roll (salo)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/salo-zapechene.jpg","keys":["сало запеченое","рулет из сала"],"state":"in_stock","desc_ru":"Сало запеченое","desc_uk":"Сало запечене","desc_en":"Oven-baked salo"},{"id":"doktorska","cat":"kovbasy","name_ru":"Колбаса Докторская","name_uk":"Ковбаса Лікарська","name_en":"Doctor's sausage (doktorskaya, boiled)","unit":"kg","price":1100,"currency":"TRY","steps_g":[500,1000],"min_g":500,"pack_g":null,"demo":false,"photo":"img/doktorska.jpg","keys":["докторская","докторська","лікарська","колбаса докторская","колбаса докторская","лікарська вар. в/с","лікарська gold","гощанські ковбаси","гощанські","гощанские","hoshchanski kovbasy","гощанские колбасы"],"state":"in_stock","brand":"Гощанські ковбаси","brand_en":"Hoshchanski Kovbasy","brand_ru":"Гощанские колбасы","desc_ru":"","desc_uk":"","desc_en":""},{"id":"balykova","cat":"kovbasy","name_ru":"Колбаса Балыковая","name_uk":"Ковбаса Баликова","name_en":"Balykova pork-loin sausage","unit":"kg","price":1450,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/balykova.jpg","keys":["балыковая","баликова","колбаса балыковая","баликова н/к, в/с","колбаса балыковая н/к"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"frantsuzka","cat":"kovbasy","name_ru":"Колбаса Французская (в перце)","name_uk":"Ковбаса Французька (в перці)","name_en":"French-style dry-cured sausage in pepper crust","unit":"kg","price":1900,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/frantsuzka.jpg","keys":["колбаса французская","французька вищого гатунку","колбаса в перце","колбаса французская в перце","колбаса сырокопченая французская"],"state":"in_stock","desc_ru":"Колбаса в перце - для любителей яркого мясного вкуса: отборное мясо, плотная сочная текстура и ароматная перечная корочка","desc_uk":"Ковбаса в перці - для любителів яскравого м'ясного смаку: відбірне м'ясо, щільна соковита текстура й ароматна перцева скоринка","desc_en":"Sausage in a pepper crust - for lovers of a bold meaty taste: select meat, dense juicy texture and an aromatic pepper crust"},{"id":"makkabi","cat":"kovbasy","name_ru":"Маккаби салями","name_uk":"Маккабі салямі","name_en":"Maccabi dry-cured salami","unit":"kg","price":1700,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/makkabi.jpg","keys":["маккаби","маккабі","маккаби салями","grandio маккабі ковбаса сиров'ялена","колбаса маккаби салями","grandio","грандио","грандіо","grandio"],"state":"few_left","brand":"GRANDIO","brand_en":"GRANDIO","brand_ru":"GRANDIO","desc_ru":"","desc_uk":"","desc_en":"","day":null,"qty":1.5},{"id":"salami-v-plisni","cat":"kovbasy","name_ru":"Салями сыровяленая в белой плесени","name_uk":"Салямі сиров'ялена в білій плісняві","name_en":"White-mould dry-cured salami","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/salami-v-plisni.jpg","keys":["салями сыровяленая","колбаса сервелат сырокопченая"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"servelat","cat":"kovbasy","name_ru":"Сервелат","name_uk":"Сервелат","name_en":"Cervelat (fine smoked sausage)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/servelat.jpg","keys":["сервелат"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"irlandska-z-balykom","cat":"kovbasy","name_ru":"Колбаса Ирландская с балыком","name_uk":"Ковбаса Ірландська з баликом","name_en":"Irish-style sausage with whole pork loin core","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/irlandska-z-balykom.jpg","keys":["ирландская колбаса с балыком","колбаса ирландская с балыком","grandio","грандио","грандіо","grandio"],"state":"in_stock","brand":"GRANDIO","brand_en":"GRANDIO","brand_ru":"GRANDIO","desc_ru":"Насыщенный вкус ароматной колбасы с крупным цельным кусочком нежного балыка и пряной обсыпкой специй","desc_uk":"Насичений смак ароматної ковбаси з великим цілим шматком ніжного балика та пряною обсипкою спецій","desc_en":"Rich taste of an aromatic sausage with a large whole piece of tender balyk and a spice crust"},{"id":"krovyana","cat":"kovbasy","name_ru":"Кровяная колбаса","name_uk":"Кров'янка","name_en":"Blood sausage (krovyanka)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/krovyana.jpg","keys":["кровянка","кров'янка","кровяная","кровяная колбаса"],"state":"preorder","desc_ru":"Насыщенная, ароматная, сочная и очень нежная","desc_uk":"Насичена, ароматна, соковита й дуже ніжна","desc_en":"Rich, aromatic, juicy and very tender","day":null,"qty":null},{"id":"domashnia","cat":"kovbasy","name_ru":"Колбаса домашняя","name_uk":"Ковбаса домашня","name_en":"Home-style coarse pork sausage","unit":"kg","price":1300,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/domashnia.jpg","keys":["колбаса домашняя","домашняя колбаса","колбаса домашняя запеченная","колбаса копченая кольцом","колбаски домашние сырые","колбаса домашняя копченая"],"state":"in_stock","desc_ru":"Это просто шедевр","desc_uk":"Це просто шедевр","desc_en":"Simply a masterpiece"},{"id":"prezydentska","cat":"kovbasy","name_ru":"Колбаса Президентская","name_uk":"Ковбаса Президентська","name_en":"Presidential semi-smoked sausage","unit":"pc","price":650,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":false,"photo":"img/prezydentska.jpg","keys":["колбаса президентская полукопченая","ходорівський м'ясокомбінат","ходорівський","ходоровский","khodorivskyi miasokombinat","ходоровский мясокомбинат"],"state":"in_stock","brand":"Ходорівський м'ясокомбінат","brand_en":"Khodorivskyi Miasokombinat","brand_ru":"Ходоровский мясокомбинат","desc_ru":"","desc_uk":"","desc_en":""},{"id":"braunshveizka","cat":"kovbasy","name_ru":"Колбаса Брауншвейгская сырокопчёная","name_uk":"Ковбаса Брауншвейзька сирокопчена","name_en":"Braunschweiger raw-smoked sausage","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/braunshveizka.jpg","keys":["салтівський","салтовский","saltivskyi"],"state":"in_stock","brand":"Салтівський","brand_en":"Saltivskyi","brand_ru":"Салтовский","desc_ru":"","desc_uk":"","desc_en":""},{"id":"kyivska","cat":"kovbasy","name_ru":"Колбаса Киевская","name_uk":"Ковбаса Київська","name_en":"Kyivska smoked sausage","unit":"kg","price":1700,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/kyivska.jpg","keys":["киевская","київська","колбаса киевская","київська ковбаса сирокопчена"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"sosysky-fileini","cat":"sosysky","name_ru":"Сосиски филейные","name_uk":"Сосиски філейні","name_en":"Fillet frankfurters (sosiski)","unit":"kg","price":1100,"currency":"TRY","steps_g":[500,1000],"min_g":500,"pack_g":null,"demo":false,"photo":"img/sosysky-fileini.jpg","keys":["сосиски","сосиски филейные","сосиски","сосиски филейные","сосиски філейні"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"sosysky-videnski","cat":"sosysky","name_ru":"Сосиски венские","name_uk":"Сосиски віденські","name_en":"Vienna sausages","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/sosysky-videnski.jpg","keys":["венские сосиски","сосиски венские"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"sosysky-salami","cat":"sosysky","name_ru":"Сосиски салями","name_uk":"Сосиски салямі","name_en":"Salami-style sausages","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/sosysky-salami.jpg","keys":["сосиски салями"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"sardelky-sochni","cat":"sosysky","name_ru":"Сардельки сочные","name_uk":"Сардельки соковиті","name_en":"Juicy thick sausages (sardelki)","unit":"kg","price":1100,"currency":"TRY","steps_g":[500,1000],"min_g":500,"pack_g":null,"demo":false,"photo":"img/sardelky-sochni.jpg","keys":["сардельки","сардельки сочные","сардельки","сардельки сочные","гощанські ковбаси","гощанські","гощанские","hoshchanski kovbasy","гощанские колбасы"],"state":"in_stock","brand":"Гощанські ковбаси","brand_en":"Hoshchanski Kovbasy","brand_ru":"Гощанские колбасы","desc_ru":"Сочные, ароматные, приготовленные из качественного мяса","desc_uk":"Соковиті, ароматні, приготовлені з якісного м'яса","desc_en":"Juicy, aromatic, made from quality meat"},{"id":"sardelky-hryl","cat":"sosysky","name_ru":"Сардельки гриль","name_uk":"Сардельки гриль","name_en":"Grill sausages (sardelki)","unit":"kg","price":950,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/sardelky-hryl.jpg","keys":["сардельки гриль","сардельки барбекю","сардельки копченые"],"state":"in_stock","desc_ru":"Вкуснейшие сардельки гриль","desc_uk":"Найсмачніші сардельки гриль","desc_en":"The tastiest grill sardelki"},{"id":"balyk","cat":"balyk","name_ru":"Балык сыровяленый","name_uk":"Балик сиров'ялений","name_en":"Dry-cured pork loin (balyk)","unit":"kg","price":1750,"currency":"TRY","steps_g":[200,300,500],"min_g":200,"pack_g":null,"demo":false,"photo":"img/balyk.jpg","keys":["балык","балик","балык","балык копченый","балык свиной копченый","балык с/к","балык сырокопченый","балык варено-копченый","балык запеченный","балык сыровяленый"],"state":"sold_out","desc_ru":"","desc_uk":"","desc_en":"","day":null,"qty":null},{"id":"bytok","cat":"balyk","name_ru":"Биток варёно-копчёный","name_uk":"Биток варено-копчений","name_en":"Cooked-smoked pork loin steak (bytok)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/bytok.jpg","keys":["биток","биток в/с","биток варено-копченый"],"state":"in_stock","desc_ru":"Биток, шея, грудинка - всё варено-копчения","desc_uk":"Биток, шия, грудинка - все варено-копчене","desc_en":"Bytok, neck, brisket - all cooked-smoked"},{"id":"buzhenyna","cat":"balyk","name_ru":"Буженина","name_uk":"Буженина","name_en":"Roast pork (buzhenyna)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/buzhenyna.jpg","keys":["буженина"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"yalovychyna-kopchena","cat":"balyk","name_ru":"Говядина копчёная","name_uk":"Яловичина копчена","name_en":"Smoked cured beef","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/yalovychyna-kopchena.jpg","keys":["сочная говядина","говядина копченая"],"state":"in_stock","desc_ru":"Сочная говядина","desc_uk":"Соковита яловичина","desc_en":"Juicy beef"},{"id":"rebra-kopcheni","cat":"balyk","name_ru":"Рёбра копчёные","name_uk":"Ребра копчені","name_en":"Smoked pork ribs","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/rebra-kopcheni.jpg","keys":["ребра копченые"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"zelts","cat":"balyk","name_ru":"Зельц с языка","name_uk":"Зельц з язика","name_en":"Tongue head cheese (zelts)","unit":"kg","price":980,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/zelts.jpg","keys":["зельц","зельц с языка","зельц с языка","рулет с языком","зельц"],"state":"preorder","desc_ru":"Зельц с языка, как был раньше у нас","desc_uk":"Зельц з язика, як був раніше в нас","desc_en":"Tongue zelts, the way it used to be at home","day":null,"qty":null},{"id":"osheek","cat":"miaso","name_ru":"Ошеек свежий (на шашлык)","name_uk":"Ошийок свіжий (на шашлик)","name_en":"Fresh pork neck (for shashlik)","unit":"kg","price":980,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/osheek.jpg","keys":["ошеек","ошийок","шея","ошеек","ошеек свежий","ошеек на шашлык","свежий домашний ошеек","мясо свежее","свинина"],"state":"new_batch","desc_ru":"Свежий домашний ошеек","desc_uk":"Свіжий домашній ошийок","desc_en":"Fresh homemade pork neck","day":null,"qty":null},{"id":"shashlyk-marynovany","cat":"miaso","name_ru":"Шашлык маринованный (ошеек)","name_uk":"Шашлик маринований (ошийок)","name_en":"Marinated pork-neck shashlik","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/shashlyk-marynovany.jpg","keys":["шашлык","шашлик","маринованный шашлык","шашлык"],"state":"preorder","desc_ru":"","desc_uk":"","desc_en":"","day":null,"qty":null},{"id":"otbyvna","cat":"miaso","name_ru":"Отбивная (свежая корейка)","name_uk":"Відбивна (свіжа корейка)","name_en":"Fresh pork loin for chops","unit":"kg","price":850,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/otbyvna.jpg","keys":["отбивная","свежая свиная корейка"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"rebra-svizhi","cat":"miaso","name_ru":"Рёбра свежие","name_uk":"Ребра свіжі","name_en":"Fresh pork ribs","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/rebra-svizhi.jpg","keys":["ребра","рёбра","ребра свежие","ребра","ребра свежие"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"kabanosy","cat":"kabanosy","name_ru":"Кабаносы","name_uk":"Кабаноси","name_en":"Kabanosy","unit":"100g","price":999,"currency":"TRY","steps_g":[100,200,500],"min_g":100,"pack_g":null,"demo":true,"photo":"img/kabanosy.jpg","keys":["кабаносы","кабаноси","кабанос","кабаносы","кабаноси","кабаносы дмитрук","chickanosy","дмитрук","dmytruk"],"state":"in_stock","brand":"Дмитрук","brand_en":"Dmytruk","brand_ru":"Дмитрук","desc_ru":"","desc_uk":"","desc_en":""},{"id":"okhotnychi-kovbasky","cat":"kabanosy","name_ru":"Охотничьи колбаски","name_uk":"Мисливські ковбаски","name_en":"Hunter's sausages","unit":"100g","price":999,"currency":"TRY","steps_g":[100,200,500],"min_g":100,"pack_g":null,"demo":true,"photo":"img/okhotnychi-kovbasky.jpg","keys":["охотничьи колбаски","охотничьи","мисливські ковбаски","мисливські","охотничьи колбаски","колбаски охотничьи","охотничьи","мисливські ковбаски","мисливські"],"state":"in_stock","desc_ru":"Хит продаж - охотничьи колбаски, качество огонь","desc_uk":"Хіт продажів - мисливські ковбаски, якість вогонь","desc_en":"A best seller - hunter's sausages, top quality"},{"id":"ikra-kyzhucha","cat":"ikra_ryba","name_ru":"Икра красная кижуча","name_uk":"Ікра червона кижуча","name_en":"Red caviar (coho salmon, kizhuch)","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":500,"demo":true,"photo":"img/ikra-kyzhucha.jpg","keys":["икра кижуча","кижуч"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"ikra-kety","cat":"ikra_ryba","name_ru":"Икра красная кеты","name_uk":"Ікра червона кети","name_en":"Red caviar (chum salmon, keta)","unit":"pc","price":120,"currency":"USD","steps_g":[1],"min_g":1,"pack_g":500,"demo":false,"photo":"img/ikra-kety.jpg","keys":["икра","ікра","икра красная","красная икра","ікра червона","кета","икра красная","икра кеты","икра красная кеты","икра лососевая чумиканская"],"state":"in_stock","desc_ru":"Сахалин, «дельта фиш», среднее зерно, вылов в море, среднесол, сливочный вкус, охлажденка - не замораживалась","desc_uk":"Сахалін, «дельта фіш», середнє зерно, вилов у морі, середньосолона, вершковий смак, охолоджена - не заморожувалась","desc_en":"Sakhalin, \"delta fish\", medium grain, sea-caught, medium salt, creamy taste, chilled - never frozen"},{"id":"ikra-chorna","cat":"ikra_ryba","name_ru":"Икра чёрная осетровая","name_uk":"Ікра чорна осетрова","name_en":"Black sturgeon caviar","unit":"pc","price":480,"currency":"USD","steps_g":[1],"min_g":1,"pack_g":500,"demo":false,"photo":"img/ikra-chorna.jpg","keys":["икра черная","чорна ікра","черная икра","икра черная","икра черная осетровая","черная осетровая икра малосол","икра осетровая дикая","russian caviar malossol 250 g tin","икра черная осетровая","икра черная осетровая 250 г"],"state":"sold_out","desc_ru":"Дикая (не аквакультура), крупное зерно, малосол, нежно орехово-сливочный вкус","desc_uk":"Дика (не аквакультура), крупне зерно, малосольна, ніжний горіхово-вершковий смак","desc_en":"Wild (not farmed), large grain, lightly salted, delicate nutty-creamy taste","day":null,"qty":null},{"id":"ikra-shchuky","cat":"ikra_ryba","name_ru":"Икра щучья","name_uk":"Ікра щуча","name_en":"Pike roe","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/ikra-shchuky.jpg","keys":["щучья икра","икра щуки"],"state":"in_stock","desc_ru":"Нежная, рассыпчатая, с приятной солоноватостью и тонким рыбным вкусом","desc_uk":"Ніжна, розсипчаста, з приємною солонуватістю та тонким рибним смаком","desc_en":"Tender, crumbly, pleasantly salty with a fine fish taste"},{"id":"taran","cat":"ikra_ryba","name_ru":"Тарань вяленая","name_uk":"Тараня в'ялена","name_en":"Dried roach (taranka)","unit":"kg","price":2100,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/taran.jpg","keys":["тарань","таранка","тарань","тарань вяленая","тарань с икрой","тарань вяленая с икрой"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"kutum","cat":"ikra_ryba","name_ru":"Кутум вяленый (тарань из кутума)","name_uk":"Кутум в'ялений","name_en":"Dried kutum (Caspian whitefish)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/kutum.jpg","keys":["кутум","тарань из кутума","кутум","тарань из кутума","иранский варезуб","кутум вяленый"],"state":"new_batch","desc_ru":"Тарань из кутума - более «благородная» версия привычной вяленой рыбы: мясистее, жирнее, без резкой «речной» горечи","desc_uk":"Тарань з кутума - «благородніша» версія звичної в'яленої риби: м'ясистіша, жирніша, без різкої «річкової» гіркоти","desc_en":"Kutum taran - a more \"noble\" version of the usual dried fish: meatier, fattier, without the sharp river bitterness","day":null,"qty":null},{"id":"forel","cat":"ikra_ryba","name_ru":"Форель слабосолёная холодного копчения","name_uk":"Форель слабосолона холодного копчення","name_en":"Cold-smoked lightly salted trout","unit":"kg","price":90,"currency":"USD","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/forel.jpg","keys":["форель","форель х/к","форель холодного копчения","форель слабо соленая холодного копчения"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"osetryna","cat":"ikra_ryba","name_ru":"Осетрина холодного копчения","name_uk":"Осетрина холодного копчення","name_en":"Cold-smoked sturgeon","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/osetryna.jpg","keys":["осетрина","осетрина холодного копчения","осетрина х/к","балык осетра холодного копчения"],"state":"in_stock","desc_ru":"Балык осетра холодного копчения, с Каспия","desc_uk":"Балик осетра холодного копчення, з Каспію","desc_en":"Cold-smoked sturgeon balyk, from the Caspian"},{"id":"rulet-osetrovy","cat":"ikra_ryba","name_ru":"Рулет осетровый","name_uk":"Рулет осетровий","name_en":"Smoked sturgeon roll","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/rulet-osetrovy.jpg","keys":["рулет осетровый"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"pechen-tresky","cat":"ikra_ryba","name_ru":"Печень трески, 500 г","name_uk":"Печінка тріски, 500 г","name_en":"Cod liver in oil, 500 g jar","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/pechen-tresky.jpg","keys":["печень трески","печінка тріски","печень трески","печень трески 500 грамм","норд фиш","норд фиш","сделано морем","nord fish"],"state":"in_stock","brand":"Норд Фиш","brand_en":"Nord Fish","brand_ru":"Норд Фиш","desc_ru":"","desc_uk":"","desc_en":""},{"id":"krab-kamchatsky","cat":"ikra_ryba","name_ru":"Краб камчатский (фаланга), банка 700 мл","name_uk":"Краб камчатський (фаланга), банка 700 мл","name_en":"Kamchatka crab leg meat, 700 ml jar","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/krab-kamchatsky.jpg","keys":["краб камчатский","фаланга","ооо флют&co сахалин","флот&co","флот","flot&co"],"state":"not_now","brand":"Флот&CO","brand_en":"Flot&Co","brand_ru":"Флот&CO","desc_ru":"","desc_uk":"","desc_en":"","day":null,"qty":null},{"id":"oseledets-file","cat":"ikra_ryba","name_ru":"Сельдь филе в масле (Norven Lofoten)","name_uk":"Оселедець філе в олії (Norven Lofoten)","name_en":"Herring fillet in oil (Norven Lofoten)","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/oseledets-file.jpg","keys":["сельдь филе в масле","norven lofoten","своя лінія","сельдь norven lofoten филе в масле","norven","норвен","norven"],"state":"in_stock","brand":"Norven","brand_en":"Norven","brand_ru":"Norven","desc_ru":"","desc_uk":"","desc_en":""},{"id":"oseledets-bilyi-vedmid","cat":"ikra_ryba","name_ru":"Селёдка «Белый медведь» (в ведре)","name_uk":"Оселедець «Білий ведмідь» (у відрі)","name_en":"Whole salted herring 'Bely Medved' (bucket)","unit":"pc","price":950,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":false,"photo":"img/oseledets-bilyi-vedmid.jpg","keys":["селедка","селёдка","белый медведь","селедка белый медведь"],"state":"in_stock","desc_ru":"Приедет в ведре с водой","desc_uk":"Приїде у відрі з водою","desc_en":"Arrives in a bucket of water"},{"id":"syr-cheese-cult","cat":"syr_molochne","name_ru":"Сыры ремесленные Cheese Cult (качотта)","name_uk":"Сири ремісничі Cheese Cult (качотта)","name_en":"Artisan cheeses Cheese Cult (caciotta)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/syr-cheese-cult.jpg","keys":["сыр","сир","качотта","cheese cult","сыр свежий с добавками","сыры ремесленные + творог","cheese cult","чиз культ","cheese cult"],"state":"in_stock","brand":"Cheese Cult","brand_en":"Cheese Cult","brand_ru":"Cheese Cult","desc_ru":"Ремесленные сыры без пальмового, рапсового масла, эмульгаторов и консервантов; итальянская качотта","desc_uk":"Ремісничі сири без пальмової, ріпакової олії, емульгаторів і консервантів; італійська качотта","desc_en":"Artisan cheeses without palm or rapeseed oil, emulsifiers or preservatives; Italian caciotta"},{"id":"tvoroh","cat":"syr_molochne","name_ru":"Творог","name_uk":"Сир кисломолочний (творог)","name_en":"Cottage cheese (tvorog)","unit":"pc","price":230,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":400,"demo":false,"photo":"img/tvoroh.jpg","keys":["творог","творог","творожный король 400 г 5%","творог творожный король 400 г 5%","творожный король","tvorozhny korol"],"state":"in_stock","brand":"Творожный Король","brand_en":"Tvorozhny Korol","brand_ru":"Творожный Король","desc_ru":"","desc_uk":"","desc_en":""},{"id":"maslo","cat":"syr_molochne","name_ru":"Масло подсолнечное домашнее пахучее","name_uk":"Олія соняшникова домашня пахуча","name_en":"Unrefined aromatic sunflower oil","unit":"pc","price":400,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":false,"photo":"img/maslo.jpg","keys":["масло","олія","масло","ароматное масло","масло душистое","салатное масло пахучее","пахучее масло"],"state":"in_stock","desc_ru":"Домашнее, пахучее, салатное масло","desc_uk":"Домашня, пахуча, салатна олія","desc_en":"Homemade, aromatic salad oil"},{"id":"tsukerky-roshen","cat":"solodke","name_ru":"Конфеты Roshen","name_uk":"Цукерки Roshen","name_en":"Roshen chocolates","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/tsukerky-roshen.jpg","keys":["конфеты","конфеты roshen київ вечірній","конфеты roshen ассорти","конфеты roshen київ вечірній","roshen","рошен","roshen"],"state":"in_stock","brand":"Roshen","brand_en":"Roshen","brand_ru":"Roshen","desc_ru":"","desc_uk":"","desc_en":""},{"id":"tort-kyivsky","cat":"solodke","name_ru":"Торт Киевский (Roshen)","name_uk":"Торт Київський (Roshen)","name_en":"Kyiv cake (Roshen)","unit":"pc","price":1400,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":false,"photo":"img/tort-kyivsky.jpg","keys":["торт","торты","тортики","торти","торт","тортики","киевский торт","торт roshen київський торт","торт roshen київський торт","roshen","рошен","roshen"],"state":"preorder","brand":"Roshen","brand_en":"Roshen","brand_ru":"Roshen","desc_ru":"Хрустящие ореховые коржи, нежный сливочный крем","desc_uk":"Хрусткі горіхові коржі, ніжний вершковий крем","desc_en":"Crunchy nut layers, tender cream","day":null,"qty":null},{"id":"salat-chuka","cat":"inshe","name_ru":"Салат чука (Hiyashi Wakame), 1 кг","name_uk":"Салат чука (Hiyashi Wakame), 1 кг","name_en":"Chuka seaweed salad (Hiyashi Wakame), 1 kg","unit":"kg","price":950,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/salat-chuka.jpg","keys":["чука","салат чука","салат чука","хияши вакаме","hiyashi wakame 1 kg","салат из водорослей","js","js"],"state":"in_stock","brand":"JS","brand_en":"JS","brand_ru":"JS","desc_ru":"","desc_uk":"","desc_en":""}],"delivery":[{"id":"pickup","price":0,"demo":true},{"id":"alanya","price":100,"free_from":1500,"demo":true},{"id":"cargo","price":250,"free_from":3000,"demo":true}],"payment":[{"id":"card","demo":true},{"id":"cash","demo":true}],"rules":{"min_order":500},"reviews":[{"img":"img/reviews/review-01-salo-ukr.jpg","text":null,"name":"Viktoriia"},{"img":"img/reviews/review-02-salo-idealne.jpg","text":null,"name":"Анжелика"},{"img":"img/reviews/review-03-sardelky-kovbasa.jpg","text":null,"name":"Artem H."},{"img":"img/reviews/review-04-doktorska-salo-vyshnia.jpg","text":null,"name":"yuriy_boss"},{"img":"img/reviews/review-05-ikra-ryba-miaso.jpg","text":null,"name":"Таня К."},{"img":"img/reviews/review-06-ikra-chorna-chervona.jpg","text":null,"name":"Диана"},{"img":"img/reviews/review-07-ikra-chervona-foto.jpg","text":null,"name":"Юлия"},{"img":"img/reviews/review-08-osetryna-ikra.jpg","text":null,"name":"Александр В."},{"img":"img/reviews/review-09-tort-balyk.jpg","text":null,"name":"marie_l_kececi"},{"img":"img/reviews/review-10-ikra-dostavka-speka.jpg","text":null,"name":"Mila"},{"img":"img/reviews/review-11-posylka-idealno.jpg","text":null,"name":"Элиф"},{"img":"img/reviews/review-12-rebra-hryl.jpg","text":null,"name":""},{"img":null,"name":"Santa","text":"Добрый вечер 🌆\nНе устану благодарить Марго и ее прекрасного отца за доставку такого прекрасного, невероятно свежего, аппетитного украинского сала 💪🏼\nОтдельная благодарность за вкуснейшие сардельки и докторскую колбасу, Вы лучшие!!!\n🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥"}]}/*CAT_END*/;
+</script>
+<script src="img/w/dims.js"></script>
+<script src="assets/engine.js"></script>
+<script>
+(function () {
+  'use strict';
+  var E = window.Engine;
+
+  /* ---------- ONE dictionary per page: I18N.ru / .uk / .en ---------- */
+  var I18N = {
+    ru: {
+      brand: 'Украинские продукты', brand_sub: 'Алания', brand_full: 'Украинские продукты · Алания', foot_tag: 'доставка по всей Турции',
+      hero_h1: 'Украинские продукты в Алании',
+      hero_p: '<b>Привозим из Украины</b> три раза в неделю. Алания - сегодня, вся Турция - карго 2-3 дня.',
+      hero_alt: 'Сало, колбасы, икра, осетрина и кабаносы из ассортимента на тёмном фоне',
+      cta_catalog: 'В каталог', cta_special: 'Привезти под заказ',
+      sp_hint: 'Привезём из Украины не только продукты (косметика, бытовая химия, детские товары) - напишите, что вам нужно. Марго уточнит, получится ли привезти, цену и сроки, и мы напишем вам.',
+      sp_what: 'Что привезти', sp_what_ph: 'Любой товар: название, марка', sp_qty: 'Количество', sp_qty_ph: 'Например: 2 кг или 3 шт',
+      sp_contact: 'Telegram или телефон (WhatsApp)', sp_contact_ph: '@ник или +90 5xx xxx xx xx', sp_comment: 'Комментарий (необязательно)', sp_send: 'Отправить запрос',
+      sp_err_what: 'Напишите, что привезти.', sp_err_contact: 'Укажите Telegram (@ник) или телефон, чтобы мы могли вам написать.', sp_err_contact_bad: 'Telegram - в формате @ник, телефон - не меньше 9 цифр.',
+      done_msg: 'Ваш заказ принят в обработку. Мы свяжемся с вами, чтобы обсудить детали.',
+      how1: '<b>Выберите</b> продукты и вес, корзина считает сумму сразу.',
+      how2: '<b>Отправьте</b> заказ: имя, телефон, способ доставки, без регистрации.',
+      how3: '<b>Подтвердим</b> в течение часа в Telegram или WhatsApp и назовём точный вес и сумму.',
+      cat_title: 'Каталог', cat_sub: 'Цена за кг, за 100 г или за штуку. Точный вес - после взвешивания.', chip_all: 'Все',
+      cart: 'Корзина', st_in_stock: 'В наличии', st_few_left: 'Осталось мало', st_sold_out: 'Закончилось', st_new_batch: 'Новая поставка', st_preorder: 'Принимаю заказы', st_not_now: 'Пока нет',
+      few_qty: '~{n} кг', next_batch: 'Следующая поставка: {d}', preorder_day: 'Заказы на: {d}',
+      add: '+ В корзину', add_pre: 'Заказать', added: 'Добавлено', notify: 'Сообщить о поставке', pre_next: 'Заказать к поставке', pre_tag: 'под заказ',
+      weight: 'Вес', less: 'Меньше', more: 'Больше', remove: 'Убрать',
+      about_title: 'О нас', about_p: 'Привозим из Украины три раза в неделю. Украинские продукты в Турции. Доставка по всей Турции.',
+      about_market: 'Закупка: Центральный рынок Харькова (Благбаз)', about_demo: 'Демо-текст, пока не согласован с владельцами.',
+      rev_more: 'Читать полностью', rev_hint: 'листайте', rev_prev: 'Предыдущие отзывы', rev_next: 'Следующие отзывы', rev_full: 'Отзыв полностью', rev_title: 'Отзывы', rev_sub: 'Настоящие сообщения клиентов, дословно', 
+      dlv_title: 'Как мы доставляем',
+      dlv1: 'Алания и окрестности', dlv1t: 'Курьер {c1}, бесплатно от {f1}. Самовывоз в Алании бесплатно. Сегодня или завтра.',
+      dlv2: 'Вся Турция - карго', dlv2t: '{c2} за отправление, бесплатно от {f2}. Срок 2-3 дня.',
+      dlv3: 'Трек-номер в Telegram', dlv3t: 'Как только отправили, вы получаете номер отправления и срок.',
+      faq_title: 'Вопросы', faq_q: [
+        'Сколько стоит и где весь прайс?', 'Откуда вы привозите продукты?', 'Есть ли в наличии?', 'Когда новая поставка?', 'Доставка в мой город - в Белек, Махмутлар, Анталию?', 'Где забрать в Алании?'],
+      faq_a: [
+        'Цена стоит на каждой карточке в каталоге выше - это и есть весь прайс. Он всегда актуален: цены меняет владелец в чате, и они сразу меняются на сайте.',
+        'С Центрального рынка Харькова - легендарного Благбаза (Благовещенского базара), куда харьковчане поколениями ходят за салом, мясом и колбасами. Привозим из Украины три раза в неделю.',
+        'Наличие видно на каждой карточке под ценой: «В наличии», «Осталось ~1,5 кг» или «Закончилось». Если закончилось - нажмите «Сообщить о поставке», и мы напишем, когда привезём, или «Заказать к поставке», и товар попадёт в заказ как «под заказ».',
+        'Привозим из Украины три раза в неделю. День следующей поставки назначает Марго: как только она его назвала, он появляется на карточках закончившихся товаров. Сейчас: {nb}.',
+        'Алания, Махмутлар и ближайшие районы - курьер {c1} (бесплатно от {f1}). Белек, Анталия, Стамбул и любой другой город - карго {c2} (бесплатно от {f2}), 2-3 дня. В корзине выберите «Другой город», и мы посчитаем.',
+        'Самовывоз в Алании бесплатный. Адрес и часы мы пришлём в подтверждении заказа.'],
+      nb_none: 'день пока не назначен', nb_day: 'ближайшая: {d}',
+      foot_phone: 'Телефон', foot_wa: 'WhatsApp', demo_word: '(демо)', legal_dlv_link: 'Доставка и оплата', legal_data_link: 'Персональные данные', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Вопросы',
+      owner_link: 'Как это видит владелец', owner_cap: 'Так заказы, наличие и цены ведёт Марго: чат в Telegram, без кабинета',
+      foot_note: 'Демо. Цены - из прайса Instagram от 08.10.2026 и сообщений Марго в группе. Цена {ph} стоит у позиций без подтверждённой цены ({n} из {N}) - это заполнитель. Товары с ценой в долларах считаются в долларах, отдельной суммой. Стоимость доставки, способы оплаты, телефон, WhatsApp и адрес самовывоза - заполнители до разговора с владельцами.',
+      usd_note: 'цена в $, в корзине - отдельной суммой в $',
+      producer: 'Производитель: {b}',
+      cb_few: 'Осталось {q}', cb_items: ['товар', 'товара', 'товаров'], cb_sections: 'Разделы', cb_all: 'Все товары', cb_in_cart_cap: 'В корзине', cb_live_in: 'В корзине: {q}', cb_live_out: 'Удалено из корзины', cb_switch: 'Карточки', cb_add: 'В корзину', cb_next_batch: 'Ближайшая поставка', cb_in_cart: 'В корзине: {q}. Открыть корзину',
+      cart_title: 'Корзина', cart_empty: 'Корзина пуста. Выберите продукты в каталоге.', to_catalog: 'В каталог', subtotal: 'Продукты', free: 'бесплатно', total: 'Итого',
+      total_dlv: 'Итого с доставкой', min_note: 'Минимальный заказ {m}. Не хватает {x}.', min_btn: 'Минимальный заказ {m}', pos: ['позиция', 'позиции', 'позиций'],
+      checkout: 'Оформление', f_name: 'Имя', f_name_ph: 'Как к вам обращаться', f_phone: 'Телефон (Telegram или WhatsApp)', f_city: 'Город', city_alanya: 'Алания', city_other: 'Другой город', city_ph: 'Какой город',
+      f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Желаемая дата доставки (необязательно)', f_date_ph: 'Выбрать в календаре', no_date: 'Без даты', prev_m: 'Предыдущий месяц', next_m: 'Следующий месяц',
+      f_comment: 'Комментарий', f_comment_ph: 'Например: позвонить перед доставкой', send: 'Отправить заказ', err_contact: 'Укажите имя и телефон, чтобы мы могли подтвердить заказ.', err_city: 'Укажите город для карго.',
+      dlv_pickup: 'Самовывоз в Алании', dlv_pickup_note: 'Адрес и часы пришлём в подтверждении', dlv_alanya: 'Курьер по Алании', dlv_cargo: 'Карго по Турции', dlv_cargo_note: 'Трек-номер пришлём в Telegram.',
+      eta_pickup: 'сегодня или завтра', eta_alanya: 'сегодня или завтра', eta_cargo: '2-3 дня', free_from: 'бесплатно от {f}',
+      pay_card: 'Перевод на украинскую карту (гривна)', pay_cash: 'Наличные при получении',
+      done_title: 'Заказ принят', done_no: 'Заказ', done_date: 'желаемая дата', tg_btn: 'Написать в Telegram', back: 'Вернуться в каталог',
+      done_owner: 'Заказ уже у владельца: откройте «Как это видит владелец».',
+      n_title: 'Сообщить о поставке', n_for: 'Когда привезём «{n}», напишем вам.', n_send: 'Сообщить мне', n_ok: 'Записали', n_ok_t: 'Напишем в Telegram или WhatsApp, как только «{n}» приедет.', n_close: 'Закрыть',
+      consent_pre: 'Отправляя заказ, вы соглашаетесь с ', consent_link: 'обработкой данных для доставки', consent_post: '.',
+      legal_dlv: { h: 'Доставка и оплата', items: [
+        ['Как принимаем заказ', 'Заказ на сайте - это заявка. В течение часа мы подтверждаем его в Telegram или WhatsApp и называем точный вес и сумму: весовые продукты взвешиваем, поэтому итог может немного отличаться от суммы в корзине. Минимальный заказ {min} - для суммы в лирах; если в заказе только товары в долларах, минимума нет. Позиции «под заказ» привозим с ближайшей поставкой.'],
+        ['Алания и окрестности', 'Алания, Махмутлар и ближайшие районы - курьер {c1} {demo}, бесплатно от {f1} {demo}, сегодня или завтра. Самовывоз в Алании бесплатный, адрес и часы пришлём в подтверждении заказа.'],
+        ['Вся Турция - карго', 'Белек, Анталия, Стамбул и любой другой город - карго {c2} за отправление {demo}, бесплатно от {f2} {demo}, срок 2-3 дня. Как только отправили, присылаем трек-номер в Telegram.'],
+        ['Оплата', 'Перевод на украинскую карту (гривна) или наличные при получении {demo}. Номер карты для перевода присылаем вместе с точной суммой после подтверждения. Цены - в турецких лирах (₺). Товары с ценой в долларах ($) указаны и считаются в долларах, отдельной суммой; реквизиты для оплаты присылаем вместе с подтверждением.'],
+        ['При получении', 'Проверьте заказ при получении. Если что-то не так, напишите нам в Telegram t.me/ukrtovari.'],
+        ['Если вас нет на месте или адрес неверный', '[уточнить у Марго: что делаем, если получателя нет на месте или адрес указан неверно]'],
+        ['Возврат и замена', '[уточнить у Марго: возврат и замена продуктов]'],
+        ['', 'Стоимость доставки и способы оплаты - демо, до согласования с владельцами.']] },
+      legal_data: { h: 'Персональные данные', items: [
+        ['Кто получает данные', 'Данные, которые вы оставляете при заказе, получает владелец магазина «{brand}».'],
+        ['Что мы получаем', 'Имя, телефон (для связи в Telegram или WhatsApp), город и детали доставки, которые вы укажете, способ оплаты, желаемую дату, комментарий и состав заказа. В форме «Сообщить о поставке» - имя и телефон.'],
+        ['Зачем', 'Только чтобы принять, подтвердить и доставить заказ и связаться с вами по нему. Из формы «Сообщить о поставке» - чтобы написать, когда товар привезём.'],
+        ['Кто ещё видит', 'Курьер или карго-служба получают только то, что нужно для доставки. Мы не продаём ваши данные.'],
+        ['Что хранится в вашем браузере', 'Сайт хранит корзину, выбранный язык и данные формы (имя, телефон, город, способ доставки и оплаты) в памяти браузера (localStorage) на вашем устройстве, чтобы в следующий раз не вводить их заново. Их можно удалить, очистив данные сайта в настройках браузера.'],
+        ['Сколько храним', '[уточнить у Марго: срок хранения данных заказов]'],
+        ['Как исправить или удалить данные', 'Напишите нам в Telegram t.me/ukrtovari или в Instagram @ukr.product.alanya.']] }
+    },
+    uk: {
+      brand: 'Українські продукти', brand_sub: 'Аланія', brand_full: 'Українські продукти · Аланія', foot_tag: 'доставка по всій Туреччині',
+      hero_h1: 'Українські продукти в Аланії',
+      hero_p: '<b>Привозимо з України</b> тричі на тиждень. Аланія - сьогодні, уся Туреччина - карго 2-3 дні.',
+      hero_alt: 'Сало, ковбаси, ікра, осетрина та кабаноси з асортименту на темному тлі',
+      cta_catalog: 'До каталогу', cta_special: 'Привезти під замовлення',
+      sp_hint: 'Привеземо з України не тільки продукти (косметика, побутова хімія, дитячі товари) - напишіть, що вам потрібно. Марго уточнить, чи вийде привезти, ціну та терміни, і ми напишемо вам.',
+      sp_what: 'Що привезти', sp_what_ph: 'Будь-який товар: назва, марка', sp_qty: 'Кількість', sp_qty_ph: 'Наприклад: 2 кг або 3 шт',
+      sp_contact: 'Telegram або номер телефону (WhatsApp)', sp_contact_ph: '@нік або +90 5xx xxx xx xx', sp_comment: 'Коментар (необов\'язково)', sp_send: 'Надіслати запит',
+      sp_err_what: 'Напишіть, що привезти.', sp_err_contact: 'Вкажіть Telegram (@нік) або номер телефону, щоб ми могли вам написати.', sp_err_contact_bad: 'Telegram - у форматі @нік, номер телефону - не менше 9 цифр.',
+      done_msg: 'Ваше замовлення прийнято в обробку. Ми зв\'яжемося з вами, щоб обговорити деталі.',
+      how1: '<b>Оберіть</b> продукти та вагу, кошик одразу рахує суму.',
+      how2: '<b>Надішліть</b> замовлення: ім\'я, номер телефону, спосіб доставки, без реєстрації.',
+      how3: '<b>Підтвердимо</b> протягом години в Telegram або WhatsApp і назвемо точну вагу та суму.',
+      cat_title: 'Каталог', cat_sub: 'Ціна за кг, за 100 г або за штуку. Точна вага - після зважування.', chip_all: 'Усе',
+      cart: 'Кошик', st_in_stock: 'В наявності', st_few_left: 'Залишилось мало', st_sold_out: 'Закінчилося', st_new_batch: 'Нова поставка', st_preorder: 'Приймаю замовлення', st_not_now: 'Поки немає',
+      few_qty: '~{n} кг', next_batch: 'Наступна поставка: {d}', preorder_day: 'Замовлення на: {d}',
+      add: '+ У кошик', add_pre: 'Замовити', added: 'Додано', notify: 'Повідомити про поставку', pre_next: 'Замовити до поставки', pre_tag: 'під замовлення',
+      weight: 'Вага', less: 'Менше', more: 'Більше', remove: 'Прибрати',
+      about_title: 'Про нас', about_p: 'Привозимо з України тричі на тиждень. Українські продукти в Туреччині. Доставка по всій Туреччині.',
+      about_market: 'Закупівля: Центральний ринок Харкова (Благбаз)', about_demo: 'Демо-текст, поки не погоджений з власниками.',
+      rev_more: 'Читати повністю', rev_hint: 'гортайте', rev_prev: 'Попередні відгуки', rev_next: 'Наступні відгуки', rev_full: 'Відгук повністю', rev_title: 'Відгуки', rev_sub: 'Справжні повідомлення клієнтів, дослівно', 
+      dlv_title: 'Як ми доставляємо',
+      dlv1: 'Аланія та околиці', dlv1t: 'Кур\'єр {c1}, безкоштовно від {f1}. Самовивіз в Аланії безкоштовно. Сьогодні або завтра.',
+      dlv2: 'Уся Туреччина - карго', dlv2t: '{c2} за відправлення, безкоштовно від {f2}. Термін 2-3 дні.',
+      dlv3: 'Трек-номер у Telegram', dlv3t: 'Щойно відправили, ви отримуєте номер відправлення і термін.',
+      faq_title: 'Питання', faq_q: [
+        'Скільки коштує і де весь прайс?', 'Звідки ви привозите продукти?', 'Чи є в наявності?', 'Коли нова поставка?', 'Доставка в моє місто - у Белек, Махмутлар, Анталію?', 'Де забрати в Аланії?'],
+      faq_a: [
+        'Ціна стоїть на кожній картці в каталозі вище - це і є весь прайс. Він завжди актуальний: ціни змінює власник у чаті, і вони одразу змінюються на сайті.',
+        'З Центрального ринку Харкова - легендарного Благбазу (Благовіщенського базару), куди харків\'яни поколіннями ходять по сало, м\'ясо й ковбаси. Привозимо з України тричі на тиждень.',
+        'Наявність видно на кожній картці під ціною: «В наявності», «Залишилось ~1,5 кг» або «Закінчилося». Якщо закінчилося - натисніть «Повідомити про поставку», і ми напишемо, коли привеземо, або «Замовити до поставки», і товар потрапить у замовлення як «під замовлення».',
+        'Привозимо з України тричі на тиждень. День наступної поставки призначає Марго: щойно вона його назвала, він з\'являється на картках товарів, що закінчилися. Зараз: {nb}.',
+        'Аланія, Махмутлар та найближчі райони - кур\'єр {c1} (безкоштовно від {f1}). Белек, Анталія, Стамбул і будь-яке інше місто - карго {c2} (безкоштовно від {f2}), 2-3 дні. У кошику оберіть «Інше місто», і ми порахуємо.',
+        'Самовивіз в Аланії безкоштовний. Адресу та години ми надішлемо в підтвердженні замовлення.'],
+      nb_none: 'день поки не призначено', nb_day: 'найближча: {d}',
+      foot_phone: 'Номер телефону', foot_wa: 'WhatsApp', demo_word: '(демо)', legal_dlv_link: 'Доставка та оплата', legal_data_link: 'Персональні дані', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Питання',
+      owner_link: 'Як це бачить власник', owner_cap: 'Так замовлення, наявність і ціни веде Марго: чат у Telegram, без кабінету',
+      foot_note: 'Демо. Ціни - з прайсу Instagram від 08.10.2026 і повідомлень Марго в групі. Ціна {ph} стоїть у позицій без підтвердженої ціни ({n} із {N}) - це заповнювач. Товари з ціною в доларах рахуються в доларах, окремою сумою. Вартість доставки, способи оплати, номер телефону, WhatsApp та адреса самовивозу - заповнювачі до розмови з власниками.',
+      usd_note: 'ціна в $, у кошику - окремою сумою в $',
+      producer: 'Виробник: {b}',
+      cb_few: 'Залишилось {q}', cb_items: ['товар', 'товари', 'товарів'], cb_sections: 'Розділи', cb_all: 'Усі товари', cb_in_cart_cap: 'У кошику', cb_live_in: 'У кошику: {q}', cb_live_out: 'Видалено з кошика', cb_switch: 'Картки', cb_add: 'У кошик', cb_next_batch: 'Найближча поставка', cb_in_cart: 'У кошику: {q}. Відкрити кошик',
+      cart_title: 'Кошик', cart_empty: 'Кошик порожній. Оберіть продукти в каталозі.', to_catalog: 'До каталогу', subtotal: 'Продукти', free: 'безкоштовно', total: 'Разом',
+      total_dlv: 'Разом з доставкою', min_note: 'Мінімальне замовлення {m}. Не вистачає {x}.', min_btn: 'Мінімальне замовлення {m}', pos: ['позиція', 'позиції', 'позицій'],
+      checkout: 'Оформлення', f_name: 'Ім\'я', f_name_ph: 'Як до вас звертатися', f_phone: 'Номер телефону (Telegram або WhatsApp)', f_city: 'Місто', city_alanya: 'Аланія', city_other: 'Інше місто', city_ph: 'Яке місто',
+      f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Бажана дата доставки (необов\'язково)', f_date_ph: 'Обрати в календарі', no_date: 'Без дати', prev_m: 'Попередній місяць', next_m: 'Наступний місяць',
+      f_comment: 'Коментар', f_comment_ph: 'Наприклад: подзвонити перед доставкою', send: 'Надіслати замовлення', err_contact: 'Вкажіть ім\'я та номер телефону, щоб ми могли підтвердити замовлення.', err_city: 'Вкажіть місто для карго.',
+      dlv_pickup: 'Самовивіз в Аланії', dlv_pickup_note: 'Адресу та години надішлемо в підтвердженні', dlv_alanya: 'Кур\'єр по Аланії', dlv_cargo: 'Карго по Туреччині', dlv_cargo_note: 'Трек-номер надішлемо в Telegram.',
+      eta_pickup: 'сьогодні або завтра', eta_alanya: 'сьогодні або завтра', eta_cargo: '2-3 дні', free_from: 'безкоштовно від {f}',
+      pay_card: 'Переказ на українську картку (гривня)', pay_cash: 'Готівка при отриманні',
+      done_title: 'Замовлення прийнято', done_no: 'Замовлення', done_date: 'бажана дата', tg_btn: 'Написати в Telegram', back: 'Повернутися в каталог',
+      done_owner: 'Замовлення вже у власника: відкрийте «Як це бачить власник».',
+      n_title: 'Повідомити про поставку', n_for: 'Коли привеземо «{n}», напишемо вам.', n_send: 'Повідомте мене', n_ok: 'Записали', n_ok_t: 'Напишемо в Telegram або WhatsApp, щойно «{n}» приїде.', n_close: 'Закрити',
+      consent_pre: 'Надсилаючи замовлення, ви погоджуєтеся з ', consent_link: 'обробкою даних для доставки', consent_post: '.',
+      legal_dlv: { h: 'Доставка та оплата', items: [
+        ['Як приймаємо замовлення', 'Замовлення на сайті - це заявка. Протягом години ми підтверджуємо його в Telegram або WhatsApp і називаємо точну вагу та суму: вагові продукти зважуємо, тому підсумок може трохи відрізнятися від суми в кошику. Мінімальне замовлення {min} - для суми в лірах; якщо в замовленні лише товари в доларах, мінімуму немає. Позиції «під замовлення» привозимо з найближчою поставкою.'],
+        ['Аланія та околиці', 'Аланія, Махмутлар і найближчі райони - кур\'єр {c1} {demo}, безкоштовно від {f1} {demo}, сьогодні або завтра. Самовивіз в Аланії безкоштовний, адресу та години надішлемо в підтвердженні замовлення.'],
+        ['Уся Туреччина - карго', 'Белек, Анталія, Стамбул і будь-яке інше місто - карго {c2} за відправлення {demo}, безкоштовно від {f2} {demo}, термін 2-3 дні. Щойно відправили, надсилаємо трек-номер у Telegram.'],
+        ['Оплата', 'Переказ на українську картку (гривня) або готівка при отриманні {demo}. Номер картки для переказу надсилаємо разом з точною сумою після підтвердження. Ціни - у турецьких лірах (₺). Товари з ціною в доларах ($) вказані й рахуються в доларах, окремою сумою; реквізити для оплати надсилаємо разом із підтвердженням.'],
+        ['При отриманні', 'Перевірте замовлення при отриманні. Якщо щось не так, напишіть нам у Telegram t.me/ukrtovari.'],
+        ['Якщо вас немає на місці або адреса неправильна', '[уточнити в Марго: що робимо, якщо одержувача немає на місці або адресу вказано неправильно]'],
+        ['Повернення та заміна', '[уточнити в Марго: повернення та заміна продуктів]'],
+        ['', 'Вартість доставки та способи оплати - демо, до погодження з власниками.']] },
+      legal_data: { h: 'Персональні дані', items: [
+        ['Хто отримує дані', 'Дані, які ви залишаєте під час замовлення, отримує власник магазину «{brand}».'],
+        ['Що ми отримуємо', 'Ім\'я, номер телефону (для зв\'язку в Telegram або WhatsApp), місто та деталі доставки, які ви вкажете, спосіб оплати, бажану дату, коментар і склад замовлення. У формі «Повідомити про поставку» - ім\'я та номер телефону.'],
+        ['Навіщо', 'Лише щоб прийняти, підтвердити й доставити замовлення та зв\'язатися з вами щодо нього. З форми «Повідомити про поставку» - щоб написати, коли товар привеземо.'],
+        ['Хто ще бачить', 'Кур\'єр або карго-служба отримують лише те, що потрібно для доставки. Ми не продаємо ваші дані.'],
+        ['Що зберігається у вашому браузері', 'Сайт зберігає кошик, обрану мову та дані форми (ім\'я, номер телефону, місто, спосіб доставки та оплати) у пам\'яті браузера (localStorage) на вашому пристрої, щоб наступного разу не вводити їх знову. Їх можна видалити, очистивши дані сайту в налаштуваннях браузера.'],
+        ['Скільки зберігаємо', '[уточнити в Марго: термін зберігання даних замовлень]'],
+        ['Як виправити або видалити дані', 'Напишіть нам у Telegram t.me/ukrtovari або в Instagram @ukr.product.alanya.']] }
+    },
+    en: {
+      brand: 'Ukrainian products', brand_sub: 'Alanya', brand_full: 'Ukrainian products · Alanya', foot_tag: 'delivery across Turkey',
+      hero_h1: 'Ukrainian food in Alanya',
+      hero_p: '<b>Fresh from Ukraine</b> three times a week. Same-day delivery in Alanya, 2-3 days by cargo anywhere in Turkey.',
+      hero_alt: 'Salo, sausages, caviar, sturgeon and kabanosy from the range on a dark background',
+      cta_catalog: 'Browse the catalog', cta_special: 'Special order',
+      sp_hint: 'We bring more than food from Ukraine (cosmetics, household goods, kids\' products) - tell us what you need. Margo will check whether we can bring it, plus the price and timing, and we\'ll get back to you.',
+      sp_what: 'What do you need?', sp_what_ph: 'Any item: name, brand', sp_qty: 'Quantity', sp_qty_ph: 'For example: 2 kg or 3 pcs',
+      sp_contact: 'Telegram or phone (WhatsApp)', sp_contact_ph: '@username or +90 5xx xxx xx xx', sp_comment: 'Comment (optional)', sp_send: 'Send request',
+      sp_err_what: 'Tell us what you need.', sp_err_contact: 'Add your Telegram (@username) or phone so we can write to you.', sp_err_contact_bad: 'Use @username for Telegram, or a phone number with at least 9 digits.',
+      done_msg: 'Your order has been received. We\'ll contact you to discuss the details.',
+      how1: '<b>Choose</b> products and weight - the cart totals it instantly.',
+      how2: '<b>Confirm</b> your order: name, phone, delivery method. No sign-up.',
+      how3: '<b>We confirm</b> within an hour on Telegram or WhatsApp with the exact weight and total.',
+      cat_title: 'Catalog', cat_sub: 'Prices per kg, per 100 g or per item. Final weight is confirmed after weighing.', chip_all: 'All',
+      cart: 'Cart', st_in_stock: 'In stock', st_few_left: 'Only a few left', st_sold_out: 'Sold out', st_new_batch: 'Just arrived', st_preorder: 'Pre-order open', st_not_now: 'Not available yet',
+      few_qty: '~{n} kg', next_batch: 'Next batch: {d}', preorder_day: 'Orders for: {d}',
+      add: '+ Add to cart', add_pre: 'Pre-order', added: 'Added', notify: 'Notify me when back in stock', pre_next: 'Pre-order', pre_tag: 'pre-order',
+      weight: 'Weight', less: 'Less', more: 'More', remove: 'Remove',
+      about_title: 'About us', about_p: 'We bring from Ukraine three times a week. Ukrainian products in Turkey. Delivery all over Turkey.',
+      about_market: 'Sourced from Kharkiv Central Market (Blagbaz)', about_demo: 'Demo text until agreed with the owners.',
+      rev_more: 'Read more', rev_hint: 'swipe', rev_prev: 'Previous reviews', rev_next: 'Next reviews', rev_full: 'Full review', rev_title: 'Reviews', rev_sub: 'Real customer messages, word for word', 
+      dlv_title: 'How we deliver',
+      dlv1: 'Alanya and nearby', dlv1t: 'Courier {c1}, free on orders over {f1}. Free pickup in Alanya. Today or tomorrow.',
+      dlv2: 'Anywhere in Turkey by cargo', dlv2t: '{c2} per shipment, free on orders over {f2}. 2-3 days.',
+      dlv3: 'Tracking number on Telegram', dlv3t: 'Once your order ships, you get the tracking number and estimated arrival.',
+      faq_title: 'Questions', faq_q: [
+        'What are your prices, and where is the full price list?', 'Where do your products come from?', 'Is it in stock?', 'When is the next batch?', 'Do you deliver to my city (Belek, Mahmutlar, Antalya)?', 'Where can I pick up in Alanya?'],
+      faq_a: [
+        'The price is on every card in the catalog above - that is the full price list. It is always up to date: Margo changes prices in her chat and the site updates instantly. Items priced in dollars are shown and totalled in dollars, as a separate sum.',
+        'From Kharkiv\'s Central Market - the legendary Blagbaz (Blagoveshchensky Bazaar), where Kharkiv families have bought salo, meat and sausages for generations. We bring products from Ukraine three times a week.',
+        'Each card shows availability under the price: "In stock", "Only ~1.5 kg left" or "Sold out". If an item is sold out, tap "Notify me when back in stock" and we\'ll message you when it arrives, or tap "Pre-order" to add it to your order as a pre-order.',
+        'We bring goods from Ukraine three times a week. Margo sets the date of the next batch, and as soon as she does, it appears on the sold-out cards. Right now: {nb}.',
+        'Alanya, Mahmutlar and nearby areas - courier {c1} (free from {f1}). Belek, Antalya, Istanbul and any other city - cargo {c2} (free from {f2}), 2-3 days. Choose "Other city" in the cart and we\'ll sort it out.',
+        'Pickup in Alanya is free. We\'ll send the address and opening hours with your order confirmation.'],
+      nb_none: 'no day set yet', nb_day: 'next: {d}',
+      foot_phone: 'Phone', foot_wa: 'WhatsApp', demo_word: '(demo)', legal_dlv_link: 'Delivery and payment', legal_data_link: 'Personal data', nav_catalog: 'Catalog', nav_delivery: 'Delivery', nav_faq: 'Questions',
+      owner_link: 'How the owner sees it', owner_cap: 'This is how Margo runs orders, stock and prices: a Telegram chat, no back office',
+      foot_note: 'Demo. Prices come from the Instagram price list of 08.10.2026 and Margo\'s messages in the group. The price {ph} marks items without a confirmed price ({n} of {N}) - it is a placeholder. Dollar-priced goods are totalled in dollars, as a separate sum. Delivery costs, payment methods, phone, WhatsApp and pickup address are placeholders until we talk to the owners. TRY = Turkish lira (₺).',
+      usd_note: 'price in $, totalled separately in $ in the cart',
+      producer: 'Producer: {b}',
+      cb_few: 'Only {q} left', cb_items: ['item', 'items', 'items'], cb_sections: 'Sections', cb_all: 'All products', cb_in_cart_cap: 'In your cart', cb_live_in: 'In your cart: {q}', cb_live_out: 'Removed from cart', cb_switch: 'Cards', cb_add: 'Add to cart', cb_next_batch: 'With the next batch', cb_in_cart: 'In your cart: {q}. Open cart',
+      cart_title: 'Cart', cart_empty: 'Your cart is empty. Browse the catalog to add products.', to_catalog: 'Browse the catalog', subtotal: 'Subtotal', free: 'free', total: 'Total',
+      total_dlv: 'Total with delivery', min_note: '{x} more to reach the minimum order of {m}.', min_btn: 'Minimum order {m}', pos: ['item', 'items', 'items'],
+      checkout: 'Checkout', f_name: 'Name', f_name_ph: 'What should we call you', f_phone: 'Phone (Telegram or WhatsApp)', f_city: 'City', city_alanya: 'Alanya', city_other: 'Other city', city_ph: 'Which city',
+      f_dlv: 'Delivery', f_pay: 'Payment', f_date: 'Preferred delivery date (optional)', f_date_ph: 'Pick a date', no_date: 'No date', prev_m: 'Previous month', next_m: 'Next month',
+      f_comment: 'Comment', f_comment_ph: 'e.g. call before delivery', send: 'Confirm order', err_contact: 'Add your name and phone so we can confirm the order.', err_city: 'Enter your city for cargo delivery.',
+      dlv_pickup: 'Pickup in Alanya', dlv_pickup_note: 'We\'ll send the address and hours with your confirmation', dlv_alanya: 'Courier in Alanya', dlv_cargo: 'Cargo across Turkey', dlv_cargo_note: 'We\'ll send the tracking number on Telegram.',
+      eta_pickup: 'today or tomorrow', eta_alanya: 'today or tomorrow', eta_cargo: '2-3 days', free_from: 'free from {f}',
+      pay_card: 'Transfer to a Ukrainian card (UAH)', pay_cash: 'Cash on delivery',
+      done_title: 'Order received', done_no: 'Order', done_date: 'preferred date', tg_btn: 'Message us on Telegram', back: 'Back to catalog',
+      done_owner: 'The order is already with the owner: open "How the owner sees it".',
+      n_title: 'Notify me when back in stock', n_for: 'We\'ll let you know when "{n}" is back in stock.', n_send: 'Notify me', n_ok: 'You\'re on the list', n_ok_t: 'We\'ll message you on Telegram or WhatsApp as soon as "{n}" is back.', n_close: 'Close',
+      consent_pre: 'By confirming your order, you agree to the ', consent_link: 'processing of your data for delivery', consent_post: '.',
+      legal_dlv: { h: 'Delivery and payment', items: [
+        ['How we take an order', 'An order placed on the site is a request. Within an hour we confirm it on Telegram or WhatsApp with the exact weight and total: weighed goods are weighed, so the total can differ slightly from the cart. Minimum order {min} - for the lira part; if the order has only dollar-priced goods, there is no minimum. Pre-order items arrive with the next batch.'],
+        ['Alanya and nearby', 'Alanya, Mahmutlar and nearby areas - courier {c1} {demo}, free from {f1} {demo}, today or tomorrow. Pickup in Alanya is free, we send the address and hours in the order confirmation.'],
+        ['All of Turkey - cargo', 'Belek, Antalya, Istanbul and any other city - cargo {c2} per shipment {demo}, free from {f2} {demo}, 2-3 days. As soon as it ships, we send the tracking number on Telegram.'],
+        ['Payment', 'Transfer to a Ukrainian card (UAH) or cash on delivery {demo}. We send the card number for the transfer together with the exact total after confirmation. Prices are in Turkish lira (₺). Goods priced in dollars ($) are priced and totalled in dollars, as a separate sum; we send the payment details with the confirmation.'],
+        ['On receipt', 'Check your order when you receive it. If something is wrong, write to us on Telegram t.me/ukrtovari.'],
+        ['If you\'re not home or the address is wrong', '[to confirm with Margo: what happens if nobody is there to receive the order or the address is wrong]'],
+        ['Returns and replacement', '[to confirm with Margo: returns and replacement of food]'],
+        ['', 'Delivery costs and payment methods are demo values until agreed with the owners.']] },
+      legal_data: { h: 'Personal data', items: [
+        ['Who receives the data', 'The data you leave when ordering goes to the owner of the shop "{brand}".'],
+        ['What we receive', 'Your name, phone (to reach you on Telegram or WhatsApp), city and the delivery details you give, payment method, preferred date, comment and the contents of the order. In the "Notify me when back in stock" form - name and phone.'],
+        ['Why', 'Only to take, confirm and deliver your order and to contact you about it. From the "Notify me when back in stock" form - to write to you when the item arrives.'],
+        ['Who else sees it', 'The courier or cargo service gets only what the delivery needs. We do not sell your data.'],
+        ['What is kept in your browser', 'The site keeps your cart, chosen language and form details (name, phone, city, delivery and payment method) in the browser storage (localStorage) on your device, so you do not have to type them again next time. You can delete them by clearing the site data in your browser settings.'],
+        ['How long we keep it', '[to confirm with Margo: how long order data is kept]'],
+        ['How to correct or delete your data', 'Write to us on Telegram t.me/ukrtovari or on Instagram @ukr.product.alanya.']] }
+    }
+  };
+
+  var LOC = { ru: 'ru-RU', uk: 'uk-UA', en: 'en-GB' };
+  var lang = E.loadLang();
+  function t(k, vars) {
+    var s = (I18N[lang] && I18N[lang][k] != null) ? I18N[lang][k] : (I18N.ru[k] != null ? I18N.ru[k] : k);
+    if (vars && typeof s === 'string') Object.keys(vars).forEach(function (v) { s = s.split('{' + v + '}').join(vars[v]); });
+    return s;
+  }
+  function $(s, r) { return (r || document).querySelector(s); }
+  function el(tag, attrs, children) {
+    var n = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === 'class') n.className = attrs[k];
+      else if (k === 'html') n.innerHTML = attrs[k];
+      else if (k === 'text') n.textContent = attrs[k];
+      else if (k.indexOf('on') === 0) n.addEventListener(k.slice(2), attrs[k]);
+      else n.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) { if (c) n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return n;
+  }
+  /* responsive photo: srcset/width/height from img/w/dims.js (written by assets/make-images.py). A photo missing there
+     renders as its plain JPG; a webp that fails to load (stale dims.js) drops the srcset and falls back to the JPG src. */
+  /* the hero photo is the LCP: every other photo the script draws waits until it is in (or 4 s at most), so a phone on
+     a slow link spends its first bandwidth on the hero instead of on cards that sit below the fold anyway */
+  var held = [], heroIn = false;
+  function heroLoaded() {
+    if (heroIn) return; heroIn = true;
+    held.forEach(function (n) {
+      var ss = n.getAttribute('data-srcset');
+      if (ss) { n.setAttribute('srcset', ss); n.removeAttribute('data-srcset'); }
+      n.setAttribute('src', n.getAttribute('data-src')); n.removeAttribute('data-src');
+    });
+    held = [];
+  }
+  (function () {
+    var h = document.getElementById('heroImg');
+    if (!h || h.complete) { heroIn = true; return; }
+    h.addEventListener('load', heroLoaded); h.addEventListener('error', heroLoaded); setTimeout(heroLoaded, 4000);
+  })();
+  function rimg(src, sizes, attrs) {
+    var a = {}, d = window.IMG_DIMS && window.IMG_DIMS[src];
+    Object.keys(attrs || {}).forEach(function (k) { a[k] = attrs[k]; });
+    a.decoding = 'async';
+    if (d) {
+      var stem = 'img/w/' + src.replace(/^img\//, '').replace(/\.(jpe?g|png)$/i, '') + (d[3] === 'card' ? '-card' : '');
+      a.width = d[0]; a.height = d[1];
+      a.sizes = typeof sizes === 'function' ? sizes(d) : sizes;
+      a.srcset = d[2].map(function (w) { return stem + '-' + w + '.webp ' + w + 'w'; }).join(', ');
+      a.onerror = function () { if (this.hasAttribute('srcset')) { this.removeAttribute('srcset'); this.removeAttribute('sizes'); } };
+    }
+    if (heroIn) a.src = src;
+    else { a['data-src'] = src; if (a.srcset) { a['data-srcset'] = a.srcset; delete a.srcset; } }
+    var n = el('img', a);
+    if (!heroIn) held.push(n);
+    return n;
+  }
+  /* card slot width per grid breakpoint (site.css .grid + .wrap). Product photos come pre-cropped to the 4:5 frame
+     (kind "card" in dims.js), so they are drawn exactly at slot width; an uncropped photo would be drawn wider by
+     1.25 * w/h under object-fit: cover - sizes always says the drawn width, not the slot */
+  function cardSizes(d) {
+    var f = d[3] === 'card' ? 1 : Math.max(1, 1.25 * d[0] / d[1]), k = function (x) { return Math.round(x * f * 10000) / 10000; };
+    return '(min-width: 1212px) ' + Math.round(282 * f) + 'px, (min-width: 960px) calc((100vw - 86px) * ' + k(0.25) + '), (min-width: 640px) calc((100vw - 60px) * ' + k(1 / 3) + '), calc((100vw - 42px) * ' + k(0.5) + ')';
+  }
+  var STAMP_SIZES = '(min-width: 1212px) 272px, (min-width: 960px) 24vw, (min-width: 640px) 32vw, 48vw';
+  var REVIEW_SIZES = '(min-width: 362px) 262px, calc(78vw - 20px)';
+  function icon(name, cls) { var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', cls || 'ico'); var u = document.createElementNS('http://www.w3.org/2000/svg', 'use'); u.setAttribute('href', '#' + name); s.appendChild(u); return s; }
+  /* CEO 10.10 (same rule as the real bot, bot-engine catalog.ts name()): the name a customer reads carries NO producer -
+     cards, cart, order confirmation and the notify form all use this. The producer stays in the data (brand / brand_ru /
+     brand_en) and in search; if it is ever shown, it goes through E.brandFor(it, lang): RU brand_ru, UA brand, EN brand_en. */
+  function nm(it) { return it['name_' + lang] || it.name_ru; }
+  function ds(it) { return it['desc_' + lang] || it.desc_ru || ''; }
+  /* card description: the seller's caption with its own 2-line clamp (no producer line: CEO 10.10) */
+  function descNodes(it) {
+    var d = ds(it), out = [];
+    if (d) out.push(el('p', { class: 'desc', text: d }));
+    return out;
+  }
+  function plural(n) {
+    var a = I18N[lang].pos;
+    if (lang === 'en') return n === 1 ? a[0] : a[1];
+    var m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return a[0];
+    if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return a[1];
+    return a[2];
+  }
+  var DAY_IDX = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
+  function dayLabel(d) {
+    if (!d) return '';
+    if (DAY_IDX[d] == null) return d;
+    return new Date(2024, 0, 1 + DAY_IDX[d]).toLocaleDateString(LOC[lang], { weekday: 'long' });
+  }
+
+  var C = E.applyOverrides(E.parseCatalog(CATALOG_RAW));
+  E.seedOrders();
+  var cart = E.loadCart();
+  var customer = E.loadCustomer() || {};
+  var state = { legal: 'dlv', cat: 'all', sel: {}, view: 'cart', calMonth: null, lastOrder: null, notifyItem: null,
+    form: { name: customer.name || '', phone: customer.phone || '', other: customer.cityMode === 'other', city: customer.cityMode === 'other' ? (customer.city || '') : '', delivery: customer.delivery || 'pickup', payment: (customer.payment && C.paymentById[customer.payment]) ? customer.payment : 'card', date: '', comment: '' } };
+
+  function delivName(d) { return t('dlv_' + d.id); }
+  function etaOf(d) { return t('eta_' + d.id); }
+  function fm(n) { return E.fmtMoney(n); }
+
+  /* ---------- static text ---------- */
+  function applyStatic() {
+    document.documentElement.lang = lang === 'uk' ? 'uk' : lang;
+    document.title = lang === 'en' ? 'Ukrainian products Alanya · C' : lang === 'uk' ? 'Українські продукти Аланія · C' : 'Украинские продукты Алания · C';
+    document.querySelectorAll('[data-i18n]').forEach(function (n) { n.textContent = t(n.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-html]').forEach(function (n) { n.innerHTML = t(n.getAttribute('data-i18n-html')); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function (n) { n.setAttribute('aria-label', t(n.getAttribute('data-i18n-aria'))); });
+    $('#heroImg').alt = t('hero_alt');
+    var nDemo = C.items.filter(function (it) { return it.demo; }).length;
+    $('#footNote').textContent = t('foot_note', { ph: fm(999), n: String(nDemo), N: String(C.items.length) });
+    $('#storyImg').alt = '';
+    document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang)); });
+    $('#sheetClose').setAttribute('aria-label', t('n_close'));
+    renderDelivery(); renderFaq(); renderReviews(); renderLegal();
+  }
+  function nextBatchDay() {
+    var d = null;
+    C.items.forEach(function (it) { if (E.itemState(it) === 'sold_out' && it.day && !d) d = it.day; });
+    return d;
+  }
+  function renderDelivery() {
+    var c1 = C.deliveryById.alanya, c2 = C.deliveryById.cargo;
+    var v = { c1: fm(c1.price), f1: fm(c1.free_from), c2: fm(c2.price), f2: fm(c2.free_from) };
+    var box = $('#dlvSteps'); box.innerHTML = '';
+    [['i-pin', 'dlv1', 'dlv1t'], ['i-truck', 'dlv2', 'dlv2t'], ['i-chat', 'dlv3', 'dlv3t']].forEach(function (r) {
+      box.appendChild(el('li', {}, [icon(r[0]), el('span', {}, [el('b', { text: t(r[1]) }), document.createTextNode(t(r[2], v))])]));
+    });
+  }
+  function renderFaq() {
+    var c1 = C.deliveryById.alanya, c2 = C.deliveryById.cargo, nd = nextBatchDay();
+    var v = { c1: fm(c1.price), f1: fm(c1.free_from), c2: fm(c2.price), f2: fm(c2.free_from), nb: nd ? t('nb_day', { d: dayLabel(nd) }) : t('nb_none') };
+    var box = $('#faqBox'); box.innerHTML = '';
+    I18N[lang].faq_q.forEach(function (q, i) {
+      box.appendChild(el('details', {}, [el('summary', { text: q }), el('p', { text: t('faq_a')[i].replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }) })]));
+    });
+  }
+  function renderReviews() {
+    var box = $('#reviewBox'); box.innerHTML = '';
+    /* round 4 (10.10): each review = a designed card. Tag comes from the build (file name / REVIEWS.md), nothing invented:
+       no stars, names, dates or counts. The pane crops the screenshot from the top; "read in full" opens the lightbox. */
+    C.reviews.forEach(function (r, i) {
+      var card;
+      var pane = r.img
+        ? el('button', { type: 'button', class: 'rv-pane', 'aria-label': t('rev_full') + (r.name ? ': ' + r.name : ''), onclick: function () { openRev(i, this); } }, [rimg(r.img, REVIEW_SIZES, { alt: '', loading: 'lazy', onload: function () { rvClip(this.parentNode); } })])
+        : el('button', { type: 'button', class: 'rv-pane txt', onclick: function () { openRev(i, this); } }, [el('p', { text: r.text })]);
+      card = el('figure', { class: 'rv-card' + (r.img ? '' : ' is-text') }, [pane, r.name ? el('figcaption', { class: 'rv-name', text: r.name }) : null]);
+      box.appendChild(card);
+    });
+    rvEdges();
+  }
+  /* a screenshot taller than its pane is cropped from the top and gets the fade; shorter ones stay centred */
+  function rvClip(pane) {
+    var im = pane && pane.querySelector('img'); if (!im || !im.naturalWidth) return;
+    pane.classList.toggle('clip', im.naturalHeight / im.naturalWidth * (pane.clientWidth - 20) > pane.clientHeight - 20);
+  }
+  /* carousel: arrows scroll by one card, edge masks follow the scroll position */
+  function rvStep() { var c = $('#reviewBox .rv-card'); return c ? c.getBoundingClientRect().width + 18 : 300; }
+  function rvEdges() {
+    var b = $('#reviewBox'), w = $('#rvWrap'); if (!b || !w) return;
+    var max = b.scrollWidth - b.clientWidth - 2;
+    w.classList.toggle('at-start', b.scrollLeft <= 2);
+    w.classList.toggle('at-end', b.scrollLeft >= max);
+    $('#rvPrev').disabled = b.scrollLeft <= 2; $('#rvNext').disabled = b.scrollLeft >= max;
+  }
+  $('#reviewBox').addEventListener('scroll', rvEdges, { passive: true });
+  window.addEventListener('resize', function () { rvEdges(); document.querySelectorAll('#reviewBox .rv-pane').forEach(rvClip); });
+  $('#rvPrev').addEventListener('click', function () { $('#reviewBox').scrollBy({ left: -rvStep(), behavior: 'smooth' }); });
+  $('#rvNext').addEventListener('click', function () { $('#reviewBox').scrollBy({ left: rvStep(), behavior: 'smooth' }); });
+  /* lightbox: full screenshot (or full text) of one review; Esc / x / backdrop close, focus returns to the card button */
+  var rvReturn = null;
+  function openRev(i, from) {
+    var r = C.reviews[i], body = $('#rvLbBody'), o = $('#ovlRev'); body.innerHTML = '';
+    if (r.img) body.appendChild(el('img', { src: r.img, alt: t('rev_full') + (r.name ? ': ' + r.name : '') }));
+    if (r.text) body.appendChild(el('p', { text: r.text }));
+    if (r.name) body.appendChild(el('p', { class: 'rv-name', text: r.name }));
+    o.setAttribute('aria-label', t('rev_full'));
+    rvReturn = from || null;
+    o.classList.add('on'); o.setAttribute('aria-hidden', 'false'); document.body.classList.add('locked');
+    body.scrollTop = 0; $('#rvClose').focus();
+  }
+  function closeRev() {
+    var o = $('#ovlRev'); if (!o.classList.contains('on')) return false;
+    o.classList.remove('on'); o.setAttribute('aria-hidden', 'true');
+    if (!$('#sheet').classList.contains('on')) document.body.classList.remove('locked');
+    if (rvReturn) rvReturn.focus({ preventScroll: true }); rvReturn = null;
+    return true;
+  }
+  $('#rvClose').addEventListener('click', closeRev);
+  $('#ovlRev').addEventListener('click', function (e) { if (e.target === this) closeRev(); });
+  $('#ovlRev').addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var f = [$('#rvClose'), $('#rvLbBody')]; var a = document.activeElement;
+    if (e.shiftKey && a === f[0]) { e.preventDefault(); f[1].focus(); }
+    else if (!e.shiftKey && a === f[1]) { e.preventDefault(); f[0].focus(); }
+  });
+  function renderLegal(which) {
+    if (which) state.legal = which;
+    var doc = I18N[lang][state.legal === 'data' ? 'legal_data' : 'legal_dlv'];
+    var c1 = C.deliveryById.alanya, c2 = C.deliveryById.cargo;
+    var v = { c1: fm(c1.price), f1: fm(c1.free_from), c2: fm(c2.price), f2: fm(c2.free_from), min: fm(C.rules.min_order), demo: t('demo_word'), brand: t('brand_full') };
+    var b = $('#legalBody'); b.innerHTML = '';
+    b.appendChild(el('h2', { text: doc.h }));
+    doc.items.forEach(function (x) {
+      var txt = x[1].replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; });
+      if (x[0]) b.appendChild(el('h3', { text: x[0] }));
+      b.appendChild(el('p', x[0] ? { text: txt, class: /^\[/.test(txt) ? 'ph' : '' } : { text: txt, style: 'color:var(--ink-3);font-size:13px' }));
+    });
+    b.scrollTop = 0;
+  }
+
+  /* ---------- catalog ---------- */
+  function renderChips() {
+    var box = $('#chips'), keep = box.scrollLeft; box.innerHTML = '';
+    [{ id: 'all', name: t('chip_all') }].concat(C.categories.map(function (c) { return { id: c.id, name: c['name_' + lang] || c.name_ru }; })).forEach(function (cat) {
+      box.appendChild(el('button', { class: 'chip', type: 'button', role: 'tab', 'aria-pressed': String(state.cat === cat.id), text: cat.name, onclick: function () { state.cat = cat.id; renderChips(); renderGrid(); chipLanding(); } }));
+    });
+    box.scrollLeft = keep; chipInView();
+  }
+  /* round 6 (M20): the pressed chip stays inside the row (a re-render or a language switch reset the row to its start) */
+  function chipInView() {
+    var box = $('#chips'), a = box.querySelector('[aria-pressed="true"]'); if (!a) return;
+    var br = box.getBoundingClientRect(), ar = a.getBoundingClientRect();
+    if (ar.left < br.left) box.scrollLeft += ar.left - br.left - 12;
+    else if (ar.right > br.right) box.scrollLeft += ar.right - br.right + 12;
+  }
+  /* round 6 (M19): switching category from deep in the list left the user below the end of the new, shorter list;
+     the new list now starts right under the sticky chip row */
+  function chipLanding() {
+    /* measured against where the row sits when stuck: after a shorter list the row may already have scrolled away with its section */
+    var cw = $('.chips-wrap'), g = $('#grid').getBoundingClientRect().top, c = parseFloat(getComputedStyle(cw).top) + cw.offsetHeight;
+    if (g < c) window.scrollTo({ top: window.scrollY + g - c - 4, behavior: 'instant' });
+  }
+  function selQty(it) { if (state.sel[it.id] == null) state.sel[it.id] = it.unit === 'pc' ? 1 : it.steps_g[0]; return state.sel[it.id]; }
+  function stampImg(st, cls) { return rimg('stamps/' + st + '_' + lang + '.png', STAMP_SIZES, { class: 'stamp ' + cls, alt: t('st_' + st), loading: 'lazy' }); }
+  function renderGrid() {
+    if (cardsB || $('#grid').classList.contains('cb')) { $('#grid').classList.toggle('cb', cardsB); $('#cbNote').hidden = !cardsB; $('#catalog').classList.toggle('cb-on', cardsB); if (cardsB) return renderGridB(); $('#cbSecbar').hidden = true; $('#qnBtn').hidden = true; }
+    var grid = $('#grid'); grid.innerHTML = '';
+    E.sortItems(C.items, state.cat).forEach(function (it) {
+      var st = E.itemState(it);
+      var qty = selQty(it);
+      var card = el('article', { class: 'card st-' + st });
+      var fig = el('figure', {}, [rimg(it.photo, cardSizes, { alt: nm(it), loading: 'lazy' })]);
+      /* new_batch: no stamp on cards (CEO 09.10); the state still drives the sort order */
+      if (st === 'few_left') fig.appendChild(stampImg('few_left', 'corner'));
+      else if (st === 'preorder') fig.appendChild(stampImg('preorder', 'corner'));
+      else if (st === 'sold_out') fig.appendChild(stampImg('sold_out', 'diag'));
+      else if (st === 'not_now') fig.appendChild(el('span', { class: 'lbl-notnow', text: t('st_not_now') }));
+      card.appendChild(fig);
+      var body = el('div', { class: 'body' });
+      body.appendChild(el('h3', { text: nm(it) }));
+      descNodes(it).forEach(function (n) { body.appendChild(n); });
+      var price = el('div', { class: 'price' }, [icon('i-scale'), el('span', { text: E.priceLabel(it, lang) })]);
+      body.appendChild(price);
+      if (it.currency === 'USD') body.appendChild(el('p', { class: 'stline' }, [el('span', { class: 'usd', text: t('usd_note') })]));
+      /* state line */
+      if (st === 'in_stock' || st === 'new_batch') body.appendChild(el('p', { class: 'stline in' }, [el('span', { class: 'dot' }), el('span', { text: t('st_in_stock') })]));
+      if (st === 'few_left') body.appendChild(el('p', { class: 'stline' }, [el('span', { text: t('st_few_left') }), it.qty ? el('b', { text: t('few_qty', { n: (lang === 'en' ? String(it.qty) : String(it.qty).replace('.', ',')) }) }) : null]));
+      if (st === 'preorder') body.appendChild(el('p', { class: 'stline day' }, [icon('i-cal'), el('span', { text: it.day ? t('preorder_day', { d: dayLabel(it.day) }) : t('st_preorder') })]));
+      if (st === 'sold_out') body.appendChild(el('p', { class: 'stline' }, [el('span', { text: it.day ? t('next_batch', { d: dayLabel(it.day) }) : t('st_sold_out') })]));
+      if (st === 'not_now') body.appendChild(el('p', { class: 'stline', text: t('st_not_now') }));
+      /* chooser + button */
+      if (st !== 'not_now') {
+        if (it.unit === 'pc') {
+          var out = el('output', { text: qty + ' ' + (lang === 'en' ? 'pc' : 'шт') });
+          body.appendChild(el('div', { class: 'counter' }, [
+            el('button', { type: 'button', 'aria-label': t('less'), text: '−', onclick: function () { state.sel[it.id] = Math.max(1, selQty(it) - 1); out.textContent = E.fmtWeight(it, state.sel[it.id], lang); } }),
+            out,
+            el('button', { type: 'button', 'aria-label': t('more'), text: '+', onclick: function () { state.sel[it.id] = Math.min(5, selQty(it) + 1); out.textContent = E.fmtWeight(it, state.sel[it.id], lang); } })
+          ]));
+          out.textContent = E.fmtWeight(it, qty, lang);
+        } else {
+          var w = el('div', { class: 'wchips', role: 'group', 'aria-label': t('weight') });
+          it.steps_g.forEach(function (g) {
+            var b = el('button', { class: 'wchip', type: 'button', 'aria-pressed': String(g === qty), text: E.fmtWeight(it, g, lang), onclick: function () { state.sel[it.id] = g; Array.prototype.forEach.call(w.children, function (x) { x.setAttribute('aria-pressed', String(x === b)); }); } });
+            w.appendChild(b);
+          });
+          body.appendChild(w);
+        }
+        var label = st === 'sold_out' ? t('pre_next') : st === 'preorder' ? t('add_pre') : t('add');
+        var add = el('button', { class: 'btn add' + (st === 'sold_out' ? ' pre-next' : ''), type: 'button', text: label, onclick: function () {
+          cart = st === 'sold_out' ? E.cartAddPre(cart, it.id, selQty(it)) : E.cartAdd(cart, it.id, selQty(it)); E.saveCart(cart); renderCartUI();
+          add.textContent = t('added'); add.classList.add('done');
+          setTimeout(function () { add.textContent = label; add.classList.remove('done'); }, 1100);
+        } });
+        if (st === 'sold_out') body.appendChild(el('button', { class: 'btn add ghost', type: 'button', text: t('notify'), onclick: function () { state.notifyItem = it.id; openSheet('notify'); } }));
+        body.appendChild(add);
+      }
+      card.appendChild(body);
+      grid.appendChild(card);
+    });
+  }
+
+  /* ---------- 10.10 card design B (comparison, off by default) ----------
+     "#cards-b" in the address turns it on; the A/B switch above the chips then stays for the session. Full-bleed photo,
+     name + big price + state pill top-left, weight chips and a glass bar (when you get it + add button) at the bottom.
+     Real data only: no ratings, no delivery minutes, no favourites. Every A function is kept: weight steps / pieces,
+     add, pre-order, "notify me" for sold out, the cart. */
+  var cardsMode = E.cardsVariant(location.hash), cardsB = E.cardsIsB(location.hash);   /* 10.10 CEO: B is the default; A only via #cards-a */
+  function cap(s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function cardSizesB() { return '(min-width: 1212px) 383px, (min-width: 960px) calc((100vw - 68px) / 3), (min-width: 640px) calc((100vw - 48px) / 2), calc(100vw - 32px)'; }
+  function cbSwitch() {
+    var sw = $('#cards-b'); sw.hidden = !cardsMode;
+    sw.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String((b.getAttribute('data-cv') === 'b') === cardsB)); });
+  }
+  function cartQty(id) { var q = 0; cart.forEach(function (l) { if (l.id === id) q += l.qty; }); return q; }
+  /* the card bar follows the cart: any change (card stepper, cart sheet, another tab) redraws only the bars that differ */
+  function syncCartBadges() {
+    if (!cardsB) return;
+    document.querySelectorAll('#grid .card.cb').forEach(function (card) {
+      var it = C.byId[card.getAttribute('data-id')], bar = card.querySelector('.cb-bar'); if (!it || !bar) return;
+      if (bar.getAttribute('data-q') !== String(cartQty(it.id))) fillBar(bar, it, E.cardInfo(it));
+    });
+  }
+  function fillBar(bar, it, ci) {
+    var st = ci.state, q = cartQty(it.id), card = bar.parentNode, qty = selQty(it);
+    bar.innerHTML = ''; bar.setAttribute('data-q', String(q)); bar.classList.toggle('in', !!q);
+    if (card) card.classList.toggle('in-cart', !!q);
+    if (!q) {
+      var ctl;
+      if (it.unit === 'pc') {
+        var out = el('output', { text: E.fmtWeight(it, qty, lang) });
+        ctl = el('div', { class: 'cb-qty cb-count' }, [
+          el('button', { type: 'button', 'aria-label': t('less'), text: '−', onclick: function () { state.sel[it.id] = Math.max(1, selQty(it) - 1); out.textContent = E.fmtWeight(it, state.sel[it.id], lang); } }),
+          out,
+          el('button', { type: 'button', 'aria-label': t('more'), text: '+', onclick: function () { state.sel[it.id] = Math.min(5, selQty(it) + 1); out.textContent = E.fmtWeight(it, state.sel[it.id], lang); } })
+        ]);
+      } else {
+        ctl = el('select', { class: 'cb-qty cb-sel', 'aria-label': t('weight'), onchange: function () { state.sel[it.id] = Number(this.value); } });
+        it.steps_g.forEach(function (g) { var o = el('option', { value: String(g), text: E.fmtWeight(it, g, lang) }); if (g === qty) o.selected = true; ctl.appendChild(o); });
+      }
+      bar.appendChild(ctl);
+      var label = st === 'sold_out' ? t('pre_next') : st === 'preorder' ? t('add_pre') : t('cb_add');
+      bar.appendChild(el('button', { class: 'cb-add' + (st === 'sold_out' ? ' pre-next' : ''), type: 'button', onclick: function () { cbChange(it, 'add'); } }, [icon('i-bag'), el('span', { text: label })]));
+      return;
+    }
+    /* in the cart: the left side says so (or "под заказ"), the right side is the only control - the stepper */
+    bar.appendChild(el('span', { class: 'cb-incap' }, [icon('i-check'), el('span', { text: ci.pre ? cap(t('pre_tag')) : t('cb_in_cart_cap') })]));
+    var w = E.fmtWeight(it, q, lang), last = E.stepQty(it, q, -1) === 0;
+    var plus = el('button', { type: 'button', 'data-dir': '1', 'aria-label': t('more'), text: '+', onclick: function () { cbChange(it, 1); } });
+    plus.disabled = E.stepQty(it, q, 1) === q;
+    bar.appendChild(el('div', { class: 'cb-step', role: 'group', 'aria-label': t('cb_live_in', { q: w }) }, [
+      el('button', { type: 'button', 'data-dir': '-1', 'aria-label': last ? t('remove') : t('less'), text: '−', onclick: function () { cbChange(it, -1); } }),
+      el('output', { text: w }),
+      plus
+    ]));
+  }
+  function cbLive(msg) { var n = $('#cbLive'); n.textContent = ''; setTimeout(function () { n.textContent = msg; }, 30); }
+  function cbChange(it, dir) {
+    var ci = E.cardInfo(it), card = document.querySelector('#grid .card.cb[data-id="' + it.id + '"]'), bar = card && card.querySelector('.cb-bar');
+    var kb = !!(bar && bar.contains(document.activeElement)), q = cartQty(it.id);
+    if (dir === 'add') cart = ci.state === 'sold_out' ? E.cartAddPre(cart, it.id, selQty(it)) : E.cartAdd(cart, it.id, selQty(it));
+    else cart = E.cartSet(cart, it.id, E.stepQty(it, q, dir));
+    E.saveCart(cart); renderCartUI();   /* cart bar sum/count + this card's bar (syncCartBadges) */
+    var nq = cartQty(it.id);
+    cbLive(nq ? t('cb_live_in', { q: E.fmtWeight(it, nq, lang) }) : t('cb_live_out'));
+    if (!bar) return;
+    var ctl = bar.querySelector('.cb-step') || bar.querySelector('.cb-add');
+    if (ctl) { ctl.classList.add('tick'); setTimeout(function () { ctl.classList.remove('tick'); }, 120); }
+    if (kb) { var f = nq ? bar.querySelector('.cb-step button[data-dir="' + (dir === -1 ? '-1' : '1') + '"]') : bar.querySelector('.cb-add'); if (f && f.disabled) f = bar.querySelector('.cb-step button'); if (f) f.focus({ preventScroll: true }); }
+  }
+  /* category tile photos: the best-looking card photo per category (CEO 10.10) */
+  var TILE_PHOTO = { salo: 'salo-solene', kovbasy: 'makkabi', sosysky: 'sosysky-salami', balyk: 'buzhenyna', kabanosy: 'okhotnychi-kovbasky', ikra_ryba: 'ikra-kety', syr_molochne: 'syr-cheese-cult', miaso: 'otbyvna', solodke: 'tort-kyivsky', inshe: 'salat-chuka' };
+  var TILE_SIZES = '(min-width: 1212px) 283px, (min-width: 960px) calc((100vw - 80px) / 4), (min-width: 640px) calc((100vw - 56px) / 3), calc((100vw - 42px) / 2)';
+  function cnt(n) { return n + ' ' + I18N[lang].cb_items[E.pluralIdx(n, lang)]; }
+  /* no smooth scrolling on this site (on purpose): an instant jump, the heading lands under the header + section bar */
+  function hdrH() { return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header')) || 60; }
+  function cbJump(target) {
+    if (!target) return;
+    target = target.querySelector('.cb-cat-h') || target;
+    window.scrollTo({ top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - hdrH() - 44 - 12), behavior: 'instant' });
+    cbSecbar();
+  }
+  /* slim bar under the header once the tiles are out of view: current section + "Разделы" back to the tiles */
+  var cbRaf = 0;
+  function cbSecbar() {
+    var bar = $('#cbSecbar'), tiles = $('#cbTiles');
+    if (!cardsB || !tiles) { bar.hidden = true; return; }
+    var line = hdrH() + 44 + 14, cat = $('#catalog').getBoundingClientRect();
+    var on = tiles.getBoundingClientRect().bottom < hdrH() + 8 && cat.bottom > line + 40;
+    bar.hidden = !on; if (!on) return;
+    var cur = null;
+    document.querySelectorAll('#grid .cb-cat').forEach(function (s) { if (s.getBoundingClientRect().top <= line + 1) cur = s; });
+    cur = cur || $('#grid .cb-cat');
+    bar.querySelector('b').textContent = cur.getAttribute('data-name');
+    bar.querySelector('small').textContent = cur.getAttribute('data-n');
+  }
+  window.addEventListener('scroll', function () { if (!cardsB || cbRaf) return; cbRaf = requestAnimationFrame(function () { cbRaf = 0; cbSecbar(); }); }, { passive: true });
+  window.addEventListener('resize', function () { if (cardsB) cbSecbar(); });
+  $('#cbSecBtn').addEventListener('click', function () { qnOpen(this); });
+  /* 10.10 quick sections (CEO): a floating "Разделы" pill reachable from anywhere; hidden while the tiles are on screen,
+     while the cart sheet / an overlay / the list itself is open. The list = the tiles, in the same order. */
+  var qnReturn = null;
+  function qnState() {
+    var tl = $('#cbTiles'), r = tl ? tl.getBoundingClientRect() : null;
+    return { b: cardsB, tilesOnScreen: !!(r && r.bottom > hdrH() && r.top < window.innerHeight), locked: document.body.classList.contains('locked'), open: !$('#qnSheet').hidden };
+  }
+  function qnUpdate() { $('#qnBtn').hidden = !E.quickNavVisible(qnState()); }
+  function qnOpen(from) {
+    if (!cardsB) return;
+    var list = $('#qnList'), groups = E.groupByCategory(C), total = 0; list.innerHTML = '';
+    groups.forEach(function (g) { total += g.items.length; });
+    var row = function (name, n, id) {
+      return el('li', {}, [el('button', { type: 'button', class: 'qn-item', onclick: function () { qnClose(false); cbJump($('#cat-' + id)); var h = $('#cat-' + id + ' .cb-cat-h'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); } } }, [el('span', { text: name }), el('small', { text: cnt(n) })])]);
+    };
+    list.appendChild(row(t('cb_all'), total, groups[0].cat.id));
+    groups.forEach(function (g) { list.appendChild(row(g.cat['name_' + lang] || g.cat.name_ru, g.items.length, g.cat.id)); });
+    qnReturn = from || $('#qnBtn');
+    $('#qnSheet').classList.toggle('from-top', qnReturn.id === 'cbSecBtn');
+    $('#qnSheet').hidden = false; document.body.classList.add('locked', 'qn-on');
+    var first = list.querySelector('button'); if (first) first.focus({ preventScroll: true });
+    qnUpdate();
+  }
+  function qnClose(restore) {
+    if ($('#qnSheet').hidden) return false;
+    $('#qnSheet').hidden = true; document.body.classList.remove('qn-on');
+    if (!$('#sheet').classList.contains('on') && !document.querySelector('.ovl.on')) document.body.classList.remove('locked');
+    qnUpdate(); cbSecbar();
+    if (restore !== false && qnReturn && document.contains(qnReturn) && !qnReturn.hidden) qnReturn.focus({ preventScroll: true });
+    qnReturn = null;
+    return true;
+  }
+  $('#qnBtn').addEventListener('click', function () { qnOpen(this); });
+  document.querySelectorAll('[data-qn-close]').forEach(function (n) { n.addEventListener('click', function () { qnClose(); }); });
+  $('#qnSheet').addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { e.stopPropagation(); qnClose(); return; }
+    if (e.key !== 'Tab') return;
+    var f = Array.prototype.slice.call($('#qnPanel').querySelectorAll('button')); if (!f.length) return;
+    var a = document.activeElement, i = f.indexOf(a);
+    if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+  });
+  new MutationObserver(qnUpdate).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('scroll', function () { if (cardsB) qnUpdate(); }, { passive: true });
+  window.addEventListener('resize', qnUpdate);
+  function renderGridB() {
+    var grid = $('#grid'); grid.innerHTML = '';
+    /* the delivery line is the same for every card: said once above the grid, not on each card */
+    var note = $('#cbNote'); note.hidden = false; note.lastChild.textContent = t('dlv_alanya') + ': ' + t('eta_alanya');
+    function cardB(it) {
+      var ci = E.cardInfo(it), st = ci.state, qty = selQty(it);
+      var card = el('article', { class: 'card cb st-' + st, 'data-id': it.id });
+      card.appendChild(rimg(it.photo, cardSizesB, { class: 'cb-photo', alt: nm(it), loading: 'lazy' }));
+      /* top-left: name, price + unit, one quiet state line */
+      var top = el('div', { class: 'cb-top' });
+      top.appendChild(el('h3', { class: 'cb-name', text: nm(it) }));
+      top.appendChild(el('p', { class: 'cb-price' }, [el('b', { text: E.fmtMoney(it.price, it.currency) }), el('span', { text: E.unitLabel(it, lang) })]));
+      var line = el('p', { class: 'cb-state s-' + st }, [el('i', { class: 'dot' })]);
+      if (st === 'few_left') line.appendChild(el('span', { text: it.qty ? t('cb_few', { q: t('few_qty', { n: (lang === 'en' ? String(it.qty) : String(it.qty).replace('.', ',')) }) }) : t('st_few_left') }));
+      else if (st === 'preorder') line.appendChild(el('span', { text: it.day ? t('preorder_day', { d: dayLabel(it.day) }) : t('st_preorder') }));
+      else if (st === 'sold_out') {
+        line.appendChild(el('span', { class: 'em', text: it.day ? t('next_batch', { d: dayLabel(it.day) }) : t('st_sold_out') }));
+        line.appendChild(el('button', { class: 'cb-notify', type: 'button', onclick: function () { state.notifyItem = it.id; openSheet('notify'); } }, [icon('i-bell'), el('span', { text: t('notify') })]));
+      }
+      else if (st === 'not_now') line.appendChild(el('span', { text: t('st_not_now') }));
+      else line.appendChild(el('span', { text: t('st_in_stock') }));
+      top.appendChild(line);
+      card.appendChild(top);
+      /* one glass bar: before the cart - quantity + add button; in the cart - a stepper (CEO 10.10) */
+      if (ci.buy) { var bar = el('div', { class: 'cb-bar' }); card.appendChild(bar); fillBar(bar, it, ci); }
+      return card;
+    }
+    /* 10.10 round 3: category tiles first (real photos), then the catalog grouped by category, one section each */
+    var groups = E.groupByCategory(C), total = 0;
+    groups.forEach(function (g) { total += g.items.length; });
+    var tiles = el('nav', { class: 'cb-tiles', id: 'cbTiles', 'aria-label': t('cb_sections') });
+    tiles.appendChild(el('a', { class: 'cb-tile all', href: '#cat-' + groups[0].cat.id, onclick: function (e) { e.preventDefault(); cbJump($('#cat-' + groups[0].cat.id)); } }, [
+      rimg('img/hero.jpg', '(min-width: 960px) 580px, (min-width: 640px) 66vw, 100vw', { class: 'cb-photo', alt: '', loading: 'lazy' }),
+      el('span', { class: 'cb-tl' }, [el('b', { text: t('cb_all') }), el('small', { text: cnt(total) })])
+    ]));
+    groups.forEach(function (g) {
+      var ph = C.byId[TILE_PHOTO[g.cat.id]] || g.items[0];
+      tiles.appendChild(el('a', { class: 'cb-tile', href: '#cat-' + g.cat.id, onclick: function (e) { e.preventDefault(); cbJump($('#cat-' + g.cat.id)); } }, [
+        rimg(ph.photo, TILE_SIZES, { class: 'cb-photo', alt: '', loading: 'lazy' }),
+        el('span', { class: 'cb-tl' }, [el('b', { text: g.cat['name_' + lang] || g.cat.name_ru }), el('small', { text: cnt(g.items.length) })])
+      ]));
+    });
+    grid.appendChild(tiles);
+    groups.forEach(function (g) {
+      var sec = el('section', { class: 'cb-cat', id: 'cat-' + g.cat.id, 'data-name': g.cat['name_' + lang] || g.cat.name_ru, 'data-n': cnt(g.items.length) });
+      sec.appendChild(el('h3', { class: 'cb-cat-h' }, [el('span', { text: g.cat['name_' + lang] || g.cat.name_ru }), el('small', { text: cnt(g.items.length) })]));
+      var box = el('div', { class: 'cb-cards' });
+      g.items.forEach(function (it) { box.appendChild(cardB(it)); });
+      sec.appendChild(box);
+      grid.appendChild(sec);
+    });
+    syncCartBadges();
+    cbSecbar(); if (typeof qnUpdate === 'function') qnUpdate();
+  }
+  $('#cards-b').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-cv]'); if (!b) return;
+    var next = b.getAttribute('data-cv') === 'b'; if (next === cardsB) return;
+    var g = $('#grid'), y0 = g.getBoundingClientRect().top;
+    cardsB = next; cbSwitch(); renderGrid();
+    if (y0 < 0) window.scrollTo({ top: window.scrollY + g.getBoundingClientRect().top - 120, behavior: 'instant' });
+  });
+  window.addEventListener('hashchange', function () {
+    var v = E.cardsVariant(location.hash); if (!v) return;
+    cardsMode = v; var next = v === 'b';
+    if (next !== cardsB) { cardsB = next; renderGrid(); }
+    cbSwitch();
+  });
+
+  /* ---------- cart UI ---------- */
+  function openSheet(view) {
+    state.view = view || 'cart';
+    renderSheet();
+    $('#sheet').classList.add('on'); $('#scrim').classList.add('on'); $('#bar').classList.remove('on');
+    $('#sheet').setAttribute('aria-hidden', 'false'); document.body.classList.add('locked');
+  }
+  /* round 6 (M16): with the on-screen keyboard up, keep the sheet above it (iOS shrinks only the visual viewport)
+     and keep the focused field inside the visible part of the sheet's scroll area, not under its foot */
+  var vv = window.visualViewport;
+  function fitSheet() {
+    var sh = $('#sheet'); if (!vv || !sh.classList.contains('on') || window.innerWidth >= 720) { sh.style.bottom = ''; sh.style.maxHeight = ''; return; }
+    var kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    if (kb > 60) { sh.style.bottom = kb + 'px'; sh.style.maxHeight = Math.round(vv.height * 0.94) + 'px'; } else { sh.style.bottom = ''; sh.style.maxHeight = ''; }
+    keepFocusVisible();
+  }
+  function keepFocusVisible() {
+    var a = document.activeElement, sc = $('#sheetBody');
+    if (!a || !sc.contains(a) || !/^(INPUT|TEXTAREA)$/.test(a.tagName)) return;
+    var r = a.getBoundingClientRect(), b = sc.getBoundingClientRect();
+    if (r.bottom > b.bottom - 12) sc.scrollTop += r.bottom - b.bottom + 24;
+    else if (r.top < b.top + 8) sc.scrollTop -= b.top - r.top + 24;
+  }
+  if (vv) { vv.addEventListener('resize', fitSheet); vv.addEventListener('scroll', fitSheet); }
+  window.addEventListener('resize', function () { setTimeout(keepFocusVisible, 60); });
+  $('#sheet').addEventListener('focusin', function () { setTimeout(keepFocusVisible, 320); });
+  function closeSheet() {
+    $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); $('#sheet').setAttribute('aria-hidden', 'true'); $('#sheet').style.bottom = ''; $('#sheet').style.maxHeight = '';
+    document.body.classList.remove('locked');
+    if (state.view === 'done' || state.view === 'notify' || state.view === 'notify_ok' || state.view === 'special' || state.view === 'special_ok') state.view = 'cart';
+    renderCartUI();
+  }
+  function renderCartUI() {
+    var f = state.form;
+    var t0 = E.totals(cart, f.delivery, C);
+    $('#cartCount').textContent = t0.count ? String(t0.count) : '';
+    $('#cartSum').textContent = t0.count ? E.fmtPair(t0.subtotal, t0.usd) : '';
+    $('#barLeft').textContent = t('cart_title') + ' · ' + t0.count + ' ' + plural(t0.count);
+    $('#barRight').textContent = E.fmtPair(t0.subtotal, t0.usd);
+    var sheetOpen = $('#sheet').classList.contains('on');
+    $('#bar').classList.toggle('on', t0.count > 0 && !sheetOpen);
+    syncCartBadges();
+    if (sheetOpen && (state.view === 'cart')) renderSheet();
+  }
+  function renderSheet() {
+    var body = $('#sheetBody'), foot = $('#sheetFoot');
+    body.innerHTML = ''; foot.innerHTML = '';
+    if (state.view === 'done') { $('#sheetTitle').textContent = t('done_title'); renderDone(body, foot); return; }
+    if (state.view === 'notify' || state.view === 'notify_ok') { renderNotify(body, foot); return; }
+    if (state.view === 'special' || state.view === 'special_ok') { renderSpecial(body, foot); return; }
+    $('#sheetTitle').textContent = t('cart_title');
+    var tt = E.totals(cart, state.form.delivery, C);
+    if (!tt.count) {
+      body.appendChild(el('p', { class: 'empty', text: t('cart_empty') }));
+      foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', text: t('to_catalog'), onclick: function () { closeSheet(); location.hash = '#catalog'; } }));
+      return;
+    }
+    tt.lines.forEach(function (l) {
+      var it = C.byId[l.id], step = E.cartStep(it), min = it.unit === 'pc' ? 1 : it.min_g;
+      var out = el('output', { text: E.fmtWeight(it, l.qty, lang) });
+      body.appendChild(el('div', { class: 'line' }, [
+        el('div', { class: 'nm', text: nm(it) + (l.pre ? ' · ' + t('pre_tag') : '') }),
+        el('div', { class: 'sum', text: E.fmtMoney(l.sum, l.cur) }),
+        el('div', { class: 'step' }, [
+          el('button', { type: 'button', 'aria-label': t('less'), text: '−', onclick: function () { var q = l.qty - step; cart = E.cartSet(cart, l.id, q < min ? 0 : q); E.saveCart(cart); renderCartUI(); } }),
+          out,
+          el('button', { type: 'button', 'aria-label': t('more'), text: '+', onclick: function () { cart = E.cartSet(cart, l.id, l.qty + step); E.saveCart(cart); renderCartUI(); } })
+        ]),
+        el('button', { class: 'rm', type: 'button', text: t('remove'), onclick: function () { cart = E.cartSet(cart, l.id, 0); E.saveCart(cart); renderCartUI(); } })
+      ]));
+    });
+    var d = C.deliveryById[state.form.delivery];
+    body.appendChild(el('div', { class: 'tots' }, [
+      el('div', {}, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })]),
+      el('div', {}, [el('span', { text: delivName(d) }), el('span', { class: tt.delivery ? '' : 'free', text: tt.delivery ? fm(tt.delivery) : t('free') })]),
+      el('div', { class: 'grand' }, [el('span', { text: t('total') }), el('span', { text: E.fmtPair(tt.total, tt.usd) })])
+    ]));
+    if (tt.belowMin) body.appendChild(el('p', { class: 'minnote', text: t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) }));
+    body.appendChild(renderForm());
+    foot.appendChild(el('div', { class: 'tot' }, [el('span', { text: t('total_dlv') }), el('b', { text: E.fmtPair(tt.total, tt.usd) })]));
+    var send = el('button', { class: 'btn fill wide', type: 'button', id: 'sendBtn', text: tt.belowMin ? t('min_btn', { m: fm(tt.minOrder) }) : t('send'), onclick: submit });
+    if (tt.belowMin) send.disabled = true;
+    foot.appendChild(send);
+    foot.appendChild(consentLine());
+    foot.appendChild(el('p', { class: 'err', id: 'formErr' }));
+  }
+  function field(label, input, value) { if (value != null) input.value = value; return el('div', { class: 'f' }, [el('label', { for: input.id, text: label }), input]); }
+  function renderForm() {
+    var f = state.form;
+    var form = el('div', { class: 'form' });
+    form.appendChild(el('h3', { text: t('checkout') }));
+    form.appendChild(field(t('f_name'), el('input', { type: 'text', id: 'fName', autocomplete: 'name', placeholder: t('f_name_ph'), value: f.name, oninput: function (e) { f.name = e.target.value; } })));
+    form.appendChild(field(t('f_phone'), el('input', { type: 'tel', id: 'fPhone', autocomplete: 'tel', inputmode: 'tel', placeholder: '+90 5xx xxx xx xx', value: f.phone, oninput: function (e) { f.phone = e.target.value; } })));
+    var cityBox = el('div', { class: 'f' }); cityBox.appendChild(el('span', { class: 'lbl', text: t('f_city') }));
+    var row = el('div', { class: 'row' });
+    var cityInput = el('input', { type: 'text', id: 'fCity', placeholder: t('city_ph'), value: f.other ? f.city : '', oninput: function (e) { f.city = e.target.value; } });
+    cityInput.style.display = f.other ? '' : 'none';
+    var bA = el('button', { class: 'chip', type: 'button', 'aria-pressed': String(!f.other), text: t('city_alanya'), onclick: function () { f.other = false; if (f.delivery === 'cargo') f.delivery = 'pickup'; renderSheet(); } });
+    var bO = el('button', { class: 'chip', type: 'button', 'aria-pressed': String(f.other), text: t('city_other'), onclick: function () { f.other = true; f.delivery = 'cargo'; if (f.payment === 'cash') f.payment = 'card'; renderSheet(); setTimeout(function () { var c = $('#fCity'); if (c) c.focus(); }, 50); } });
+    row.appendChild(bA); row.appendChild(bO);
+    cityBox.appendChild(row); cityBox.appendChild(cityInput); form.appendChild(cityBox);
+    var tt = E.totals(cart, f.delivery, C);
+    var dBox = el('div', { class: 'f' }, [el('span', { class: 'lbl', text: t('f_dlv') })]);
+    var radios = el('div', { class: 'radios', role: 'radiogroup' });
+    C.delivery.forEach(function (d) {
+      if (f.other && d.id !== 'cargo') return;
+      var price = d.free_from && tt.subtotal >= d.free_from ? 0 : d.price;
+      var lab = el('label', { class: 'radio' }, [
+        el('input', { type: 'radio', name: 'delivery', value: d.id, onchange: function () { f.delivery = d.id; if (d.id === 'cargo' && f.payment === 'cash') f.payment = 'card'; renderSheet(); } }),
+        el('span', {}, [el('b', { text: delivName(d) }), el('small', {}, [icon('i-clock'), document.createTextNode(etaOf(d) + (d.free_from ? ' · ' + t('free_from', { f: fm(d.free_from) }) : ''))])]),
+        el('span', { class: 'pr' + (price ? '' : ' free'), text: price ? fm(price) : t('free') })
+      ]);
+      var note = d.id === 'pickup' ? t('dlv_pickup_note') : d.id === 'cargo' ? t('dlv_cargo_note') : '';
+      if (note) lab.appendChild(el('span', { class: 'note', text: note }));
+      lab.querySelector('input').checked = f.delivery === d.id;
+      radios.appendChild(lab);
+    });
+    dBox.appendChild(radios); form.appendChild(dBox);
+    var pBox = el('div', { class: 'f' }, [el('span', { class: 'lbl', text: t('f_pay') })]);
+    var pr = el('div', { class: 'radios', role: 'radiogroup' });
+    C.payment.forEach(function (p) {
+      if (p.id === 'cash' && f.delivery === 'cargo') return;
+      var lab = el('label', { class: 'radio' }, [el('input', { type: 'radio', name: 'payment', value: p.id, onchange: function () { f.payment = p.id; } }), el('span', {}, [el('b', { text: t('pay_' + p.id) })]), el('span')]);
+      lab.querySelector('input').checked = f.payment === p.id;
+      pr.appendChild(lab);
+    });
+    pBox.appendChild(pr); form.appendChild(pBox);
+    form.appendChild(renderDate());
+    form.appendChild(field(t('f_comment'), el('textarea', { id: 'fComment', placeholder: t('f_comment_ph'), oninput: function (e) { f.comment = e.target.value; } }), f.comment));
+    return form;
+  }
+  function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function dateLabel(s) { if (!s) return ''; var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString(LOC[lang], { day: 'numeric', month: 'long' }); }
+  function renderDate() {
+    var f = state.form;
+    var box = el('div', { class: 'f' }, [el('span', { class: 'lbl', text: t('f_date') })]);
+    var cal = el('div', { class: 'cal', id: 'cal' }); cal.hidden = true;
+    var btn = el('button', { class: 'datebtn', type: 'button', id: 'dateBtn', 'aria-expanded': 'false', onclick: function () { cal.hidden = !cal.hidden; btn.setAttribute('aria-expanded', String(!cal.hidden)); if (!cal.hidden) drawCal(); } }, [
+      el('span', { class: f.date ? '' : 'ph', text: f.date ? dateLabel(f.date) : t('f_date_ph') }), icon('i-cal', 'ico')
+    ]);
+    box.appendChild(btn); box.appendChild(cal);
+    function drawCal() {
+      var today = new Date(); today.setHours(0, 0, 0, 0);
+      if (!state.calMonth) state.calMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      var m = state.calMonth; cal.innerHTML = '';
+      cal.appendChild(el('div', { class: 'nav' }, [
+        el('button', { type: 'button', 'aria-label': t('prev_m'), text: '‹', onclick: function () { state.calMonth = new Date(m.getFullYear(), m.getMonth() - 1, 1); drawCal(); } }),
+        el('b', { text: m.toLocaleDateString(LOC[lang], { month: 'long', year: 'numeric' }) }),
+        el('button', { type: 'button', 'aria-label': t('next_m'), text: '›', onclick: function () { state.calMonth = new Date(m.getFullYear(), m.getMonth() + 1, 1); drawCal(); } })
+      ]));
+      var dow = el('div', { class: 'dow' });
+      for (var k = 0; k < 7; k++) dow.appendChild(el('span', { text: new Date(2024, 0, 1 + k).toLocaleDateString(LOC[lang], { weekday: 'short' }) }));
+      cal.appendChild(dow);
+      var days = el('div', { class: 'days' });
+      var first = (m.getDay() + 6) % 7;
+      for (var i = 0; i < first; i++) days.appendChild(el('span', { class: 'pad' }));
+      var n = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
+      var limit = new Date(today.getTime() + 30 * 86400000);
+      for (var d = 1; d <= n; d++) (function (d) {
+        var dt = new Date(m.getFullYear(), m.getMonth(), d), s = iso(dt);
+        var b = el('button', { type: 'button', text: String(d), class: f.date === s ? 'sel' : '', onclick: function () { f.date = s; btn.firstChild.textContent = dateLabel(s); btn.firstChild.className = ''; cal.hidden = true; btn.setAttribute('aria-expanded', 'false'); } });
+        if (dt < today || dt > limit) b.disabled = true;
+        days.appendChild(b);
+      })(d);
+      cal.appendChild(days);
+      cal.appendChild(el('button', { class: 'clr', type: 'button', text: t('no_date'), onclick: function () { f.date = ''; btn.firstChild.textContent = t('f_date_ph'); btn.firstChild.className = 'ph'; cal.hidden = true; } }));
+    }
+    return box;
+  }
+  function submit() {
+    var f = state.form, err = $('#formErr');
+    if (!f.name.trim() || f.phone.replace(/\D/g, '').length < 9) { err.textContent = t('err_contact'); (f.name.trim() ? $('#fPhone') : $('#fName')).focus(); return; }
+    if (f.other && !f.city.trim()) { err.textContent = t('err_city'); $('#fCity').focus(); return; }
+    var tt = E.totals(cart, f.delivery, C);
+    if (tt.belowMin) return;
+    var cityRu = f.other ? f.city.trim() : 'Аланья';
+    var order = { customer: { name: f.name.trim(), phone: f.phone.trim(), city: cityRu }, delivery: f.delivery, payment: f.payment, date: f.date, comment: f.comment.trim(),
+      lines: tt.lines, subtotal: tt.subtotal, usd: tt.usd, deliveryPrice: tt.delivery, total: tt.total, status: 'new' };
+    E.saveOrder(order);
+    E.saveCustomer({ name: order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment });
+    state.lastOrder = order; cart = []; E.saveCart(cart);
+    state.view = 'done'; renderSheet(); $('#sheetBody').scrollTop = 0;
+  }
+  function renderDone(body, foot) {
+    var o = state.lastOrder, d = C.deliveryById[o.delivery];
+    var wrap = el('div', { class: 'done' });
+    wrap.appendChild(el('p', { class: 'no', html: t('done_no') + ' <b style="color:var(--gold)">' + E.orderNo(o.no) + '</b>' + (o.date ? ' · ' + t('done_date') + ' ' + dateLabel(o.date) : '') }));
+    var lines = el('div', { class: 'lines' });
+    o.lines.forEach(function (l) { var it = C.byId[l.id]; lines.appendChild(el('div', {}, [el('span', { text: (it ? nm(it) : l.name) + ', ' + (it ? E.fmtWeight(it, l.qty, lang) : l.weight) + (l.pre ? ' · ' + t('pre_tag') : '') }), el('span', { text: E.fmtMoney(l.sum, l.cur) })])); });
+    lines.appendChild(el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: o.deliveryPrice ? fm(o.deliveryPrice) : t('free') })]));
+    lines.appendChild(el('div', { class: 't' }, [el('span', { text: t('total') }), el('span', { text: E.fmtPair(o.total, o.usd) })]));
+    wrap.appendChild(lines);
+    /* owner 10.10: one message, no other promises (was: confirm within an hour, weighing, delivery and review steps) */
+    wrap.appendChild(el('p', { class: 'promise', id: 'doneMsg', text: t('done_msg') }));
+    wrap.appendChild(el('div', { class: 'cta' }, [
+      el('a', { class: 'btn fill', href: C.shop.telegram, target: '_blank', rel: 'noopener', text: t('tg_btn') }),
+      el('button', { class: 'btn', type: 'button', text: t('back'), onclick: function () { closeSheet(); location.hash = '#catalog'; } })
+    ]));
+    body.appendChild(wrap);
+    foot.appendChild(el('p', { style: 'margin:0;color:var(--ink-2);font-size:13.5px' }, [document.createTextNode(t('done_owner').split('«')[0].split('"')[0]), el('a', { href: '#owner', text: t('owner_link'), onclick: function (e) { e.preventDefault(); closeSheet(); openOverlay('bot'); } })]));
+  }
+  function renderNotify(body, foot) {
+    var it = C.byId[state.notifyItem];
+    $('#sheetTitle').textContent = t('n_title');
+    if (!it) return;
+    if (state.view === 'notify_ok') {
+      body.appendChild(el('div', { class: 'done' }, [el('span', { class: 'okmark' }, [icon('i-check')]), el('h2', { text: t('n_ok') }), el('p', { class: 'promise', text: t('n_ok_t', { n: nm(it) }) })]));
+      foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', text: t('n_close'), onclick: closeSheet }));
+      return;
+    }
+    var nf = state.nf || (state.nf = { name: (customer.name || ''), phone: (customer.phone || '') });
+    body.appendChild(el('p', { class: 'hint', text: t('n_for', { n: nm(it) }) }));
+    body.appendChild(field(t('f_name'), el('input', { type: 'text', id: 'nName', autocomplete: 'name', placeholder: t('f_name_ph'), value: nf.name, oninput: function (e) { nf.name = e.target.value; } })));
+    body.appendChild(field(t('f_phone'), el('input', { type: 'tel', id: 'nPhone', autocomplete: 'tel', inputmode: 'tel', placeholder: '+90 5xx xxx xx xx', value: nf.phone, oninput: function (e) { nf.phone = e.target.value; } })));
+    foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', text: t('n_send'), onclick: function () {
+      if (!nf.name.trim() || nf.phone.replace(/\D/g, '').length < 9) { $('#nErr').textContent = t('err_contact'); return; }
+      E.saveNotify({ item: it.id, name: nf.name.trim(), phone: nf.phone.trim(), ts: Date.now() });
+      state.view = 'notify_ok'; renderSheet();
+    } }));
+    foot.appendChild(el('p', { class: 'err', id: 'nErr' }));
+  }
+
+  /* ---------- special order (10.10): bring something from Ukraine that is not on the site ---------- */
+  function consentLine() {
+    return el('p', { class: 'consent' }, [t('consent_pre'), el('a', { href: '#personal-data', text: t('consent_link'), onclick: function (e) { e.preventDefault(); openOverlay('legal', 'data'); } }), t('consent_post')]);
+  }
+  function renderSpecial(body, foot) {
+    $('#sheetTitle').textContent = t('cta_special');
+    if (state.view === 'special_ok') {
+      var p = state.lastSpecial || {};
+      var sum = el('div', { class: 'lines' }, [el('div', {}, [el('span', { text: p.what || '' }), p.qty ? el('span', { text: p.qty }) : null])]);
+      body.appendChild(el('div', { class: 'done' }, [el('span', { class: 'okmark' }, [icon('i-check')]), el('p', { class: 'promise', id: 'spDoneMsg', text: t('done_msg') }), sum]));
+      foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', text: t('back'), onclick: function () { closeSheet(); } }));
+      return;
+    }
+    var sf = state.sf || (state.sf = { what: '', qty: '', name: customer.name || '', contact: customer.phone || '', comment: '' });
+    function req(label) { return label + ' *'; }
+    function inp(id, key, attrs) {
+      var a = { id: id, oninput: function (e) { sf[key] = e.target.value; e.target.removeAttribute('aria-invalid'); } };
+      Object.keys(attrs).forEach(function (k) { a[k] = attrs[k]; });
+      return el(attrs.rows ? 'textarea' : 'input', a);
+    }
+    body.appendChild(el('p', { class: 'hint', id: 'spHint', text: t('sp_hint') }));
+    body.appendChild(field(req(t('sp_what')), inp('spWhat', 'what', { rows: '2', required: 'required', 'aria-required': 'true', 'aria-describedby': 'spHint', placeholder: t('sp_what_ph'), autocomplete: 'off', autocapitalize: 'sentences', enterkeyhint: 'next' }), sf.what));
+    body.appendChild(field(t('sp_qty'), inp('spQty', 'qty', { type: 'text', inputmode: 'text', placeholder: t('sp_qty_ph'), autocomplete: 'off', enterkeyhint: 'next' }), sf.qty));
+    body.appendChild(field(t('f_name'), inp('spName', 'name', { type: 'text', autocomplete: 'name', autocapitalize: 'words', placeholder: t('f_name_ph'), enterkeyhint: 'next' }), sf.name));
+    body.appendChild(field(req(t('sp_contact')), inp('spContact', 'contact', { type: 'text', inputmode: 'text', autocomplete: 'tel', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', required: 'required', 'aria-required': 'true', placeholder: t('sp_contact_ph'), enterkeyhint: 'next' }), sf.contact));
+    body.appendChild(field(t('sp_comment'), inp('spComment', 'comment', { rows: '2', autocomplete: 'off', enterkeyhint: 'done' }), sf.comment));
+    Array.prototype.forEach.call(body.querySelectorAll('input'), function (n) {
+      n.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); var all = body.querySelectorAll('input, textarea'), i = Array.prototype.indexOf.call(all, n); if (all[i + 1]) all[i + 1].focus(); } });
+    });
+    foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', id: 'spSend', text: t('sp_send'), onclick: submitSpecial }));
+    foot.appendChild(consentLine());
+    foot.appendChild(el('p', { class: 'err', id: 'spErr', role: 'alert' }));
+  }
+  function submitSpecial() {
+    var sf = state.sf, errs = E.validateSpecial(sf), err = $('#spErr');
+    if (errs.length) {
+      var msgs = [];
+      if (errs.indexOf('what') >= 0) { msgs.push(t('sp_err_what')); $('#spWhat').setAttribute('aria-invalid', 'true'); }
+      if (errs.indexOf('contact') >= 0) { msgs.push(t('sp_err_contact')); $('#spContact').setAttribute('aria-invalid', 'true'); }
+      if (errs.indexOf('contact_bad') >= 0) { msgs.push(t('sp_err_contact_bad')); $('#spContact').setAttribute('aria-invalid', 'true'); }
+      err.textContent = msgs.join(' ');
+      (errs[0] === 'what' ? $('#spWhat') : $('#spContact')).focus();
+      return;
+    }
+    /* demo hand-off: same route as a site order - the browser store the owner's demo reads (engine.saveOrder -> ukr-demo-orders-v2);
+       requests go to their own key ukr-demo-special so the order list format stays intact */
+    var payload = E.specialPayload(sf, lang);
+    E.saveSpecial(payload);
+    state.lastSpecial = payload;
+    state.sf = { what: '', qty: '', name: sf.name, contact: sf.contact, comment: '' };
+    state.view = 'special_ok'; renderSheet(); $('#sheetBody').scrollTop = 0;
+  }
+
+  /* ---------- overlays ---------- */
+  function openOverlay(which, doc) {
+    var o = which === 'bot' ? $('#ovlBot') : $('#ovlLegal');
+    if (which === 'legal') renderLegal(doc || 'dlv');
+    if (which === 'bot') { $('#botFrame').src = 'bot.html?t=' + Date.now(); }
+    o.classList.add('on'); o.setAttribute('aria-hidden', 'false'); document.body.classList.add('locked');
+  }
+  function refresh() { C = E.applyOverrides(E.parseCatalog(CATALOG_RAW)); renderGrid(); renderFaq(); renderDelivery(); renderCartUI(); }
+  function closeOverlays() {
+    [$('#ovlBot'), $('#ovlLegal')].forEach(function (o) { o.classList.remove('on'); o.setAttribute('aria-hidden', 'true'); });
+    $('#botFrame').src = 'about:blank';
+    if (!$('#sheet').classList.contains('on')) document.body.classList.remove('locked');
+    refresh();
+  }
+  document.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', closeOverlays); });
+  $('#ownerLink').addEventListener('click', function (e) { e.preventDefault(); openOverlay('bot'); });
+  $('#legalDlvLink').addEventListener('click', function (e) { e.preventDefault(); openOverlay('legal', 'dlv'); });
+  $('#legalDataLink').addEventListener('click', function (e) { e.preventDefault(); openOverlay('legal', 'data'); });
+  window.addEventListener('message', function (e) {
+    if (e.source !== $('#botFrame').contentWindow) return;
+    if (e.data === 'ukr-demo:close') closeOverlays();
+    if (e.data === 'ukr-demo:changed') refresh();
+  });
+  window.addEventListener('storage', function (e) { if (e.key === E.KEYS.stock || e.key === E.KEYS.prices || e.key === E.KEYS.newitems) refresh(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (closeRev()) return; closeOverlays(); if ($('#sheet').classList.contains('on')) closeSheet(); } });
+  $('#cartBtn').addEventListener('click', function () { openSheet('cart'); });
+  $('#specialBtn').addEventListener('click', function () { openSheet('special'); });
+  $('#barBtn').addEventListener('click', function () { openSheet('cart'); });
+  $('#sheetClose').addEventListener('click', closeSheet);
+  $('#scrim').addEventListener('click', closeSheet);
+
+  /* language switch (remembered in localStorage "ukr-lang") */
+  function setLang(l) {
+    lang = l; E.saveLang(l);
+    applyStatic(); renderChips(); renderGrid(); renderCartUI();
+    if ($('#sheet').classList.contains('on')) renderSheet();
+  }
+  document.querySelectorAll('.lang button').forEach(function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); }); });
+
+  cbSwitch();
+  applyStatic(); renderChips(); renderGrid(); renderCartUI();
+  document.documentElement.classList.remove('boot');   /* texts are in: show the page (site.css "boot") */
+  window.__demo = { state: state, get cart() { return cart; }, openSheet: openSheet, closeSheet: closeSheet, setLang: setLang, get lang() { return lang; }, openSpecial: function () { openSheet('special'); } };
+})();
+</script>
+</body>
+</html>

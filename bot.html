@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Помощник магазина · чат владельца</title>
+<meta name="theme-color" content="#0b0b0b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/bot.css">
+</head>
+<body>
+<header class="top">
+  <div class="ava"><svg style="width:70%;height:70%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><title>c1-zorya</title><rect width="512" height="512" fill="#0b0b0b"/><polygon points="256.0,16.0 310.0,114.0 256.0,212.0 202.0,114.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,53.2 289.5,114.0 256.0,174.8 222.5,114.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,88.5 270.0,114.0 256.0,139.5 242.0,114.0" fill="#c9a86a"/><polygon points="496.0,256.0 398.0,310.0 300.0,256.0 398.0,202.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="458.8,256.0 398.0,289.5 337.2,256.0 398.0,222.5" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="423.5,256.0 398.0,270.0 372.5,256.0 398.0,242.0" fill="#c9a86a"/><polygon points="256.0,496.0 202.0,398.0 256.0,300.0 310.0,398.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,458.8 222.5,398.0 256.0,337.2 289.5,398.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,423.5 242.0,398.0 256.0,372.5 270.0,398.0" fill="#c9a86a"/><polygon points="16.0,256.0 114.0,202.0 212.0,256.0 114.0,310.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="53.2,256.0 114.0,222.5 174.8,256.0 114.0,289.5" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="88.5,256.0 114.0,242.0 139.5,256.0 114.0,270.0" fill="#c9a86a"/><g stroke="#c9a86a" stroke-width="14" stroke-linecap="butt"><line x1="299.8" y1="169.7" x2="359.2" y2="110.3"/><line x1="305.5" y1="206.5" x2="407.3" y2="104.7"/><line x1="342.3" y1="212.2" x2="401.7" y2="152.8"/><line x1="342.3" y1="299.8" x2="401.7" y2="359.2"/><line x1="305.5" y1="305.5" x2="407.3" y2="407.3"/><line x1="299.8" y1="342.3" x2="359.2" y2="401.7"/><line x1="212.2" y1="342.3" x2="152.8" y2="401.7"/><line x1="206.5" y1="305.5" x2="104.7" y2="407.3"/><line x1="169.7" y1="299.8" x2="110.3" y2="359.2"/><line x1="169.7" y1="212.2" x2="110.3" y2="152.8"/><line x1="206.5" y1="206.5" x2="104.7" y2="104.7"/><line x1="212.2" y1="169.7" x2="152.8" y2="110.3"/></g><polygon points="256.0,222.0 290.0,256.0 256.0,290.0 222.0,256.0" fill="#c9a86a"/></svg></div>
+  <div><b>Помощник магазина</b><small>бот · видят Марго и семья</small></div>
+  <button class="reset" type="button" id="reset">Сбросить</button>
+</header>
+<main class="chat" id="chat" aria-live="polite"></main>
+<div class="quick" id="quick"></div>
+<form class="compose" id="compose">
+  <button type="button" class="attach" id="attach" aria-label="Переслать фото"><svg viewBox="0 0 24 24"><path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.2 3.2 0 0 1 4.5 4.5L9.5 17a1.4 1.4 0 0 1-2-2L15 7.5"/></svg></button>
+  <input type="text" id="inp" placeholder="Напишите команду" autocomplete="off" aria-label="Сообщение">
+  <button type="submit" class="go" aria-label="Отправить"><svg viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+</form>
+
+<div class="sovl" id="sovl" aria-hidden="true"><button class="sclose" type="button" id="sclose" aria-label="Закрыть">&times;</button><iframe id="sframe" title="Плашки"></iframe></div>
+
+<script>
+/* catalog = data/catalog-v2.json, site:true items only, inlined by assets/build-catalog.py */
+var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські продукти · Аланія","handle":"ukr.product.alanya","telegram":"https://t.me/ukrtovari","instagram":"https://www.instagram.com/ukr.product.alanya/"},"categories":[{"id":"salo","name_ru":"Сало","name_uk":"Сало","name_en":"Salo (pork fat)"},{"id":"kovbasy","name_ru":"Колбасы","name_uk":"Ковбаси","name_en":"Sausages"},{"id":"sosysky","name_ru":"Сосиски и сардельки","name_uk":"Сосиски та сардельки","name_en":"Frankfurters and sardelki"},{"id":"balyk","name_ru":"Балык и мясные деликатесы","name_uk":"Балик і м'ясні делікатеси","name_en":"Balyk and cured meats"},{"id":"kabanosy","name_ru":"Кабаносы","name_uk":"Кабаноси","name_en":"Kabanosy"},{"id":"ikra_ryba","name_ru":"Икра и рыба","name_uk":"Ікра та риба","name_en":"Caviar and fish"},{"id":"syr_molochne","name_ru":"Сыр и молочное","name_uk":"Сир і молочне","name_en":"Cheese and dairy"},{"id":"miaso","name_ru":"Мясо свежее","name_uk":"М'ясо свіже","name_en":"Fresh meat"},{"id":"solodke","name_ru":"Сладкое","name_uk":"Солодке","name_en":"Sweets"},{"id":"inshe","name_ru":"Другое","name_uk":"Інше","name_en":"Other"}],"items":[{"id":"salo-solene","cat":"salo","name_ru":"Сало солёное","name_uk":"Сало солоне","name_en":"Salted pork fat (salo)","unit":"kg","price":1650,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/salo-solene.jpg","keys":["сало","сало соленое","сало солоне","сало","сало солене","белое домашнее сало","сало соленое с прослойкой","малосольное","сало соленое"],"state":"new_batch","desc_ru":"Белое домашнее сало","desc_uk":"Біле домашнє сало","desc_en":"White homemade salo","day":null,"qty":null},{"id":"salo-kopchene-na-vyshni","cat":"salo","name_ru":"Сало копчёное на вишне","name_uk":"Сало копчене на вишні","name_en":"Cherry-wood smoked pork fat (salo)","unit":"kg","price":1700,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/salo-kopchene-na-vyshni.jpg","keys":["сало копченое","сало копчене","сало копченое","копченое на вишне сало","бочок копченый","сало копченое на вишне"],"state":"in_stock","desc_ru":"Сало копченое на вишне - хит продаж","desc_uk":"Сало копчене на вишні - хіт продажів","desc_en":"Cherry-wood smoked salo - a best seller"},{"id":"salo-zapechene","cat":"salo","name_ru":"Сало запечённое (рулет)","name_uk":"Сало запечене (рулет)","name_en":"Oven-baked pork belly roll (salo)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/salo-zapechene.jpg","keys":["сало запеченое","рулет из сала"],"state":"in_stock","desc_ru":"Сало запеченое","desc_uk":"Сало запечене","desc_en":"Oven-baked salo"},{"id":"doktorska","cat":"kovbasy","name_ru":"Колбаса Докторская","name_uk":"Ковбаса Лікарська","name_en":"Doctor's sausage (doktorskaya, boiled)","unit":"kg","price":1100,"currency":"TRY","steps_g":[500,1000],"min_g":500,"pack_g":null,"demo":false,"photo":"img/doktorska.jpg","keys":["докторская","докторська","лікарська","колбаса докторская","колбаса докторская","лікарська вар. в/с","лікарська gold","гощанські ковбаси","гощанські","гощанские","hoshchanski kovbasy","гощанские колбасы"],"state":"in_stock","brand":"Гощанські ковбаси","brand_en":"Hoshchanski Kovbasy","brand_ru":"Гощанские колбасы","desc_ru":"","desc_uk":"","desc_en":""},{"id":"balykova","cat":"kovbasy","name_ru":"Колбаса Балыковая","name_uk":"Ковбаса Баликова","name_en":"Balykova pork-loin sausage","unit":"kg","price":1450,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/balykova.jpg","keys":["балыковая","баликова","колбаса балыковая","баликова н/к, в/с","колбаса балыковая н/к"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"frantsuzka","cat":"kovbasy","name_ru":"Колбаса Французская (в перце)","name_uk":"Ковбаса Французька (в перці)","name_en":"French-style dry-cured sausage in pepper crust","unit":"kg","price":1900,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/frantsuzka.jpg","keys":["колбаса французская","французька вищого гатунку","колбаса в перце","колбаса французская в перце","колбаса сырокопченая французская"],"state":"in_stock","desc_ru":"Колбаса в перце - для любителей яркого мясного вкуса: отборное мясо, плотная сочная текстура и ароматная перечная корочка","desc_uk":"Ковбаса в перці - для любителів яскравого м'ясного смаку: відбірне м'ясо, щільна соковита текстура й ароматна перцева скоринка","desc_en":"Sausage in a pepper crust - for lovers of a bold meaty taste: select meat, dense juicy texture and an aromatic pepper crust"},{"id":"makkabi","cat":"kovbasy","name_ru":"Маккаби салями","name_uk":"Маккабі салямі","name_en":"Maccabi dry-cured salami","unit":"kg","price":1700,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/makkabi.jpg","keys":["маккаби","маккабі","маккаби салями","grandio маккабі ковбаса сиров'ялена","колбаса маккаби салями","grandio","грандио","грандіо","grandio"],"state":"few_left","brand":"GRANDIO","brand_en":"GRANDIO","brand_ru":"GRANDIO","desc_ru":"","desc_uk":"","desc_en":"","day":null,"qty":1.5},{"id":"salami-v-plisni","cat":"kovbasy","name_ru":"Салями сыровяленая в белой плесени","name_uk":"Салямі сиров'ялена в білій плісняві","name_en":"White-mould dry-cured salami","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/salami-v-plisni.jpg","keys":["салями сыровяленая","колбаса сервелат сырокопченая"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"servelat","cat":"kovbasy","name_ru":"Сервелат","name_uk":"Сервелат","name_en":"Cervelat (fine smoked sausage)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/servelat.jpg","keys":["сервелат"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"irlandska-z-balykom","cat":"kovbasy","name_ru":"Колбаса Ирландская с балыком","name_uk":"Ковбаса Ірландська з баликом","name_en":"Irish-style sausage with whole pork loin core","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/irlandska-z-balykom.jpg","keys":["ирландская колбаса с балыком","колбаса ирландская с балыком","grandio","грандио","грандіо","grandio"],"state":"in_stock","brand":"GRANDIO","brand_en":"GRANDIO","brand_ru":"GRANDIO","desc_ru":"Насыщенный вкус ароматной колбасы с крупным цельным кусочком нежного балыка и пряной обсыпкой специй","desc_uk":"Насичений смак ароматної ковбаси з великим цілим шматком ніжного балика та пряною обсипкою спецій","desc_en":"Rich taste of an aromatic sausage with a large whole piece of tender balyk and a spice crust"},{"id":"krovyana","cat":"kovbasy","name_ru":"Кровяная колбаса","name_uk":"Кров'янка","name_en":"Blood sausage (krovyanka)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/krovyana.jpg","keys":["кровянка","кров'янка","кровяная","кровяная колбаса"],"state":"preorder","desc_ru":"Насыщенная, ароматная, сочная и очень нежная","desc_uk":"Насичена, ароматна, соковита й дуже ніжна","desc_en":"Rich, aromatic, juicy and very tender","day":null,"qty":null},{"id":"domashnia","cat":"kovbasy","name_ru":"Колбаса домашняя","name_uk":"Ковбаса домашня","name_en":"Home-style coarse pork sausage","unit":"kg","price":1300,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/domashnia.jpg","keys":["колбаса домашняя","домашняя колбаса","колбаса домашняя запеченная","колбаса копченая кольцом","колбаски домашние сырые","колбаса домашняя копченая"],"state":"in_stock","desc_ru":"Это просто шедевр","desc_uk":"Це просто шедевр","desc_en":"Simply a masterpiece"},{"id":"prezydentska","cat":"kovbasy","name_ru":"Колбаса Президентская","name_uk":"Ковбаса Президентська","name_en":"Presidential semi-smoked sausage","unit":"pc","price":650,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":false,"photo":"img/prezydentska.jpg","keys":["колбаса президентская полукопченая","ходорівський м'ясокомбінат","ходорівський","ходоровский","khodorivskyi miasokombinat","ходоровский мясокомбинат"],"state":"in_stock","brand":"Ходорівський м'ясокомбінат","brand_en":"Khodorivskyi Miasokombinat","brand_ru":"Ходоровский мясокомбинат","desc_ru":"","desc_uk":"","desc_en":""},{"id":"braunshveizka","cat":"kovbasy","name_ru":"Колбаса Брауншвейгская сырокопчёная","name_uk":"Ковбаса Брауншвейзька сирокопчена","name_en":"Braunschweiger raw-smoked sausage","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/braunshveizka.jpg","keys":["салтівський","салтовский","saltivskyi"],"state":"in_stock","brand":"Салтівський","brand_en":"Saltivskyi","brand_ru":"Салтовский","desc_ru":"","desc_uk":"","desc_en":""},{"id":"kyivska","cat":"kovbasy","name_ru":"Колбаса Киевская","name_uk":"Ковбаса Київська","name_en":"Kyivska smoked sausage","unit":"kg","price":1700,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/kyivska.jpg","keys":["киевская","київська","колбаса киевская","київська ковбаса сирокопчена"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"sosysky-fileini","cat":"sosysky","name_ru":"Сосиски филейные","name_uk":"Сосиски філейні","name_en":"Fillet frankfurters (sosiski)","unit":"kg","price":1100,"currency":"TRY","steps_g":[500,1000],"min_g":500,"pack_g":null,"demo":false,"photo":"img/sosysky-fileini.jpg","keys":["сосиски","сосиски филейные","сосиски","сосиски филейные","сосиски філейні"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"sosysky-videnski","cat":"sosysky","name_ru":"Сосиски венские","name_uk":"Сосиски віденські","name_en":"Vienna sausages","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/sosysky-videnski.jpg","keys":["венские сосиски","сосиски венские"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"sosysky-salami","cat":"sosysky","name_ru":"Сосиски салями","name_uk":"Сосиски салямі","name_en":"Salami-style sausages","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/sosysky-salami.jpg","keys":["сосиски салями"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"sardelky-sochni","cat":"sosysky","name_ru":"Сардельки сочные","name_uk":"Сардельки соковиті","name_en":"Juicy thick sausages (sardelki)","unit":"kg","price":1100,"currency":"TRY","steps_g":[500,1000],"min_g":500,"pack_g":null,"demo":false,"photo":"img/sardelky-sochni.jpg","keys":["сардельки","сардельки сочные","сардельки","сардельки сочные","гощанські ковбаси","гощанські","гощанские","hoshchanski kovbasy","гощанские колбасы"],"state":"in_stock","brand":"Гощанські ковбаси","brand_en":"Hoshchanski Kovbasy","brand_ru":"Гощанские колбасы","desc_ru":"Сочные, ароматные, приготовленные из качественного мяса","desc_uk":"Соковиті, ароматні, приготовлені з якісного м'яса","desc_en":"Juicy, aromatic, made from quality meat"},{"id":"sardelky-hryl","cat":"sosysky","name_ru":"Сардельки гриль","name_uk":"Сардельки гриль","name_en":"Grill sausages (sardelki)","unit":"kg","price":950,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/sardelky-hryl.jpg","keys":["сардельки гриль","сардельки барбекю","сардельки копченые"],"state":"in_stock","desc_ru":"Вкуснейшие сардельки гриль","desc_uk":"Найсмачніші сардельки гриль","desc_en":"The tastiest grill sardelki"},{"id":"balyk","cat":"balyk","name_ru":"Балык сыровяленый","name_uk":"Балик сиров'ялений","name_en":"Dry-cured pork loin (balyk)","unit":"kg","price":1750,"currency":"TRY","steps_g":[200,300,500],"min_g":200,"pack_g":null,"demo":false,"photo":"img/balyk.jpg","keys":["балык","балик","балык","балык копченый","балык свиной копченый","балык с/к","балык сырокопченый","балык варено-копченый","балык запеченный","балык сыровяленый"],"state":"sold_out","desc_ru":"","desc_uk":"","desc_en":"","day":null,"qty":null},{"id":"bytok","cat":"balyk","name_ru":"Биток варёно-копчёный","name_uk":"Биток варено-копчений","name_en":"Cooked-smoked pork loin steak (bytok)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/bytok.jpg","keys":["биток","биток в/с","биток варено-копченый"],"state":"in_stock","desc_ru":"Биток, шея, грудинка - всё варено-копчения","desc_uk":"Биток, шия, грудинка - все варено-копчене","desc_en":"Bytok, neck, brisket - all cooked-smoked"},{"id":"buzhenyna","cat":"balyk","name_ru":"Буженина","name_uk":"Буженина","name_en":"Roast pork (buzhenyna)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/buzhenyna.jpg","keys":["буженина"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"yalovychyna-kopchena","cat":"balyk","name_ru":"Говядина копчёная","name_uk":"Яловичина копчена","name_en":"Smoked cured beef","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/yalovychyna-kopchena.jpg","keys":["сочная говядина","говядина копченая"],"state":"in_stock","desc_ru":"Сочная говядина","desc_uk":"Соковита яловичина","desc_en":"Juicy beef"},{"id":"rebra-kopcheni","cat":"balyk","name_ru":"Рёбра копчёные","name_uk":"Ребра копчені","name_en":"Smoked pork ribs","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/rebra-kopcheni.jpg","keys":["ребра копченые"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"zelts","cat":"balyk","name_ru":"Зельц с языка","name_uk":"Зельц з язика","name_en":"Tongue head cheese (zelts)","unit":"kg","price":980,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/zelts.jpg","keys":["зельц","зельц с языка","зельц с языка","рулет с языком","зельц"],"state":"preorder","desc_ru":"Зельц с языка, как был раньше у нас","desc_uk":"Зельц з язика, як був раніше в нас","desc_en":"Tongue zelts, the way it used to be at home","day":null,"qty":null},{"id":"osheek","cat":"miaso","name_ru":"Ошеек свежий (на шашлык)","name_uk":"Ошийок свіжий (на шашлик)","name_en":"Fresh pork neck (for shashlik)","unit":"kg","price":980,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/osheek.jpg","keys":["ошеек","ошийок","шея","ошеек","ошеек свежий","ошеек на шашлык","свежий домашний ошеек","мясо свежее","свинина"],"state":"new_batch","desc_ru":"Свежий домашний ошеек","desc_uk":"Свіжий домашній ошийок","desc_en":"Fresh homemade pork neck","day":null,"qty":null},{"id":"shashlyk-marynovany","cat":"miaso","name_ru":"Шашлык маринованный (ошеек)","name_uk":"Шашлик маринований (ошийок)","name_en":"Marinated pork-neck shashlik","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/shashlyk-marynovany.jpg","keys":["шашлык","шашлик","маринованный шашлык","шашлык"],"state":"preorder","desc_ru":"","desc_uk":"","desc_en":"","day":null,"qty":null},{"id":"otbyvna","cat":"miaso","name_ru":"Отбивная (свежая корейка)","name_uk":"Відбивна (свіжа корейка)","name_en":"Fresh pork loin for chops","unit":"kg","price":850,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/otbyvna.jpg","keys":["отбивная","свежая свиная корейка"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"rebra-svizhi","cat":"miaso","name_ru":"Рёбра свежие","name_uk":"Ребра свіжі","name_en":"Fresh pork ribs","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/rebra-svizhi.jpg","keys":["ребра","рёбра","ребра свежие","ребра","ребра свежие"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"kabanosy","cat":"kabanosy","name_ru":"Кабаносы","name_uk":"Кабаноси","name_en":"Kabanosy","unit":"100g","price":999,"currency":"TRY","steps_g":[100,200,500],"min_g":100,"pack_g":null,"demo":true,"photo":"img/kabanosy.jpg","keys":["кабаносы","кабаноси","кабанос","кабаносы","кабаноси","кабаносы дмитрук","chickanosy","дмитрук","dmytruk"],"state":"in_stock","brand":"Дмитрук","brand_en":"Dmytruk","brand_ru":"Дмитрук","desc_ru":"","desc_uk":"","desc_en":""},{"id":"okhotnychi-kovbasky","cat":"kabanosy","name_ru":"Охотничьи колбаски","name_uk":"Мисливські ковбаски","name_en":"Hunter's sausages","unit":"100g","price":999,"currency":"TRY","steps_g":[100,200,500],"min_g":100,"pack_g":null,"demo":true,"photo":"img/okhotnychi-kovbasky.jpg","keys":["охотничьи колбаски","охотничьи","мисливські ковбаски","мисливські","охотничьи колбаски","колбаски охотничьи","охотничьи","мисливські ковбаски","мисливські"],"state":"in_stock","desc_ru":"Хит продаж - охотничьи колбаски, качество огонь","desc_uk":"Хіт продажів - мисливські ковбаски, якість вогонь","desc_en":"A best seller - hunter's sausages, top quality"},{"id":"ikra-kyzhucha","cat":"ikra_ryba","name_ru":"Икра красная кижуча","name_uk":"Ікра червона кижуча","name_en":"Red caviar (coho salmon, kizhuch)","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":500,"demo":true,"photo":"img/ikra-kyzhucha.jpg","keys":["икра кижуча","кижуч"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"ikra-kety","cat":"ikra_ryba","name_ru":"Икра красная кеты","name_uk":"Ікра червона кети","name_en":"Red caviar (chum salmon, keta)","unit":"pc","price":120,"currency":"USD","steps_g":[1],"min_g":1,"pack_g":500,"demo":false,"photo":"img/ikra-kety.jpg","keys":["икра","ікра","икра красная","красная икра","ікра червона","кета","икра красная","икра кеты","икра красная кеты","икра лососевая чумиканская"],"state":"in_stock","desc_ru":"Сахалин, «дельта фиш», среднее зерно, вылов в море, среднесол, сливочный вкус, охлажденка - не замораживалась","desc_uk":"Сахалін, «дельта фіш», середнє зерно, вилов у морі, середньосолона, вершковий смак, охолоджена - не заморожувалась","desc_en":"Sakhalin, \"delta fish\", medium grain, sea-caught, medium salt, creamy taste, chilled - never frozen"},{"id":"ikra-chorna","cat":"ikra_ryba","name_ru":"Икра чёрная осетровая","name_uk":"Ікра чорна осетрова","name_en":"Black sturgeon caviar","unit":"pc","price":480,"currency":"USD","steps_g":[1],"min_g":1,"pack_g":500,"demo":false,"photo":"img/ikra-chorna.jpg","keys":["икра черная","чорна ікра","черная икра","икра черная","икра черная осетровая","черная осетровая икра малосол","икра осетровая дикая","russian caviar malossol 250 g tin","икра черная осетровая","икра черная осетровая 250 г"],"state":"sold_out","desc_ru":"Дикая (не аквакультура), крупное зерно, малосол, нежно орехово-сливочный вкус","desc_uk":"Дика (не аквакультура), крупне зерно, малосольна, ніжний горіхово-вершковий смак","desc_en":"Wild (not farmed), large grain, lightly salted, delicate nutty-creamy taste","day":null,"qty":null},{"id":"ikra-shchuky","cat":"ikra_ryba","name_ru":"Икра щучья","name_uk":"Ікра щуча","name_en":"Pike roe","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/ikra-shchuky.jpg","keys":["щучья икра","икра щуки"],"state":"in_stock","desc_ru":"Нежная, рассыпчатая, с приятной солоноватостью и тонким рыбным вкусом","desc_uk":"Ніжна, розсипчаста, з приємною солонуватістю та тонким рибним смаком","desc_en":"Tender, crumbly, pleasantly salty with a fine fish taste"},{"id":"taran","cat":"ikra_ryba","name_ru":"Тарань вяленая","name_uk":"Тараня в'ялена","name_en":"Dried roach (taranka)","unit":"kg","price":2100,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/taran.jpg","keys":["тарань","таранка","тарань","тарань вяленая","тарань с икрой","тарань вяленая с икрой"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"kutum","cat":"ikra_ryba","name_ru":"Кутум вяленый (тарань из кутума)","name_uk":"Кутум в'ялений","name_en":"Dried kutum (Caspian whitefish)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/kutum.jpg","keys":["кутум","тарань из кутума","кутум","тарань из кутума","иранский варезуб","кутум вяленый"],"state":"new_batch","desc_ru":"Тарань из кутума - более «благородная» версия привычной вяленой рыбы: мясистее, жирнее, без резкой «речной» горечи","desc_uk":"Тарань з кутума - «благородніша» версія звичної в'яленої риби: м'ясистіша, жирніша, без різкої «річкової» гіркоти","desc_en":"Kutum taran - a more \"noble\" version of the usual dried fish: meatier, fattier, without the sharp river bitterness","day":null,"qty":null},{"id":"forel","cat":"ikra_ryba","name_ru":"Форель слабосолёная холодного копчения","name_uk":"Форель слабосолона холодного копчення","name_en":"Cold-smoked lightly salted trout","unit":"kg","price":90,"currency":"USD","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/forel.jpg","keys":["форель","форель х/к","форель холодного копчения","форель слабо соленая холодного копчения"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"osetryna","cat":"ikra_ryba","name_ru":"Осетрина холодного копчения","name_uk":"Осетрина холодного копчення","name_en":"Cold-smoked sturgeon","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/osetryna.jpg","keys":["осетрина","осетрина холодного копчения","осетрина х/к","балык осетра холодного копчения"],"state":"in_stock","desc_ru":"Балык осетра холодного копчения, с Каспия","desc_uk":"Балик осетра холодного копчення, з Каспію","desc_en":"Cold-smoked sturgeon balyk, from the Caspian"},{"id":"rulet-osetrovy","cat":"ikra_ryba","name_ru":"Рулет осетровый","name_uk":"Рулет осетровий","name_en":"Smoked sturgeon roll","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/rulet-osetrovy.jpg","keys":["рулет осетровый"],"state":"in_stock","desc_ru":"","desc_uk":"","desc_en":""},{"id":"pechen-tresky","cat":"ikra_ryba","name_ru":"Печень трески, 500 г","name_uk":"Печінка тріски, 500 г","name_en":"Cod liver in oil, 500 g jar","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/pechen-tresky.jpg","keys":["печень трески","печінка тріски","печень трески","печень трески 500 грамм","норд фиш","норд фиш","сделано морем","nord fish"],"state":"in_stock","brand":"Норд Фиш","brand_en":"Nord Fish","brand_ru":"Норд Фиш","desc_ru":"","desc_uk":"","desc_en":""},{"id":"krab-kamchatsky","cat":"ikra_ryba","name_ru":"Краб камчатский (фаланга), банка 700 мл","name_uk":"Краб камчатський (фаланга), банка 700 мл","name_en":"Kamchatka crab leg meat, 700 ml jar","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/krab-kamchatsky.jpg","keys":["краб камчатский","фаланга","ооо флют&co сахалин","флот&co","флот","flot&co"],"state":"not_now","brand":"Флот&CO","brand_en":"Flot&Co","brand_ru":"Флот&CO","desc_ru":"","desc_uk":"","desc_en":"","day":null,"qty":null},{"id":"oseledets-file","cat":"ikra_ryba","name_ru":"Сельдь филе в масле (Norven Lofoten)","name_uk":"Оселедець філе в олії (Norven Lofoten)","name_en":"Herring fillet in oil (Norven Lofoten)","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/oseledets-file.jpg","keys":["сельдь филе в масле","norven lofoten","своя лінія","сельдь norven lofoten филе в масле","norven","норвен","norven"],"state":"in_stock","brand":"Norven","brand_en":"Norven","brand_ru":"Norven","desc_ru":"","desc_uk":"","desc_en":""},{"id":"oseledets-bilyi-vedmid","cat":"ikra_ryba","name_ru":"Селёдка «Белый медведь» (в ведре)","name_uk":"Оселедець «Білий ведмідь» (у відрі)","name_en":"Whole salted herring 'Bely Medved' (bucket)","unit":"pc","price":950,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":false,"photo":"img/oseledets-bilyi-vedmid.jpg","keys":["селедка","селёдка","белый медведь","селедка белый медведь"],"state":"in_stock","desc_ru":"Приедет в ведре с водой","desc_uk":"Приїде у відрі з водою","desc_en":"Arrives in a bucket of water"},{"id":"syr-cheese-cult","cat":"syr_molochne","name_ru":"Сыры ремесленные Cheese Cult (качотта)","name_uk":"Сири ремісничі Cheese Cult (качотта)","name_en":"Artisan cheeses Cheese Cult (caciotta)","unit":"kg","price":999,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":true,"photo":"img/syr-cheese-cult.jpg","keys":["сыр","сир","качотта","cheese cult","сыр свежий с добавками","сыры ремесленные + творог","cheese cult","чиз культ","cheese cult"],"state":"in_stock","brand":"Cheese Cult","brand_en":"Cheese Cult","brand_ru":"Cheese Cult","desc_ru":"Ремесленные сыры без пальмового, рапсового масла, эмульгаторов и консервантов; итальянская качотта","desc_uk":"Ремісничі сири без пальмової, ріпакової олії, емульгаторів і консервантів; італійська качотта","desc_en":"Artisan cheeses without palm or rapeseed oil, emulsifiers or preservatives; Italian caciotta"},{"id":"tvoroh","cat":"syr_molochne","name_ru":"Творог","name_uk":"Сир кисломолочний (творог)","name_en":"Cottage cheese (tvorog)","unit":"pc","price":230,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":400,"demo":false,"photo":"img/tvoroh.jpg","keys":["творог","творог","творожный король 400 г 5%","творог творожный король 400 г 5%","творожный король","tvorozhny korol"],"state":"in_stock","brand":"Творожный Король","brand_en":"Tvorozhny Korol","brand_ru":"Творожный Король","desc_ru":"","desc_uk":"","desc_en":""},{"id":"maslo","cat":"syr_molochne","name_ru":"Масло подсолнечное домашнее пахучее","name_uk":"Олія соняшникова домашня пахуча","name_en":"Unrefined aromatic sunflower oil","unit":"pc","price":400,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":false,"photo":"img/maslo.jpg","keys":["масло","олія","масло","ароматное масло","масло душистое","салатное масло пахучее","пахучее масло"],"state":"in_stock","desc_ru":"Домашнее, пахучее, салатное масло","desc_uk":"Домашня, пахуча, салатна олія","desc_en":"Homemade, aromatic salad oil"},{"id":"tsukerky-roshen","cat":"solodke","name_ru":"Конфеты Roshen","name_uk":"Цукерки Roshen","name_en":"Roshen chocolates","unit":"pc","price":999,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":true,"photo":"img/tsukerky-roshen.jpg","keys":["конфеты","конфеты roshen київ вечірній","конфеты roshen ассорти","конфеты roshen київ вечірній","roshen","рошен","roshen"],"state":"in_stock","brand":"Roshen","brand_en":"Roshen","brand_ru":"Roshen","desc_ru":"","desc_uk":"","desc_en":""},{"id":"tort-kyivsky","cat":"solodke","name_ru":"Торт Киевский (Roshen)","name_uk":"Торт Київський (Roshen)","name_en":"Kyiv cake (Roshen)","unit":"pc","price":1400,"currency":"TRY","steps_g":[1],"min_g":1,"pack_g":null,"demo":false,"photo":"img/tort-kyivsky.jpg","keys":["торт","торты","тортики","торти","торт","тортики","киевский торт","торт roshen київський торт","торт roshen київський торт","roshen","рошен","roshen"],"state":"preorder","brand":"Roshen","brand_en":"Roshen","brand_ru":"Roshen","desc_ru":"Хрустящие ореховые коржи, нежный сливочный крем","desc_uk":"Хрусткі горіхові коржі, ніжний вершковий крем","desc_en":"Crunchy nut layers, tender cream","day":null,"qty":null},{"id":"salat-chuka","cat":"inshe","name_ru":"Салат чука (Hiyashi Wakame), 1 кг","name_uk":"Салат чука (Hiyashi Wakame), 1 кг","name_en":"Chuka seaweed salad (Hiyashi Wakame), 1 kg","unit":"kg","price":950,"currency":"TRY","steps_g":[300,500,1000],"min_g":300,"pack_g":null,"demo":false,"photo":"img/salat-chuka.jpg","keys":["чука","салат чука","салат чука","хияши вакаме","hiyashi wakame 1 kg","салат из водорослей","js","js"],"state":"in_stock","brand":"JS","brand_en":"JS","brand_ru":"JS","desc_ru":"","desc_uk":"","desc_en":""}],"delivery":[{"id":"pickup","price":0,"demo":true},{"id":"alanya","price":100,"free_from":1500,"demo":true},{"id":"cargo","price":250,"free_from":3000,"demo":true}],"payment":[{"id":"card","demo":true},{"id":"cash","demo":true}],"rules":{"min_order":500},"reviews":[{"img":"img/reviews/review-01-salo-ukr.jpg","text":null,"name":"Viktoriia"},{"img":"img/reviews/review-02-salo-idealne.jpg","text":null,"name":"Анжелика"},{"img":"img/reviews/review-03-sardelky-kovbasa.jpg","text":null,"name":"Artem H."},{"img":"img/reviews/review-04-doktorska-salo-vyshnia.jpg","text":null,"name":"yuriy_boss"},{"img":"img/reviews/review-05-ikra-ryba-miaso.jpg","text":null,"name":"Таня К."},{"img":"img/reviews/review-06-ikra-chorna-chervona.jpg","text":null,"name":"Диана"},{"img":"img/reviews/review-07-ikra-chervona-foto.jpg","text":null,"name":"Юлия"},{"img":"img/reviews/review-08-osetryna-ikra.jpg","text":null,"name":"Александр В."},{"img":"img/reviews/review-09-tort-balyk.jpg","text":null,"name":"marie_l_kececi"},{"img":"img/reviews/review-10-ikra-dostavka-speka.jpg","text":null,"name":"Mila"},{"img":"img/reviews/review-11-posylka-idealno.jpg","text":null,"name":"Элиф"},{"img":"img/reviews/review-12-rebra-hryl.jpg","text":null,"name":""},{"img":null,"name":"Santa","text":"Добрый вечер 🌆\nНе устану благодарить Марго и ее прекрасного отца за доставку такого прекрасного, невероятно свежего, аппетитного украинского сала 💪🏼\nОтдельная благодарность за вкуснейшие сардельки и докторскую колбасу, Вы лучшие!!!\n🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥"}]}/*CAT_END*/;
+</script>
+<script src="assets/engine.js"></script>
+<script>
+(function () {
+  'use strict';
+  var E = window.Engine;
+  var C = E.applyOverrides(E.parseCatalog(CATALOG_RAW));
+  E.seedOrders();
+  var chat = document.getElementById('chat');
+  var pending = null; /* a "Верно?" question waiting for Да/Нет typed instead of tapped */
+
+  function now() { var d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+  function bubble(html, dir, buttons, extra) {
+    var m = document.createElement('div'); m.className = 'msg ' + (dir || 'in') + (extra ? ' ' + extra : '');
+    var b = document.createElement('div'); b.className = 'bub'; b.innerHTML = html + '<span class="t">' + now() + '</span>';
+    m.appendChild(b);
+    if (buttons && buttons.length) {
+      var kb = document.createElement('div'); kb.className = 'kb';
+      buttons.forEach(function (bt) {
+        var x = document.createElement('button'); x.type = 'button'; x.textContent = bt.label;
+        x.addEventListener('click', function () {
+          Array.prototype.forEach.call(kb.children, function (c) { c.disabled = true; });
+          x.classList.add('done'); bt.run();
+        });
+        kb.appendChild(x);
+      });
+      m.appendChild(kb);
+    }
+    chat.appendChild(m); chat.scrollTop = chat.scrollHeight;
+    return m;
+  }
+  function say(html, buttons) { return bubble(html, 'in', buttons); }
+  function me(text) { return bubble(esc(text), 'out'); }
+  function customer(who, html) { return bubble('<span class="who">' + esc(who) + '</span>' + html, 'in', null, 'cust'); }
+  function notifyParent(msg) { try { if (window.parent !== window) window.parent.postMessage(msg, '*'); } catch (e) { /* ignore */ } }
+  function refreshCatalog() { C = E.applyOverrides(E.parseCatalog(CATALOG_RAW)); notifyParent('ukr-demo:changed'); }
+  function money(n) { return '<span class="g">' + E.fmtMoney(n) + '</span>'; }
+  function nameOf(it) { return esc(it.name_ru); }
+  var STATUS = { 'new': 'новый', confirmed: 'подтверждён', paid: 'оплачен', shipped: 'отправлен', oos: 'нет в наличии' };
+  var DAY_RU = { mon: 'понедельник', tue: 'вторник', wed: 'среда', thu: 'четверг', fri: 'пятница', sat: 'суббота', sun: 'воскресенье' };
+  function dayRu(d) { return d ? (DAY_RU[d] || d) : ''; }
+  function plural(n, a, b, c) { var m10 = n % 10, m100 = n % 100; if (m10 === 1 && m100 !== 11) return a; if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return b; return c; }
+  function ask(html, yes) {
+    pending = { yes: yes };
+    say(html, [{ label: 'Да', run: function () { pending = null; yes(); } }, { label: 'Нет', run: function () { pending = null; say('Отменено.'); } }]);
+  }
+
+  /* ---------- job 1: orders ---------- */
+  function orderCard(o) {
+    var line = esc(E.orderShortLine(o));
+    var extra = o.comment ? '\nКомментарий: ' + esc(o.comment) : '';
+    if (o.date) extra += '\nЖелаемая дата: ' + esc(o.date.split('-').reverse().join('.'));
+    var buttons = o.status === 'new' ? [
+      { label: 'Подтвердить', run: function () { confirmOrder(o.no); } },
+      { label: 'Нет в наличии', run: function () { askOos(o.no); } },
+      { label: 'Позвонить', run: function () { say('Клиент: ' + esc(o.customer.name) + ', ' + esc(o.customer.phone)); } }
+    ] : [];
+    return say('<b>' + line.replace(/^(Заказ №\d+):/, '<span class="g">$1</span>:') + '</b>' + extra, buttons);
+  }
+  function confirmOrder(no) {
+    var o = E.updateOrder(no, { status: 'confirmed' });
+    if (!o) return say('Не нашёл заказ ' + E.orderNo(no) + '.');
+    say('Клиенту отправлено подтверждение: ' + E.orderNo(o.no) + ', ' + E.fmtPair(o.subtotal, o.usd) + (o.deliveryPrice ? ' + доставка ' + E.fmtMoney(o.deliveryPrice) : ', доставка бесплатно') + '. После взвешивания напишите, например: <b>' + o.no + ' ' + esc(o.lines[0].name.split(' ')[0].toLowerCase()) + ' 0,54</b>');
+  }
+  function askOos(no) {
+    var o = E.findOrder(no); if (!o) return;
+    say('Чего нет в ' + E.orderNo(no) + '?', o.lines.map(function (l) {
+      return { label: l.name, run: function () {
+        E.updateOrder(no, { status: 'oos', oosItem: l.name });
+        var it = C.byId[l.id];
+        if (it && E.itemState(it) !== 'sold_out') { E.setState(l.id, { state: 'sold_out' }); refreshCatalog(); }
+        say('Клиенту отправлено: «' + esc(l.name) + '» сейчас нет, предложили заменить или подождать до поставки. Заказ ' + E.orderNo(no) + ' на паузе. На сайте у позиции плашка «Закончилось».');
+      } };
+    }));
+  }
+  function weigh(cmd) {
+    var o = E.findOrder(cmd.no);
+    if (!o) return say('Не нашёл заказ ' + E.orderNo(cmd.no) + '.');
+    var line = E.findItem(cmd.query, o.lines.map(function (l) { return { id: l.id, name_ru: l.name, keys: [] }; }));
+    if (!line) return say('В ' + E.orderNo(o.no) + ' нет позиции «' + esc(cmd.query) + '». Есть: ' + o.lines.map(function (l) { return esc(l.name.toLowerCase()); }).join(', ') + '.');
+    var it = C.byId[line.id];
+    var qty = it.unit === 'pc' ? Math.round(cmd.kg) : Math.round(cmd.kg * 1000);
+    o.lines.forEach(function (l) { if (l.id === line.id) l.qty = qty; });
+    E.recalcOrder(o, C);
+    E.updateOrder(o.no, { lines: o.lines, subtotal: o.subtotal, deliveryPrice: o.deliveryPrice, total: o.total, status: o.status === 'new' ? 'confirmed' : o.status });
+    var l2 = o.lines.filter(function (l) { return l.id === line.id; })[0];
+    say(E.orderNo(o.no) + ': ' + esc(l2.name.toLowerCase()) + ' ' + esc(l2.weight) + ' = <span class="g">' + E.fmtMoney(l2.sum, l2.cur) + '</span>. Итого <span class="g">' + E.fmtPair(o.subtotal, o.usd) + '</span>' + (o.deliveryPrice ? ' + доставка ' + E.fmtMoney(o.deliveryPrice) + ' = ' + E.fmtPair(o.total, o.usd) : '') + '.\nКлиенту отправлено: сумма ' + E.fmtPair(o.subtotal, o.usd) + (o.payment === 'card' ? ', номер карты' : '') + '.');
+  }
+  function today() {
+    var pl = E.pickList(E.loadOrders(), C);
+    if (!pl.count) return say('На сегодня открытых заказов нет.');
+    var items = pl.items.map(function (i) { return esc(i.name.toLowerCase()) + ' <b>' + esc(i.label) + '</b>'; }).join(', ');
+    say('<b>На сегодня: ' + pl.count + ' ' + plural(pl.count, 'заказ', 'заказа', 'заказов') + '.</b>\nСобрать: ' + items + '.\nОтправка: карго ' + (pl.shipping.cargo || 0) + ' / Алания ' + (pl.shipping.alanya || 0) + ' / самовывоз ' + (pl.shipping.pickup || 0) + '.');
+    var open = E.loadOrders().filter(function (o) { return o.status === 'new' || o.status === 'confirmed' || o.status === 'paid'; });
+    say(open.map(function (o) { return E.orderNo(o.no) + ' · ' + esc(o.customer.name) + ', ' + esc(o.customer.city) + ' · ' + STATUS[o.status]; }).join('\n'));
+  }
+  function week() {
+    var r = E.weekReport(E.loadOrders());
+    say('<b>За неделю:</b> ' + r.count + ' ' + plural(r.count, 'заказ', 'заказа', 'заказов') + ' на <span class="g">' + E.fmtPair(r.sum, r.usd) + '</span>.\nТоп-3: ' + r.top.map(function (t) { return esc(t.name.toLowerCase()) + ' ' + E.fmtMoney(t.sum, t.cur); }).join(', ') + '.\nПовторных клиентов: ' + r.repeat + '.');
+  }
+
+  /* ---------- job 2: delivery requests ---------- */
+  function money0(n) { return E.fmtMoney(n); }
+  function deliveryAnswer(city, fromCustomer) {
+    var r = E.deliveryRule(city, C);
+    var c = C.deliveryById.cargo;
+    var head = fromCustomer ? 'Отвечаю клиенту сам. ' : '';
+    if (r.mode === 'courier') {
+      return say(head + '<b>' + esc(r.city) + '</b>: это Алания и район. Курьер ' + money0(r.price) + ', бесплатно от ' + money0(r.freeFrom) + ', сегодня или завтра; самовывоз бесплатно. Клиенту отправлено, в заказ запишу курьером.');
+    }
+    if (r.mode === 'courier-own') {
+      return say(head + '<b>' + esc(r.city) + '</b>: по моей памяти вы ездите сами' + (r.day ? ' (' + esc(dayRu(r.day)) + ')' : '') + '. Клиенту отправлено: привезём' + (r.day ? ' в ' + esc(dayRu(r.day)) : '') + ' или карго ' + money0(r.price) + '. В заказ запишу выездом.');
+    }
+    if (r.mode === 'ask') {
+      say(head + '<b>' + esc(r.city) + '</b>: карго я знаю - ' + money0(r.price) + ', бесплатно от ' + money0(r.freeFrom) + ', 2-3 дня. Клиенту пока ответил: «Уточню, отвечу в течение часа».');
+      return say('Марго, одного не знаю: вы сами ездите в ' + esc(r.city) + '?', [
+        { label: 'Да, по четвергам', run: function () { E.learnDelivery(r.city, { courier: true, day: 'thu' }); say('Запомнил: ' + esc(r.city) + ' - выезд по четвергам. Клиенту отправлено: привезём в четверг или карго ' + money0(r.price) + '. В следующий раз отвечу сам.'); } },
+        { label: 'Да, любой день', run: function () { E.learnDelivery(r.city, { courier: true, day: null }); say('Запомнил: ' + esc(r.city) + ' - выезд в любой день. Клиенту отправлено. В следующий раз отвечу сам.'); } },
+        { label: 'Нет, только карго', run: function () { E.learnDelivery(r.city, { courier: false }); say('Запомнил: ' + esc(r.city) + ' - только карго ' + money0(r.price) + '. Клиенту отправлено. В следующий раз отвечу сам.'); } }
+      ]);
+    }
+    return say(head + '<b>' + esc(r.city) + '</b>: карго ' + money0(r.price) + ' (бесплатно от ' + money0(r.freeFrom) + '), 2-3 дня, трек-номер пришлю в Telegram. Клиенту отправлено, в заказ запишу карго. Вас не беспокоил: правило известно.');
+  }
+  function customerAsk(city, who, text) {
+    customer(who, esc(text));
+    setTimeout(function () { deliveryAnswer(city, true); }, 350);
+  }
+
+  /* ---------- job 3: site updates from chat ---------- */
+  function noItem(q) { say('Не нашёл такой товар: «' + esc(q) + '». Напишите название как в каталоге.'); }
+  function stateCmd(cmd) {
+    var it = E.findItem(cmd.query, C.items);
+    if (!it) return noItem(cmd.query);
+    var cur = E.itemState(it), n = nameOf(it), s = cmd.state;
+    if (s === 'sold_out') return ask('<b>' + n + '</b>: на сайте будет плашка «Закончилось ⛔️», кнопки «Сообщить о поставке» и «Заказать к следующей поставке» (идёт в заказ «под заказ»). Верно?', function () { E.setState(it.id, { state: 'sold_out' }); refreshCatalog(); say('Готово. «' + n + '»: закончилось. Спасибо за день.'); });
+    if (s === 'few_left') return ask('<b>' + n + '</b>: плашка «Осталось мало»' + (cmd.qty ? ', на карточке ~' + String(cmd.qty).replace('.', ',') + ' кг' : '') + '. Верно?', function () { E.setState(it.id, { state: 'few_left', qty: cmd.qty }); refreshCatalog(); say('Готово. «' + n + '»: осталось мало' + (cmd.qty ? ' (~' + String(cmd.qty).replace('.', ',') + ' кг)' : '') + '.'); });
+    if (s === 'not_now') return ask('<b>' + n + '</b>: пометить «Пока нет» (серая карточка, без кнопки, не в общей ленте). Верно?', function () { E.setState(it.id, { state: 'not_now' }); refreshCatalog(); say('Готово. «' + n + '»: пока нет.'); });
+    if (s === 'preorder') return ask('<b>' + n + '</b>: «Принимаю заказы»' + (cmd.day ? ', день: ' + esc(dayRu(cmd.day)) : '') + '. Заказы идут в корзину как «под заказ». Верно?', function () { E.setState(it.id, { state: 'preorder', day: cmd.day }); refreshCatalog(); say('Готово. «' + n + '»: принимаю заказы' + (cmd.day ? ', день: ' + esc(dayRu(cmd.day)) : '') + '.'); });
+    /* in_stock / new_batch: back from sold out or not yet = new batch (first in the list for 48 h; no stamp on the card since 09.10) */
+    var fresh = s === 'new_batch' || cur === 'sold_out' || cur === 'not_now' || cur === 'preorder';
+    return ask('<b>' + n + '</b>: ' + (fresh ? 'в наличии, карточка на 48 часов выходит в начало списка' : 'в наличии') + '. Верно?', function () {
+      E.setState(it.id, { state: fresh ? 'new_batch' : 'in_stock' }); refreshCatalog();
+      say('Готово. «' + n + '»: в наличии' + (fresh ? ', первой в списке' : '') + '.');
+      if (fresh) say('Разослать клиентам, кто ждал «' + n + '»?', [
+        { label: 'Да, разослать', run: function () { var k = E.loadNotify().filter(function (x) { return x.item === it.id; }).length; say('Отправлено: ' + k + ' ' + plural(k, 'клиенту', 'клиентам', 'клиентам') + ' из «Сообщить о поставке» и 2 135 участникам группы: «Новая поставка 🔥 ' + n.toLowerCase() + '».'); } },
+        { label: 'Не сейчас', run: function () { say('Хорошо, не рассылаю.'); } }
+      ]);
+    });
+  }
+  function nextBatchCmd(cmd) {
+    var out = C.items.filter(function (it) { return E.itemState(it) === 'sold_out'; });
+    if (!out.length) return say('Сейчас ничего не закончилось, день ставить некуда. Когда что-то закончится, напишите ещё раз.');
+    ask('Следующая поставка: <b>' + esc(dayRu(cmd.day)) + '</b>. Появится на ' + out.length + ' ' + plural(out.length, 'карточке', 'карточках', 'карточках') + ' закончившихся товаров: ' + out.slice(0, 4).map(function (i) { return esc(i.name_ru.toLowerCase()); }).join(', ') + (out.length > 4 ? ' и ещё ' + (out.length - 4) : '') + '. Верно?', function () {
+      var n = E.setNextBatch(cmd.day, C); refreshCatalog();
+      say('Готово. День «' + esc(dayRu(cmd.day)) + '» стоит на ' + n + ' карточках; в ответе «Когда новая поставка?» на сайте тоже.');
+    });
+  }
+  function price(cmd) {
+    var it = E.findItem(cmd.query, C.items);
+    if (!it) return noItem(cmd.query);
+    ask('<b>' + nameOf(it) + '</b>: ' + E.fmtMoney(it.price, it.currency) + E.unitLabel(it, 'ru') + ' → <span class="g">' + E.fmtMoney(cmd.price, it.currency) + '</span>' + E.unitLabel(it, 'ru') + '. Верно?', function () { E.setPrice(it.id, cmd.price); refreshCatalog(); say('Готово. Цена на сайте: ' + nameOf(it) + ' ' + E.fmtMoney(cmd.price, it.currency) + E.unitLabel(it, 'ru') + '.'); });
+  }
+  function forwardPhoto(caption) {
+    var cap = caption || 'бастурма 850';
+    bubble('<img class="pic" src="img/forward-basturma.jpg" alt="">' + esc(cap), 'out');
+    setTimeout(function () {
+      var p = E.parseNewItem(cap);
+      if (!p) return say('Фото получил, но в подписи не вижу цены. Перешлите ещё раз с подписью «название цена», например: <b>бастурма 850</b>.');
+      ask('Новая позиция: <b>' + esc(p.name) + '</b>, ' + money(p.price) + '/кг, фото получено. На сайте: первой в списке, категория «Другое», веса 300 г / 500 г / 1 кг. Верно?', function () {
+        var id = 'new-' + Date.now().toString(36);
+        E.addNewItem({ id: id, cat: 'inshe', name_ru: p.name, name_uk: p.name, name_en: p.name, desc_ru: '', desc_uk: '', desc_en: '', unit: 'kg', price: p.price, currency: 'TRY', steps_g: [300, 500, 1000], min_g: 300, pack_g: null, demo: false,
+          photo: 'img/forward-basturma.jpg', keys: [p.name.toLowerCase()], state: 'new_batch', since: Date.now() });
+        refreshCatalog();
+        say('Готово. «' + esc(p.name) + '» на сайте: ' + E.fmtMoney(p.price) + '/кг, первой в списке. Название на украинском и английском оставил как есть; поправить - напишите.');
+      });
+    }, 350);
+  }
+  function broadcast() {
+    var fresh = C.items.filter(function (i) { var s = E.itemState(i); return s === 'new_batch'; }).slice(0, 4).map(function (i) { return i.name_ru.toLowerCase(); });
+    var have = fresh.length ? fresh : C.items.filter(function (i) { return E.itemState(i) === 'in_stock'; }).slice(0, 4).map(function (i) { return i.name_ru.toLowerCase(); });
+    say('Черновик рассылки:\n«Новая поставка 🔥 ' + esc(have.join(', ')) + '. Заказывайте на сайте: Алания сегодня, Турция карго 2-3 дня.»', [
+      { label: 'Отправить всем', run: function () { say('Отправлено 2 135 участникам группы и подписчикам сайта, которые согласились на сообщения.'); } },
+      { label: 'Изменить текст', run: function () { say('Напишите новый текст, и я отправлю его на подтверждение.'); } }
+    ]);
+  }
+  function stampsOverlay() {
+    say('Плашки в ваших словах: «Закончилось», «Осталось мало», «Новая поставка», «Принимаю заказы», «В наличии», на русском, украинском и английском. Открываю.');
+    var o = document.getElementById('sovl'); document.getElementById('sframe').src = 'stamps.html?t=' + Date.now();
+    o.classList.add('on'); o.setAttribute('aria-hidden', 'false');
+  }
+  function closeStamps() { var o = document.getElementById('sovl'); o.classList.remove('on'); o.setAttribute('aria-hidden', 'true'); document.getElementById('sframe').src = 'about:blank'; }
+  document.getElementById('sclose').addEventListener('click', closeStamps);
+  window.addEventListener('message', function (e) { if (e.source === document.getElementById('sframe').contentWindow && e.data === 'ukr-demo:close-stamps') closeStamps(); });
+
+  /* ---------- router ---------- */
+  function help() {
+    say('Не понял. Примеры:\n<b>103 сало 0,54</b> взвесили, пересчитать\n<b>сало закончилось</b> / <b>сало есть</b> / <b>сало мало 2 кг</b>\n<b>зельц на воскресенье</b> / <b>следующая поставка четверг</b>\n<b>доставка в Белек?</b> / <b>Докторская 1150</b>\n<b>Сегодня</b>, <b>Неделя</b>, <b>плашки</b>, <b>Завоз</b>');
+  }
+  function handle(text) {
+    var cmd = E.parseBotCommand(text);
+    if (pending && /^(да|так|нет|ні)$/i.test(text.trim())) { var p = pending; pending = null; if (/^(да|так)$/i.test(text.trim())) p.yes(); else say('Отменено.'); return; }
+    pending = null;
+    switch (cmd.type) {
+      case 'confirm': return confirmOrder(cmd.no);
+      case 'weight': return weigh(cmd);
+      case 'paid': { var o = E.updateOrder(cmd.no, { status: 'paid' }); if (!o) return say('Не нашёл заказ ' + E.orderNo(cmd.no) + '.'); return say(E.orderNo(o.no) + ': оплачен. Клиенту отправлено: «получили, собираем».'); }
+      case 'shipped': { var s = E.updateOrder(cmd.no, { status: 'shipped', track: cmd.track }); if (!s) return say('Не нашёл заказ ' + E.orderNo(cmd.no) + '.'); return say(E.orderNo(s.no) + ': отправлен' + (cmd.track ? ', трек <b>' + esc(cmd.track) + '</b>' : '') + '. Клиенту отправлено: трек и срок (' + (s.delivery === 'cargo' ? '2-3 дня' : 'сегодня или завтра') + ').'); }
+      case 'today': return today();
+      case 'week': return week();
+      case 'broadcast': return broadcast();
+      case 'stamps': return stampsOverlay();
+      case 'delivery': return deliveryAnswer(cmd.city, false);
+      case 'state': return stateCmd(cmd);
+      case 'nextbatch': return nextBatchCmd(cmd);
+      case 'price': return price(cmd);
+      default: return help();
+    }
+  }
+
+  /* ---------- UI ---------- */
+  var QUICK = [
+    { label: 'Сегодня', text: 'Сегодня' }, { label: '103 сало 0,54', text: '103 сало 0,54' }, { label: '103 оплачено', text: '103 оплачено' },
+    { label: '103 отправлено 1234567890', text: '103 отправлено 1234567890' },
+    { label: 'сало закончилось', text: 'сало закончилось' }, { label: 'новая поставка сало', text: 'новая поставка сало' }, { label: 'сало мало 2 кг', text: 'сало мало 2 кг' },
+    { label: 'зельц на воскресенье', text: 'зельц на воскресенье' }, { label: 'следующая поставка четверг', text: 'следующая поставка четверг' },
+    { label: 'Клиент: доставка в Белек?', cust: ['Белек', 'Марина', 'Добрый день! Можна замовити сало і ковбасу, і чи можна доставку в Белек?'] },
+    { label: 'Клиент: доставка в Стамбул?', cust: ['Стамбул', 'Игорь', 'А в Стамбул доставляете?'] },
+    { label: 'плашки', text: 'плашки' }, { label: 'Докторская 1150', text: 'Докторская 1150' }, { label: 'Завоз', text: 'Завоз' }, { label: 'Неделя', text: 'Неделя' },
+    { label: 'Фото + «бастурма 850»', photo: true }
+  ];
+  var quick = document.getElementById('quick');
+  QUICK.forEach(function (q) {
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = q.label;
+    b.addEventListener('click', function () { if (q.cust) customerAsk(q.cust[0], q.cust[1], q.cust[2]); else if (q.photo) forwardPhoto(''); else send(q.text); });
+    quick.appendChild(b);
+  });
+  var inp = document.getElementById('inp');
+  document.getElementById('compose').addEventListener('submit', function (e) { e.preventDefault(); var v = inp.value.trim(); if (!v) return; inp.value = ''; send(v); });
+  document.getElementById('attach').addEventListener('click', function () { var v = inp.value.trim(); inp.value = ''; forwardPhoto(v); });
+  function send(text) { me(text); setTimeout(function () { handle(text); }, 250); }
+  document.getElementById('reset').addEventListener('click', function () {
+    try { [E.KEYS.orders, E.KEYS.ordersOld, 'ukr-demo-stock', 'ukr-demo-prices', 'ukr-demo-newitems', 'ukr-demo-delivery', 'ukr-demo-notify'].forEach(function (k) { localStorage.removeItem(k); }); } catch (e) { /* ignore */ }
+    E.seedOrders(); refreshCatalog(); chat.innerHTML = ''; pending = null; open();
+  });
+
+  function open() {
+    var orders = E.loadOrders();
+    var day = document.createElement('div'); day.className = 'day'; day.textContent = 'сегодня'; chat.appendChild(day);
+    var fresh = orders.filter(function (o) { return o.status === 'new'; });
+    if (fresh.length) { say('Новых заказов: <b>' + fresh.length + '</b>. Одно нажатие, и клиент получает подтверждение.'); fresh.forEach(orderCard); }
+    else say('Новых заказов нет. Напишите <b>Сегодня</b>, чтобы увидеть, что собирать.');
+    var waiting = E.loadNotify();
+    if (waiting.length) say('Ждут поставку: ' + waiting.length + ' ' + plural(waiting.length, 'клиент', 'клиента', 'клиентов') + ' (кнопка «Сообщить о поставке» на сайте). Когда напишете «новая поставка ...», я предложу им разослать.');
+  }
+  open();
+  window.__bot = { send: send, handle: handle, customerAsk: customerAsk, forwardPhoto: forwardPhoto };
+})();
+</script>
+</body>
+</html>
