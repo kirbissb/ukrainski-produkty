@@ -443,6 +443,29 @@
     for (i = steps.length - 1; i >= 0; i--) if (steps[i] < cur) return steps[i];
     return 0;
   }
+  /* ---------- real orders (CEO 10.10): the checkout goes to the test bot's worker, POST /site-order (bot-engine src/site-order.ts).
+     The № on the done screen is the one the worker returns (the bot's own counter); nothing is numbered in the browser. ---------- */
+  var ORDER_URL = 'https://ukr-alanya-bot-test.bot-engine.workers.dev/site-order';
+  function orderNonce() { var a = '', c = 'abcdefghijklmnopqrstuvwxyz0123456789'; for (var i = 0; i < 20; i++) a += c.charAt(Math.floor(Math.random() * c.length)); return a; }
+  /* the request body: cart lines as {id, qty} (grams for weighed items, pieces for pc), the form as typed; website = honeypot (empty) */
+  function sitePayload(cart, form, lang, nonce) {
+    return { items: cart.map(function (l) { return { id: l.id, qty: l.qty }; }), name: String(form.name || '').trim(), contact: String(form.phone || '').trim(),
+      delivery: form.delivery, city: form.other ? String(form.city || '').trim() : '', payment: form.payment, comment: String(form.comment || '').trim(),
+      date: form.date || '', lang: lang === 'uk' || lang === 'en' ? lang : 'ru', nonce: nonce, website: String(form.website || '') };
+  }
+  /* -> Promise<{ok:true, data}> | {ok:false, kind:'network'|'rejected', status, error}. Never throws; 'network' = no answer at all
+     (the order may or may not exist: a retry with the SAME nonce returns the same order, never a second one) */
+  function sendOrder(payload, fetchFn, url) {
+    var f = fetchFn || (typeof fetch !== 'undefined' ? fetch : null);
+    if (!f) return Promise.resolve({ ok: false, kind: 'network', status: 0, error: 'no_fetch' });
+    return f(url || ORDER_URL, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.ok && j && j.ok && j.order_id) return { ok: true, data: j };
+        return { ok: false, kind: r.status >= 500 ? 'network' : 'rejected', status: r.status, error: (j && j.error) || 'http_' + r.status };
+      });
+    }, function () { return { ok: false, kind: 'network', status: 0, error: 'network' }; });
+  }
+
   /* what the B card says in its glass bar and pill, from real data only (no ratings, no delivery minutes) */
   function cardInfo(it, now) {
     var st = itemState(it, now);
@@ -465,6 +488,7 @@
     loadCustomer: loadCustomer, saveCustomer: saveCustomer, loadCart: loadCart, saveCart: saveCart, loadLang: loadLang, saveLang: saveLang,
     saveNotify: saveNotify, loadNotify: loadNotify,
     cardsVariant: cardsVariant, cardsIsB: cardsIsB, quickNavVisible: quickNavVisible, stepQty: stepQty, cardInfo: cardInfo, groupByCategory: groupByCategory, pluralIdx: pluralIdx,
-    contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial
+    contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
+    ORDER_URL: ORDER_URL, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder
   };
 });
