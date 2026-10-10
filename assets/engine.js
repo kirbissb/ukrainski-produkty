@@ -322,6 +322,49 @@
     return best;
   }
 
+  /* ---------- site search (CEO 10.10: header magnifier, "сосиски" / "сало") ----------
+     All matching items, not the single best one (findItem is the bot's). Both sides are folded the same way:
+     case, ё/е, UA letters to RU (і ї -> и, є -> е, ґ -> г, ы -> и, э -> е), no ь/ъ/apostrophe, UA "ковбас" = RU "колбас";
+     then a light ending strip (сосиски/сосиску/сосисок, сало/сала). A word matches a token when the stems are equal or a stem
+     of 5+ letters starts the token; only if that finds nothing, a token that starts with what was typed (live typing "сос"). */
+  function sFold(s) {
+    return norm(s).replace(/[іїи]/g, 'и').replace(/ы/g, 'и').replace(/[єэ]/g, 'е').replace(/ґ/g, 'г').replace(/[ьъ']/g, '')
+      .replace(/колбас/g, 'ковбас');
+  }
+  var S_END = ['ами', 'ями', 'ого', 'его', 'ому', 'ему', 'ими', 'ой', 'ей', 'ий', 'ая', 'яя', 'ое', 'ее', 'ие', 'ов', 'ев', 'ам', 'ям', 'ах', 'ях', 'ом', 'ем', 'ую', 'юю', 'а', 'я', 'о', 'е', 'и', 'у', 'ю'];
+  function sStem(w) {
+    if (/[^а-яй]/.test(w) || w.length < 4) return w;
+    for (var i = 0; i < S_END.length; i++) {
+      var e = S_END[i];
+      if (w.length - e.length >= (e.length > 2 ? 4 : 3) && w.slice(-e.length) === e) { w = w.slice(0, -e.length); break; }
+    }
+    return w.replace(/([бвгджзклмнпрстфхцчшщ])[ое]к$/, '$1к');   /* fleeting vowel: сосисок -> сосиск, колбасок -> колбаск */
+  }
+  function sTokens(it) {
+    var out = [];
+    phrases(it).concat([it.brand_en || '']).forEach(function (ph) {
+      sFold(ph).split(/[\s,()&/+-]+/).forEach(function (tk) { if (tk && out.indexOf(tk) < 0) out.push(tk); });
+    });
+    return out;
+  }
+  function searchItems(query, items) {
+    var pool = items || (CATALOG && CATALOG.items) || [];
+    var words = sFold(query).split(/[\s,()&/+-]+/).filter(Boolean);
+    if (!words.length) return [];
+    var stems = words.map(sStem), toks = pool.map(sTokens);
+    function pass(loose) {
+      return pool.filter(function (it, i) {
+        return words.every(function (w, k) {
+          var ws = stems[k];
+          return toks[i].some(function (tk) { return sStem(tk) === ws || (ws.length >= 5 && tk.indexOf(ws) === 0) || (loose && tk.indexOf(w) === 0); });
+        });
+      });
+    }
+    /* whole words first ("сала" = salo, not "салат"); only when nothing matches, read the query as an unfinished word ("сос") */
+    var hit = pass(false);
+    return hit.length ? hit : pass(true);
+  }
+
   /* ---------- delivery rules (placeholders until agreed with the owners) ---------- */
   var ALANYA_AREA = ['аланья', 'алания', 'аланія', 'alanya', 'махмутлар', 'mahmutlar', 'оба', 'oba', 'кестель', 'kestel', 'авсаллар', 'avsallar', 'конаклы', 'konakli'];
   var ASK_OWNER = { 'белек': 'Белек', 'belek': 'Белек', 'анталия': 'Анталия', 'анталья': 'Анталия', 'антальйя': 'Анталия', 'анталія': 'Анталия', 'antalya': 'Анталия' };
@@ -483,7 +526,7 @@
     lineSum: lineSum, cartAdd: cartAdd, cartAddPre: cartAddPre, cartSet: cartSet, cartStep: cartStep, totals: totals,
     orderNo: orderNo, migrateOrders: migrateOrders, brandFor: brandFor, seedOrders: seedOrders, loadOrders: loadOrders, saveOrders: saveOrders, orderNumber: orderNumber, saveOrder: saveOrder,
     findOrder: findOrder, updateOrder: updateOrder, recalcOrder: recalcOrder, orderSummary: orderSummary, orderShortLine: orderShortLine,
-    pickList: pickList, weekReport: weekReport, findItem: findItem, parseBotCommand: parseBotCommand, parseNewItem: parseNewItem,
+    pickList: pickList, weekReport: weekReport, findItem: findItem, searchItems: searchItems, parseBotCommand: parseBotCommand, parseNewItem: parseNewItem,
     deliveryRule: deliveryRule, learnDelivery: learnDelivery,
     loadCustomer: loadCustomer, saveCustomer: saveCustomer, loadCart: loadCart, saveCart: saveCart, loadLang: loadLang, saveLang: saveLang,
     saveNotify: saveNotify, loadNotify: loadNotify,

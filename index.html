@@ -27,6 +27,7 @@
   <symbol id="i-box" viewBox="0 0 24 24"><path d="M3.5 7.5L12 3.5l8.5 4v9L12 20.5l-8.5-4v-9zM3.5 7.5L12 11.5l8.5-4M12 11.5v9M7.8 5.5l8.4 4"/></symbol>
   <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.3 15.3L20.5 20.5"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 17h2"/></symbol>
   <!-- logo mark "Zorya" (CEO pick 10.10, logo/c1-zorya-mark-gold.svg, inlined without its black plate) -->
   <symbol id="logo-zorya" viewBox="0 0 512 512"><polygon points="256.0,16.0 310.0,114.0 256.0,212.0 202.0,114.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,53.2 289.5,114.0 256.0,174.8 222.5,114.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,88.5 270.0,114.0 256.0,139.5 242.0,114.0" fill="#c9a86a"/><polygon points="496.0,256.0 398.0,310.0 300.0,256.0 398.0,202.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="458.8,256.0 398.0,289.5 337.2,256.0 398.0,222.5" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="423.5,256.0 398.0,270.0 372.5,256.0 398.0,242.0" fill="#c9a86a"/><polygon points="256.0,496.0 202.0,398.0 256.0,300.0 310.0,398.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,458.8 222.5,398.0 256.0,337.2 289.5,398.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="256.0,423.5 242.0,398.0 256.0,372.5 270.0,398.0" fill="#c9a86a"/><polygon points="16.0,256.0 114.0,202.0 212.0,256.0 114.0,310.0" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="53.2,256.0 114.0,222.5 174.8,256.0 114.0,289.5" fill="none" stroke="#c9a86a" stroke-width="14" stroke-linejoin="miter"/><polygon points="88.5,256.0 114.0,242.0 139.5,256.0 114.0,270.0" fill="#c9a86a"/><g stroke="#c9a86a" stroke-width="14" stroke-linecap="butt"><line x1="299.8" y1="169.7" x2="359.2" y2="110.3"/><line x1="305.5" y1="206.5" x2="407.3" y2="104.7"/><line x1="342.3" y1="212.2" x2="401.7" y2="152.8"/><line x1="342.3" y1="299.8" x2="401.7" y2="359.2"/><line x1="305.5" y1="305.5" x2="407.3" y2="407.3"/><line x1="299.8" y1="342.3" x2="359.2" y2="401.7"/><line x1="212.2" y1="342.3" x2="152.8" y2="401.7"/><line x1="206.5" y1="305.5" x2="104.7" y2="407.3"/><line x1="169.7" y1="299.8" x2="110.3" y2="359.2"/><line x1="169.7" y1="212.2" x2="110.3" y2="152.8"/><line x1="206.5" y1="206.5" x2="104.7" y2="104.7"/><line x1="212.2" y1="169.7" x2="152.8" y2="110.3"/></g><polygon points="256.0,222.0 290.0,256.0 256.0,290.0 222.0,256.0" fill="#c9a86a"/></symbol>
@@ -47,6 +48,7 @@
       <div class="lang" role="group" aria-label="Language">
         <button type="button" data-lang="ru" aria-pressed="true">RU</button><button type="button" data-lang="uk" aria-pressed="false">UA</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
       </div>
+      <button class="btn srchbtn" id="srchBtn" type="button" data-i18n-aria="srch_open" aria-expanded="false" aria-controls="srch"><svg class="ico" aria-hidden="true"><use href="#i-search"/></svg></button>
       <button class="btn cartbtn" id="cartBtn" type="button" data-i18n-aria="cart">
         <svg class="ico" style="width:18px;height:18px"><use href="#i-basket"/></svg>
         <span class="n" id="cartCount"></span>
@@ -164,6 +166,15 @@
 
 <button class="qn-btn" id="qnBtn" type="button" hidden aria-haspopup="dialog" aria-controls="qnSheet"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span data-i18n="cb_sections"></span></button>
 <div class="qn" id="qnSheet" role="dialog" aria-modal="true" aria-labelledby="qnTitle" hidden><div class="qn-back" data-qn-close></div><div class="qn-panel" id="qnPanel"><div class="qn-head"><h2 id="qnTitle" data-i18n="cb_sections"></h2><button class="xbtn" type="button" data-qn-close data-i18n-aria="n_close">&times;</button></div><ul class="qn-list" id="qnList"></ul></div></div>
+<!-- 10.10 site search (CEO): opens from the header magnifier, sits under the header (cart and language stay reachable) -->
+<div class="srch" id="srch" role="search" hidden>
+  <div class="srch-bar"><div class="wrap">
+    <svg class="ico" aria-hidden="true"><use href="#i-search"/></svg>
+    <input id="srchInput" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+    <button class="xbtn" id="srchClose" type="button" data-i18n-aria="n_close">&times;</button>
+  </div></div>
+  <div class="wrap srch-body"><p class="srch-meta" id="srchMeta" aria-live="polite"></p><div id="srchGrid"></div></div>
+</div>
 <p class="cb-live" id="cbLive" aria-live="polite" role="status"></p>
 <div class="bar" id="bar"><button class="btn fill" type="button" id="barBtn"><span id="barLeft"></span><span id="barRight"></span></button></div>
 
@@ -213,6 +224,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       hero_p: '<b>Привозим из Украины</b> три раза в неделю. Алания - сегодня, вся Турция - карго 2-3 дня.',
       hero_alt: 'Сало, колбасы, икра, осетрина и кабаносы из ассортимента на тёмном фоне',
       cta_catalog: 'В каталог', cta_special: 'Привезти под заказ',
+      srch_open: 'Поиск', srch_ph: 'Поиск по товарам', srch_found: 'Найдено: {n}', srch_none: 'По запросу «{q}» ничего не нашлось.',
       sp_hint: 'Привезём из Украины не только продукты (косметика, бытовая химия, детские товары) - напишите, что вам нужно. Марго уточнит, получится ли привезти, цену и сроки, и мы напишем вам.',
       sp_what: 'Что привезти', sp_what_ph: 'Любой товар: название, марка', sp_qty: 'Количество', sp_qty_ph: 'Например: 2 кг или 3 шт',
       sp_contact: 'Telegram или телефон (WhatsApp)', sp_contact_ph: '@ник или +90 5xx xxx xx xx', sp_comment: 'Комментарий (необязательно)', sp_send: 'Отправить запрос',
@@ -284,6 +296,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       hero_p: '<b>Привозимо з України</b> тричі на тиждень. Аланія - сьогодні, уся Туреччина - карго 2-3 дні.',
       hero_alt: 'Сало, ковбаси, ікра, осетрина та кабаноси з асортименту на темному тлі',
       cta_catalog: 'До каталогу', cta_special: 'Привезти під замовлення',
+      srch_open: 'Пошук', srch_ph: 'Пошук товарів', srch_found: 'Знайдено: {n}', srch_none: 'За запитом «{q}» нічого не знайшлося.',
       sp_hint: 'Привеземо з України не тільки продукти (косметика, побутова хімія, дитячі товари) - напишіть, що вам потрібно. Марго уточнить, чи вийде привезти, ціну та терміни, і ми напишемо вам.',
       sp_what: 'Що привезти', sp_what_ph: 'Будь-який товар: назва, марка', sp_qty: 'Кількість', sp_qty_ph: 'Наприклад: 2 кг або 3 шт',
       sp_contact: 'Telegram або номер телефону (WhatsApp)', sp_contact_ph: '@нік або +90 5xx xxx xx xx', sp_comment: 'Коментар (необов\'язково)', sp_send: 'Надіслати запит',
@@ -355,6 +368,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       hero_p: '<b>Fresh from Ukraine</b> three times a week. Same-day delivery in Alanya, 2-3 days by cargo anywhere in Turkey.',
       hero_alt: 'Salo, sausages, caviar, sturgeon and kabanosy from the range on a dark background',
       cta_catalog: 'Browse the catalog', cta_special: 'Special order',
+      srch_open: 'Search', srch_ph: 'Search products', srch_found: 'Found: {n}', srch_none: 'Nothing found for “{q}”.',
       sp_hint: 'We bring more than food from Ukraine (cosmetics, household goods, kids\' products) - tell us what you need. Margo will check whether we can bring it, plus the price and timing, and we\'ll get back to you.',
       sp_what: 'What do you need?', sp_what_ph: 'Any item: name, brand', sp_qty: 'Quantity', sp_qty_ph: 'For example: 2 kg or 3 pcs',
       sp_contact: 'Telegram or phone (WhatsApp)', sp_contact_ph: '@username or +90 5xx xxx xx xx', sp_comment: 'Comment (optional)', sp_send: 'Send request',
@@ -660,7 +674,10 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   function renderGrid() {
     if (cardsB || $('#grid').classList.contains('cb')) { $('#grid').classList.toggle('cb', cardsB); $('#cbNote').hidden = !cardsB; $('#catalog').classList.toggle('cb-on', cardsB); if (cardsB) return renderGridB(); $('#cbSecbar').hidden = true; $('#qnBtn').hidden = true; }
     var grid = $('#grid'); grid.innerHTML = '';
-    E.sortItems(C.items, state.cat).forEach(function (it) {
+    E.sortItems(C.items, state.cat).forEach(function (it) { grid.appendChild(cardA(it)); });
+  }
+  /* one design-A card (catalog grid and search results share it) */
+  function cardA(it) {
       var st = E.itemState(it);
       var qty = selQty(it);
       var card = el('article', { class: 'card st-' + st });
@@ -711,8 +728,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
         body.appendChild(add);
       }
       card.appendChild(body);
-      grid.appendChild(card);
-    });
+      return card;
   }
 
   /* ---------- 10.10 card design B (comparison, off by default) ----------
@@ -731,7 +747,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   /* the card bar follows the cart: any change (card stepper, cart sheet, another tab) redraws only the bars that differ */
   function syncCartBadges() {
     if (!cardsB) return;
-    document.querySelectorAll('#grid .card.cb').forEach(function (card) {
+    document.querySelectorAll('#grid .card.cb, #srchGrid .card.cb').forEach(function (card) {
       var it = C.byId[card.getAttribute('data-id')], bar = card.querySelector('.cb-bar'); if (!it || !bar) return;
       if (bar.getAttribute('data-q') !== String(cartQty(it.id))) fillBar(bar, it, E.cardInfo(it));
     });
@@ -771,7 +787,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   }
   function cbLive(msg) { var n = $('#cbLive'); n.textContent = ''; setTimeout(function () { n.textContent = msg; }, 30); }
   function cbChange(it, dir) {
-    var ci = E.cardInfo(it), card = document.querySelector('#grid .card.cb[data-id="' + it.id + '"]'), bar = card && card.querySelector('.cb-bar');
+    var ci = E.cardInfo(it), card = document.querySelector((srchIsOpen() ? '#srchGrid' : '#grid') + ' .card.cb[data-id="' + it.id + '"]'), bar = card && card.querySelector('.cb-bar');
     var kb = !!(bar && bar.contains(document.activeElement)), q = cartQty(it.id);
     if (dir === 'add') cart = ci.state === 'sold_out' ? E.cartAddPre(cart, it.id, selQty(it)) : E.cartAdd(cart, it.id, selQty(it));
     else cart = E.cartSet(cart, it.id, E.stepQty(it, q, dir));
@@ -857,33 +873,34 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   new MutationObserver(qnUpdate).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   window.addEventListener('scroll', function () { if (cardsB) qnUpdate(); }, { passive: true });
   window.addEventListener('resize', qnUpdate);
+  /* one design-B card (catalog sections and search results share it) */
+  function cardB(it) {
+    var ci = E.cardInfo(it), st = ci.state, qty = selQty(it);
+    var card = el('article', { class: 'card cb st-' + st, 'data-id': it.id });
+    card.appendChild(rimg(it.photo, cardSizesB, { class: 'cb-photo', alt: nm(it), loading: 'lazy' }));
+    /* top-left: name, price + unit, one quiet state line */
+    var top = el('div', { class: 'cb-top' });
+    top.appendChild(el('h3', { class: 'cb-name', text: nm(it) }));
+    top.appendChild(el('p', { class: 'cb-price' }, [el('b', { text: E.fmtMoney(it.price, it.currency) }), el('span', { text: E.unitLabel(it, lang) })]));
+    var line = el('p', { class: 'cb-state s-' + st }, [el('i', { class: 'dot' })]);
+    if (st === 'few_left') line.appendChild(el('span', { text: it.qty ? t('cb_few', { q: t('few_qty', { n: (lang === 'en' ? String(it.qty) : String(it.qty).replace('.', ',')) }) }) : t('st_few_left') }));
+    else if (st === 'preorder') line.appendChild(el('span', { text: it.day ? t('preorder_day', { d: dayLabel(it.day) }) : t('st_preorder') }));
+    else if (st === 'sold_out') {
+      line.appendChild(el('span', { class: 'em', text: it.day ? t('next_batch', { d: dayLabel(it.day) }) : t('st_sold_out') }));
+      line.appendChild(el('button', { class: 'cb-notify', type: 'button', onclick: function () { state.notifyItem = it.id; openSheet('notify'); } }, [icon('i-bell'), el('span', { text: t('notify') })]));
+    }
+    else if (st === 'not_now') line.appendChild(el('span', { text: t('st_not_now') }));
+    else line.appendChild(el('span', { text: t('st_in_stock') }));
+    top.appendChild(line);
+    card.appendChild(top);
+    /* one glass bar: before the cart - quantity + add button; in the cart - a stepper (CEO 10.10) */
+    if (ci.buy) { var bar = el('div', { class: 'cb-bar' }); card.appendChild(bar); fillBar(bar, it, ci); }
+    return card;
+  }
   function renderGridB() {
     var grid = $('#grid'); grid.innerHTML = '';
     /* the delivery line is the same for every card: said once above the grid, not on each card */
     var note = $('#cbNote'); note.hidden = false; note.lastChild.textContent = t('dlv_alanya') + ': ' + t('eta_alanya');
-    function cardB(it) {
-      var ci = E.cardInfo(it), st = ci.state, qty = selQty(it);
-      var card = el('article', { class: 'card cb st-' + st, 'data-id': it.id });
-      card.appendChild(rimg(it.photo, cardSizesB, { class: 'cb-photo', alt: nm(it), loading: 'lazy' }));
-      /* top-left: name, price + unit, one quiet state line */
-      var top = el('div', { class: 'cb-top' });
-      top.appendChild(el('h3', { class: 'cb-name', text: nm(it) }));
-      top.appendChild(el('p', { class: 'cb-price' }, [el('b', { text: E.fmtMoney(it.price, it.currency) }), el('span', { text: E.unitLabel(it, lang) })]));
-      var line = el('p', { class: 'cb-state s-' + st }, [el('i', { class: 'dot' })]);
-      if (st === 'few_left') line.appendChild(el('span', { text: it.qty ? t('cb_few', { q: t('few_qty', { n: (lang === 'en' ? String(it.qty) : String(it.qty).replace('.', ',')) }) }) : t('st_few_left') }));
-      else if (st === 'preorder') line.appendChild(el('span', { text: it.day ? t('preorder_day', { d: dayLabel(it.day) }) : t('st_preorder') }));
-      else if (st === 'sold_out') {
-        line.appendChild(el('span', { class: 'em', text: it.day ? t('next_batch', { d: dayLabel(it.day) }) : t('st_sold_out') }));
-        line.appendChild(el('button', { class: 'cb-notify', type: 'button', onclick: function () { state.notifyItem = it.id; openSheet('notify'); } }, [icon('i-bell'), el('span', { text: t('notify') })]));
-      }
-      else if (st === 'not_now') line.appendChild(el('span', { text: t('st_not_now') }));
-      else line.appendChild(el('span', { text: t('st_in_stock') }));
-      top.appendChild(line);
-      card.appendChild(top);
-      /* one glass bar: before the cart - quantity + add button; in the cart - a stepper (CEO 10.10) */
-      if (ci.buy) { var bar = el('div', { class: 'cb-bar' }); card.appendChild(bar); fillBar(bar, it, ci); }
-      return card;
-    }
     /* 10.10 round 3: category tiles first (real photos), then the catalog grouped by category, one section each */
     var groups = E.groupByCategory(C), total = 0;
     groups.forEach(function (g) { total += g.items.length; });
@@ -1227,7 +1244,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     if (which === 'bot') { $('#botFrame').src = 'bot.html?t=' + Date.now(); }
     o.classList.add('on'); o.setAttribute('aria-hidden', 'false'); document.body.classList.add('locked');
   }
-  function refresh() { C = E.applyOverrides(E.parseCatalog(CATALOG_RAW)); renderGrid(); renderFaq(); renderDelivery(); renderCartUI(); }
+  function refresh() { C = E.applyOverrides(E.parseCatalog(CATALOG_RAW)); renderGrid(); renderFaq(); renderDelivery(); renderCartUI(); if (typeof srchRender === 'function') srchRender(); }
   function closeOverlays() {
     [$('#ovlBot'), $('#ovlLegal')].forEach(function (o) { o.classList.remove('on'); o.setAttribute('aria-hidden', 'true'); });
     $('#botFrame').src = 'about:blank';
@@ -1244,7 +1261,57 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     if (e.data === 'ukr-demo:changed') refresh();
   });
   window.addEventListener('storage', function (e) { if (e.key === E.KEYS.stock || e.key === E.KEYS.prices || e.key === E.KEYS.newitems) refresh(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (closeRev()) return; closeOverlays(); if ($('#sheet').classList.contains('on')) closeSheet(); } });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (closeRev()) return;
+    var ov = !!document.querySelector('.ovl.on'), sh = $('#sheet').classList.contains('on');
+    closeOverlays(); if (sh) closeSheet();
+    else if (!ov) srchClose();   /* the search closes last: Esc from the cart / an overlay opened over it returns to the results */
+  });
+
+  /* ---------- 10.10 site search (CEO): magnifier in the header, results across all sections with the normal card controls ---------- */
+  function srchIsOpen() { return !$('#srch').hidden; }
+  function srchPlace() { $('#srch').style.top = Math.max(0, Math.round($('.hdr').getBoundingClientRect().bottom)) + 'px'; }
+  function srchOpen() {
+    var inp = $('#srchInput');
+    if (!srchIsOpen()) { srchPlace(); $('#srch').hidden = false; document.body.classList.add('srch-on'); $('#srchBtn').setAttribute('aria-expanded', 'true'); srchRender(); }
+    inp.focus();   /* inside the tap: the phone keyboard opens */
+  }
+  function srchClose() {
+    if (!srchIsOpen()) return false;
+    $('#srch').hidden = true; document.body.classList.remove('srch-on'); $('#srchBtn').setAttribute('aria-expanded', 'false');
+    $('#srchInput').value = ''; $('#srchGrid').innerHTML = ''; $('#srchMeta').textContent = '';
+    $('#srchBtn').focus({ preventScroll: true });
+    return true;
+  }
+  function srchRender() {
+    if (!srchIsOpen()) return;
+    var inp = $('#srchInput'), q = inp.value.trim(), meta = $('#srchMeta'), grid = $('#srchGrid');
+    inp.placeholder = t('srch_ph'); inp.setAttribute('aria-label', t('srch_open'));
+    meta.innerHTML = ''; grid.innerHTML = ''; grid.className = '';
+    if (!q) return;
+    var list = E.searchItems(q, C.items);
+    if (!list.length) {
+      meta.appendChild(el('span', { text: t('srch_none', { q: q }) }));
+      grid.className = 'srch-none';
+      grid.appendChild(el('button', { class: 'btn', type: 'button', onclick: function () {
+        /* the same "Привезти под заказ" sheet; what they typed goes into "Что привезти" if that field is still empty */
+        if (!state.sf) state.sf = { what: '', qty: '', name: customer.name || '', contact: customer.phone || '', comment: '' };
+        if (!state.sf.what) state.sf.what = q;
+        openSheet('special');
+      } }, [icon('i-box'), el('span', { text: t('cta_special') })]));
+      return;
+    }
+    meta.textContent = t('srch_found', { n: cnt(list.length) });
+    grid.className = cardsB ? 'cb-cards' : 'grid';
+    list.forEach(function (it) { grid.appendChild(cardsB ? cardB(it) : cardA(it)); });
+    syncCartBadges();
+  }
+  $('#srchBtn').addEventListener('click', function () { if (srchIsOpen()) srchClose(); else srchOpen(); });
+  $('#srchClose').addEventListener('click', function () { srchClose(); });
+  $('#srchInput').addEventListener('input', srchRender);
+  $('#srchInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });   /* "search" on the phone keyboard hides it to show the results */
+  window.addEventListener('resize', function () { if (srchIsOpen()) srchPlace(); });
   $('#cartBtn').addEventListener('click', function () { openSheet('cart'); });
   $('#specialBtn').addEventListener('click', function () { openSheet('special'); });
   $('#barBtn').addEventListener('click', function () { openSheet('cart'); });
@@ -1254,7 +1321,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   /* language switch (remembered in localStorage "ukr-lang") */
   function setLang(l) {
     lang = l; E.saveLang(l);
-    applyStatic(); renderChips(); renderGrid(); renderCartUI();
+    applyStatic(); renderChips(); renderGrid(); renderCartUI(); srchRender();
     if ($('#sheet').classList.contains('on')) renderSheet();
   }
   document.querySelectorAll('.lang button').forEach(function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); }); });
@@ -1262,7 +1329,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   cbSwitch();
   applyStatic(); renderChips(); renderGrid(); renderCartUI();
   document.documentElement.classList.remove('boot');   /* texts are in: show the page (site.css "boot") */
-  window.__demo = { state: state, get cart() { return cart; }, openSheet: openSheet, closeSheet: closeSheet, setLang: setLang, get lang() { return lang; }, openSpecial: function () { openSheet('special'); } };
+  window.__demo = { state: state, get cart() { return cart; }, openSheet: openSheet, closeSheet: closeSheet, setLang: setLang, get lang() { return lang; }, openSpecial: function () { openSheet('special'); }, openSearch: srchOpen, closeSearch: srchClose };
 })();
 </script>
 </body>

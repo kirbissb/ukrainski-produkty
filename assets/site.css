@@ -755,3 +755,41 @@ html.boot .grid:empty { min-height: 300vh; }
 .cb-step output { display: grid; place-items: center; min-width: 62px; padding: 0 2px; font-size: 15px; font-weight: 600; white-space: nowrap; }
 .cb-step.tick, .cb-add.tick { transform: scale(0.94); }
 @media (prefers-reduced-motion: reduce) { .cb-step, .cb-add { transition: none; } .cb-step.tick, .cb-add.tick { transform: none; } }
+
+/* ===== 10.10: site search (CEO) - magnifier in the header, results layer under the header ===== */
+.srchbtn { min-height: 44px; min-width: 44px; width: 44px; padding: 0; flex: 0 0 auto; }
+.srchbtn .ico { width: 18px; height: 18px; }
+.srchbtn[aria-expanded="true"] { background: var(--gold); border-color: var(--gold); }
+.srchbtn[aria-expanded="true"] .ico { stroke: var(--gold-ink); }
+.srch { position: fixed; left: 0; right: 0; bottom: 0; top: var(--header); z-index: 29; background: var(--bg); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.srch-bar { position: sticky; top: 0; z-index: 3; background: var(--bg); border-bottom: 1px solid var(--line); padding: 10px 0; }
+.srch-bar .wrap { display: flex; align-items: center; gap: 8px; position: relative; }
+.srch-bar .wrap > .ico { position: absolute; left: 14px; width: 18px; height: 18px; pointer-events: none; }
+.srch-bar input { flex: 1 1 auto; min-width: 0; height: 48px; padding: 0 12px 0 42px; border: 1px solid var(--hair); border-radius: var(--r); background: var(--card); color: var(--ink); font-size: 16px; -webkit-appearance: none; appearance: none; }
+.srch-bar input::placeholder { color: var(--ink-3); }
+.srch-bar input:focus { border-color: var(--gold); outline: none; }
+.srch-bar input::-webkit-search-cancel-button { display: none; }
+.srch-bar .xbtn { flex: 0 0 48px; width: 48px; height: 48px; }
+.srch-body { padding: 14px 0 calc(96px + env(safe-area-inset-bottom)); }
+.srch-meta { margin: 0 0 12px; color: var(--ink-2); font-size: 14px; }
+.srch-meta:empty { display: none; }
+.srch-none .btn { min-height: 46px; }
+.srch-none .btn .ico { width: 18px; height: 18px; }
+body.srch-on { overflow: hidden; }
+html:has(body.srch-on) { overflow: hidden; }
+body.srch-on .cb-secbar, body.srch-on .qn-btn { display: none; }
+body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results on phones */
+/* the header strip for the special-order button is gone (button moved to the hero 10.10), but the header still stuck at
+   top: -52px on phones, so after any scroll only 8 px of it stayed on screen and the magnifier and cart were unreachable */
+@media (max-width: 719px) { :root { --hdr-strip: 0px; } }
+/* phones: with the magnifier in the row, a cart count widened the cart button and cut the brand name ("Украински|"):
+   the count becomes a corner badge on a fixed 44 px cart button (the sum is hidden below 520 px anyway) */
+@media (max-width: 519px) {
+  .cartbtn { position: relative; width: 44px; padding: 0; }
+  .cartbtn .n { position: absolute; top: -7px; right: -7px; min-width: 20px; height: 20px; box-shadow: 0 0 0 2px var(--bg); }
+}
+/* below 380 px the row (brand, RU/UA/EN, magnifier, cart = 4 x 44 px targets) leaves the brand ~53 px: the name goes first,
+   the gold mark is dropped there so "Украинские / Українські" is not cut */
+@media (max-width: 386px) { .hdr .brand .mark { display: none; } }
+/* 340 px and below (iPhone SE 1st gen) even the bare name does not fit: the mark alone, the name stays visually hidden for screen readers */
+@media (max-width: 340px) { .hdr .brand .mark { display: block; } .hdr .brand > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
