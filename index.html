@@ -27,6 +27,8 @@
   <symbol id="i-box" viewBox="0 0 24 24"><path d="M3.5 7.5L12 3.5l8.5 4v9L12 20.5l-8.5-4v-9zM3.5 7.5L12 11.5l8.5-4M12 11.5v9M7.8 5.5l8.4 4"/></symbol>
   <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1.5"/><path d="M3 10h18M7 14.5h4"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="1"/><circle cx="12" cy="12" r="2.2"/><path d="M6.5 10v4M17.5 10v4"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.3 15.3L20.5 20.5"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 17h2"/></symbol>
   <!-- logo mark "Zorya" (CEO pick 10.10, logo/c1-zorya-mark-gold.svg, inlined without its black plate) -->
@@ -179,8 +181,10 @@
 <div class="bar" id="bar"><button class="btn fill" type="button" id="barBtn"><span id="barLeft"></span><span id="barRight"></span></button></div>
 
 <div class="scrim" id="scrim"></div>
-<aside class="sheet" id="sheet" aria-hidden="true">
-  <div class="head"><h2 id="sheetTitle"></h2><button class="xbtn" type="button" id="sheetClose" aria-label="x">&times;</button></div>
+<!-- CEO 11.10: the cart is a centred popup, one action per step (cart -> how -> when / where -> payment -> contacts -> check) -->
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-hidden="true">
+  <div class="head"><div class="ttl"><p class="wz-meta" id="wzMeta" hidden></p><h2 id="sheetTitle" tabindex="-1"></h2></div><button class="xbtn" type="button" id="sheetClose" aria-label="x">&times;</button></div>
+  <div class="wz-prog" id="wzProg" aria-hidden="true" hidden><i id="wzBar"></i></div>
   <div class="scroll" id="sheetBody"></div>
   <div class="foot" id="sheetFoot"></div>
 </aside>
@@ -265,6 +269,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       checkout: 'Оформление', f_name: 'Имя', f_name_ph: 'Как к вам обращаться', f_phone: 'Телефон (Telegram или WhatsApp)', f_city: 'Город', city_alanya: 'Алания', city_other: 'Другой город', city_ph: 'Какой город',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Желаемая дата доставки (необязательно)', f_date_ph: 'Выбрать в календаре', no_date: 'Без даты', prev_m: 'Предыдущий месяц', next_m: 'Следующий месяц',
       f_comment: 'Комментарий', f_comment_ph: 'Например: позвонить перед доставкой', send: 'Отправить заказ', err_contact: 'Укажите имя и телефон, чтобы мы могли подтвердить заказ.', err_send: 'Заказ не отправлен: нет связи с сервером. Корзина сохранена - попробуйте ещё раз.', err_reject: 'Заказ не отправлен: проверьте корзину и данные или напишите нам в Telegram. Корзина сохранена.', f_contact: 'Телефон или ник в Telegram', f_contact_ph: '+90 5xx xxx xx xx или @ник', err_contact_ord: 'Укажите имя и телефон или ник в Telegram - подойдёт любое: +90 5xx xxx xx xx или @ник.', tg_note: 'После заказа откроется Telegram - там вы увидите заказ и подтвердите его одной кнопкой.', f_when_pickup: 'Когда удобно забрать?', f_when_courier: 'Когда удобно принять курьера?', day_today: 'Сегодня', day_tomorrow: 'Завтра', day_none: 'окон больше нет', err_window: 'Выберите день и время, когда вам удобно.', done_when: 'Время', done_tg_msg: 'Сейчас откроется Telegram - там вы увидите заказ и подтвердите его одной кнопкой. Если Telegram не открылся, нажмите кнопку ниже.', done_tg_btn: 'Открыть Telegram', err_city: 'Укажите город для карго.',
+      wz_step: 'Шаг {n} из {m}', wz_next: 'Дальше', wz_back: 'Назад', wz_how: 'Как получить заказ?', wz_where: 'Куда отправить?', wz_pay: 'Как удобно оплатить?', wz_contact: 'Как с вами связаться?', wz_review: 'Проверьте заказ', wz_edit: 'Изменить', wz_items: 'Товары', wz_get: 'Получение', wz_card_note: 'Реквизиты и сумму в гривнах пришлём в Telegram', wz_contacts: 'Контакты', wz_no_comment: 'без комментария',
       dlv_pickup: 'Самовывоз в Алании', dlv_pickup_note: 'Адрес и часы пришлём в подтверждении', dlv_alanya: 'Курьер по Алании', dlv_cargo: 'Карго по Турции', dlv_cargo_note: 'Трек-номер пришлём в Telegram.',
       eta_pickup: 'сегодня или завтра', eta_alanya: 'сегодня или завтра', eta_cargo: '2-3 дня', free_from: 'бесплатно от {f}',
       pay_card: 'Перевод на украинскую карту (гривна)', pay_cash: 'Наличные при получении',
@@ -337,6 +342,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       checkout: 'Оформлення', f_name: 'Ім\'я', f_name_ph: 'Як до вас звертатися', f_phone: 'Номер телефону (Telegram або WhatsApp)', f_city: 'Місто', city_alanya: 'Аланія', city_other: 'Інше місто', city_ph: 'Яке місто',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Бажана дата доставки (необов\'язково)', f_date_ph: 'Обрати в календарі', no_date: 'Без дати', prev_m: 'Попередній місяць', next_m: 'Наступний місяць',
       f_comment: 'Коментар', f_comment_ph: 'Наприклад: подзвонити перед доставкою', send: 'Надіслати замовлення', err_contact: 'Вкажіть ім\'я та номер телефону, щоб ми могли підтвердити замовлення.', err_send: 'Замовлення не надіслано: немає зв\'язку з сервером. Кошик збережено - спробуйте ще раз.', err_reject: 'Замовлення не надіслано: перевірте кошик і дані або напишіть нам у Telegram. Кошик збережено.', f_contact: 'Номер телефону або нік у Telegram', f_contact_ph: '+90 5xx xxx xx xx або @нік', err_contact_ord: 'Вкажіть ім\'я та номер телефону або нік у Telegram - підійде будь-що: +90 5xx xxx xx xx або @нік.', tg_note: 'Після замовлення відкриється Telegram - там ви побачите замовлення і підтвердите його однією кнопкою.', f_when_pickup: 'Коли зручно забрати?', f_when_courier: 'Коли зручно прийняти кур\'єра?', day_today: 'Сьогодні', day_tomorrow: 'Завтра', day_none: 'вікон більше немає', err_window: 'Оберіть день і час, коли вам зручно.', done_when: 'Час', done_tg_msg: 'Зараз відкриється Telegram - там ви побачите замовлення і підтвердите його однією кнопкою. Якщо Telegram не відкрився, натисніть кнопку нижче.', done_tg_btn: 'Відкрити Telegram', err_city: 'Вкажіть місто для карго.',
+      wz_step: 'Крок {n} з {m}', wz_next: 'Далі', wz_back: 'Назад', wz_how: 'Як отримати замовлення?', wz_where: 'Куди надіслати?', wz_pay: 'Як зручно оплатити?', wz_contact: 'Як з вами зв\'язатися?', wz_review: 'Перевірте замовлення', wz_edit: 'Змінити', wz_items: 'Товари', wz_get: 'Отримання', wz_card_note: 'Реквізити та суму в гривнях надішлемо в Telegram', wz_contacts: 'Контакти', wz_no_comment: 'без коментаря',
       dlv_pickup: 'Самовивіз в Аланії', dlv_pickup_note: 'Адресу та години надішлемо в підтвердженні', dlv_alanya: 'Кур\'єр по Аланії', dlv_cargo: 'Карго по Туреччині', dlv_cargo_note: 'Трек-номер надішлемо в Telegram.',
       eta_pickup: 'сьогодні або завтра', eta_alanya: 'сьогодні або завтра', eta_cargo: '2-3 дні', free_from: 'безкоштовно від {f}',
       pay_card: 'Переказ на українську картку (гривня)', pay_cash: 'Готівка при отриманні',
@@ -409,6 +415,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       checkout: 'Checkout', f_name: 'Name', f_name_ph: 'What should we call you', f_phone: 'Phone (Telegram or WhatsApp)', f_city: 'City', city_alanya: 'Alanya', city_other: 'Other city', city_ph: 'Which city',
       f_dlv: 'Delivery', f_pay: 'Payment', f_date: 'Preferred delivery date (optional)', f_date_ph: 'Pick a date', no_date: 'No date', prev_m: 'Previous month', next_m: 'Next month',
       f_comment: 'Comment', f_comment_ph: 'e.g. call before delivery', send: 'Confirm order', err_contact: 'Add your name and phone so we can confirm the order.', err_send: 'The order was not sent: no connection to the server. Your cart is saved - please try again.', err_reject: 'The order was not sent: please check your cart and details or message us on Telegram. Your cart is saved.', f_contact: 'Phone or Telegram username', f_contact_ph: '+90 5xx xxx xx xx or @username', err_contact_ord: 'Add your name and a phone number or Telegram username - either works: +90 5xx xxx xx xx or @username.', tg_note: 'After you order, Telegram opens - you\'ll see your order there and confirm it with one tap.', f_when_pickup: 'When would you like to pick it up?', f_when_courier: 'When can you receive the courier?', day_today: 'Today', day_tomorrow: 'Tomorrow', day_none: 'no slots left', err_window: 'Pick a day and a time that suits you.', done_when: 'Time', done_tg_msg: 'Telegram will now open - you\'ll see your order there and confirm it with one tap. If Telegram didn\'t open, tap the button below.', done_tg_btn: 'Open Telegram', err_city: 'Enter your city for cargo delivery.',
+      wz_step: 'Step {n} of {m}', wz_next: 'Next', wz_back: 'Back', wz_how: 'How would you like to get it?', wz_where: 'Where should we ship it?', wz_pay: 'How would you like to pay?', wz_contact: 'How can we reach you?', wz_review: 'Check your order', wz_edit: 'Edit', wz_items: 'Items', wz_get: 'Delivery', wz_card_note: 'We\'ll send the card details and the amount in UAH on Telegram', wz_contacts: 'Contact details', wz_no_comment: 'no comment',
       dlv_pickup: 'Pickup in Alanya', dlv_pickup_note: 'We\'ll send the address and hours with your confirmation', dlv_alanya: 'Courier in Alanya', dlv_cargo: 'Cargo across Turkey', dlv_cargo_note: 'We\'ll send the tracking number on Telegram.',
       eta_pickup: 'today or tomorrow', eta_alanya: 'today or tomorrow', eta_cargo: '2-3 days', free_from: 'free from {f}',
       pay_card: 'Transfer to a Ukrainian card (UAH)', pay_cash: 'Cash on delivery',
@@ -541,7 +548,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   var cart = E.loadCart();
   var customer = E.loadCustomer() || {};
   var state = { legal: 'dlv', cat: 'all', sel: {}, view: 'cart', calMonth: null, lastOrder: null, notifyItem: null,
-    form: { name: customer.name || '', phone: customer.phone || '', other: customer.cityMode === 'other', city: customer.cityMode === 'other' ? (customer.city || '') : '', delivery: customer.delivery || 'pickup', payment: (customer.payment && C.paymentById[customer.payment]) ? customer.payment : 'card', date: '', comment: '', windowId: null, windowDate: null } };
+    form: { name: customer.name || '', phone: customer.phone || '', other: customer.cityMode === 'other', city: customer.cityMode === 'other' ? (customer.city || '') : '', delivery: customer.delivery || 'pickup', payment: (customer.payment && C.paymentById[customer.payment]) ? customer.payment : 'card', date: '', comment: '', windowId: null, windowDate: null }, step: 'cart', wzReturn: false };
 
   function delivName(d) { return t('dlv_' + d.id); }
   function etaOf(d) { return t('eta_' + d.id); }
@@ -958,14 +965,26 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     renderSheet();
     $('#sheet').classList.add('on'); $('#scrim').classList.add('on'); $('#bar').classList.remove('on');
     $('#sheet').setAttribute('aria-hidden', 'false'); document.body.classList.add('locked');
+    setTimeout(function () { if ($('#sheet').contains(document.activeElement)) return; $('#sheetTitle').focus({ preventScroll: true }); }, 30);
   }
+  /* the popup keeps Tab inside itself while it is open */
+  $('#sheet').addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var f = Array.prototype.filter.call(this.querySelectorAll('button:not([disabled]), a[href], input:not([tabindex="-1"]), textarea, [tabindex="0"]'), function (n) { return n.offsetParent !== null; });
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1], a = document.activeElement;
+    if (e.shiftKey && (a === first || a === $('#sheetTitle'))) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+  });
   /* round 6 (M16): with the on-screen keyboard up, keep the sheet above it (iOS shrinks only the visual viewport)
      and keep the focused field inside the visible part of the sheet's scroll area, not under its foot */
   var vv = window.visualViewport;
+  /* 11.10: the popup is centred; with the keyboard up it is pinned inside the visible part of the screen instead */
   function fitSheet() {
-    var sh = $('#sheet'); if (!vv || !sh.classList.contains('on') || window.innerWidth >= 720) { sh.style.bottom = ''; sh.style.maxHeight = ''; return; }
+    var sh = $('#sheet'), clear = function () { sh.style.top = ''; sh.style.bottom = ''; sh.style.height = ''; sh.style.maxHeight = ''; };
+    if (!vv || !sh.classList.contains('on') || window.innerWidth >= 720) { clear(); return; }
     var kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-    if (kb > 60) { sh.style.bottom = kb + 'px'; sh.style.maxHeight = Math.round(vv.height * 0.94) + 'px'; } else { sh.style.bottom = ''; sh.style.maxHeight = ''; }
+    if (kb > 60) { sh.style.top = Math.round(vv.offsetTop + 8) + 'px'; sh.style.bottom = 'auto'; sh.style.height = Math.round(vv.height - 16) + 'px'; sh.style.maxHeight = 'none'; } else clear();
     keepFocusVisible();
   }
   function keepFocusVisible() {
@@ -979,7 +998,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   window.addEventListener('resize', function () { setTimeout(keepFocusVisible, 60); });
   $('#sheet').addEventListener('focusin', function () { setTimeout(keepFocusVisible, 320); });
   function closeSheet() {
-    $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); $('#sheet').setAttribute('aria-hidden', 'true'); $('#sheet').style.bottom = ''; $('#sheet').style.maxHeight = '';
+    $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); $('#sheet').setAttribute('aria-hidden', 'true'); ['top', 'bottom', 'height', 'maxHeight'].forEach(function (k) { $('#sheet').style[k] = ''; });
     document.body.classList.remove('locked');
     if (state.view === 'done' || state.view === 'notify' || state.view === 'notify_ok' || state.view === 'special' || state.view === 'special_ok') state.view = 'cart';
     renderCartUI();
@@ -994,102 +1013,196 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     var sheetOpen = $('#sheet').classList.contains('on');
     $('#bar').classList.toggle('on', t0.count > 0 && !sheetOpen);
     syncCartBadges();
-    if (sheetOpen && (state.view === 'cart')) renderSheet();
+    /* a redraw while the buyer types (live catalog arriving) would drop the focused field and its keyboard */
+    var a = document.activeElement, typing = a && /^(INPUT|TEXTAREA)$/.test(a.tagName) && $('#sheet').contains(a);
+    if (sheetOpen && state.view === 'cart' && !typing) renderSheet();
   }
   function renderSheet() {
     var body = $('#sheetBody'), foot = $('#sheetFoot');
-    body.innerHTML = ''; foot.innerHTML = '';
+    body.innerHTML = ''; foot.innerHTML = ''; wzMeta(null); $('#sheet').classList.remove('wz-on');
     if (state.view === 'done') { $('#sheetTitle').textContent = t('done_title'); renderDone(body, foot); return; }
     if (state.view === 'notify' || state.view === 'notify_ok') { renderNotify(body, foot); return; }
     if (state.view === 'special' || state.view === 'special_ok') { renderSpecial(body, foot); return; }
-    $('#sheetTitle').textContent = t('cart_title');
     var tt = E.totals(cart, state.form.delivery, C);
     if (!tt.count) {
+      $('#sheetTitle').textContent = t('cart_title');
       body.appendChild(el('p', { class: 'empty', text: t('cart_empty') }));
       foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', text: t('to_catalog'), onclick: function () { closeSheet(); location.hash = '#catalog'; } }));
       return;
     }
-    tt.lines.forEach(function (l) {
-      var it = C.byId[l.id];
-      var out = el('output', { text: E.fmtWeight(it, l.qty, lang) });
-      body.appendChild(el('div', { class: 'line' }, [
-        el('div', { class: 'nm', text: nm(it) + (l.pre ? ' · ' + t('pre_tag') : '') }),
-        el('div', { class: 'sum', text: l.sum == null ? E.priceTbd(lang) : E.fmtMoney(l.sum, l.cur) }),
-        el('div', { class: 'step' }, [
-          el('button', { type: 'button', 'aria-label': t('less'), text: '−', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, -1)); E.saveCart(cart); renderCartUI(); } }),
-          out,
-          el('button', { type: 'button', 'aria-label': t('more'), text: '+', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, 1)); E.saveCart(cart); renderCartUI(); } })
-        ]),
-        el('button', { class: 'rm', type: 'button', text: t('remove'), onclick: function () { cart = E.cartSet(cart, l.id, 0); E.saveCart(cart); renderCartUI(); } })
-      ]));
-    });
-    var d = C.deliveryById[state.form.delivery];
-    body.appendChild(el('div', { class: 'tots' }, [
-      el('div', {}, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })]),
-      el('div', {}, [el('span', { text: delivName(d) }), el('span', { class: tt.delivery ? '' : 'free', text: tt.delivery ? fm(tt.delivery) : t('free') })]),
-      el('div', { class: 'grand' }, [el('span', { text: t('total') }), el('span', { text: E.fmtPair(tt.total, tt.usd) })])
-    ]));
-    if (tt.unpriced.length) body.appendChild(el('p', { class: 'minnote tbd', text: t('unpriced_note', { n: tt.lines.filter(function (l) { return l.sum == null; }).map(function (l) { return nm(C.byId[l.id]); }).join(', ') }) }));
-    if (tt.belowMin) body.appendChild(el('p', { class: 'minnote', text: t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) }));
-    body.appendChild(renderForm());
-    foot.appendChild(el('div', { class: 'tot' }, [el('span', { text: t('total_dlv') }), el('b', { text: E.fmtPair(tt.total, tt.usd) })]));
-    var send = el('button', { class: 'btn fill wide', type: 'button', id: 'sendBtn', text: tt.belowMin ? t('min_btn', { m: fm(tt.minOrder) }) : t('send'), onclick: submit });
-    if (tt.belowMin) send.disabled = true;
-    if (!tt.belowMin) foot.appendChild(el('p', { class: 'tgnote', id: 'tgNote', text: t('tg_note') }));
-    foot.appendChild(send);
-    foot.appendChild(consentLine());
-    foot.appendChild(el('p', { class: 'err', id: 'formErr' }));
+    $('#sheet').classList.add('wz-on'); renderStep(body, foot, tt);
   }
   function field(label, input, value) { if (value != null) input.value = value; return el('div', { class: 'f' }, [el('label', { for: input.id, text: label }), input]); }
-  function renderForm() {
-    var f = state.form;
-    var form = el('div', { class: 'form' });
-    form.appendChild(el('h3', { text: t('checkout') }));
-    form.appendChild(field(t('f_name'), el('input', { type: 'text', id: 'fName', autocomplete: 'name', placeholder: t('f_name_ph'), value: f.name, oninput: function (e) { f.name = e.target.value; } })));
-    /* CEO live test 11.10: a phone OR a Telegram nick (type=text: the tel keypad has no letters) */
-    form.appendChild(field(t('f_contact'), el('input', { type: 'text', id: 'fPhone', autocomplete: 'tel', inputmode: 'text', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', placeholder: t('f_contact_ph'), value: f.phone, oninput: function (e) { f.phone = e.target.value; } })));
-    var cityBox = el('div', { class: 'f' }); cityBox.appendChild(el('span', { class: 'lbl', text: t('f_city') }));
-    var row = el('div', { class: 'row' });
-    var cityInput = el('input', { type: 'text', id: 'fCity', placeholder: t('city_ph'), value: f.other ? f.city : '', oninput: function (e) { f.city = e.target.value; } });
-    cityInput.style.display = f.other ? '' : 'none';
-    var bA = el('button', { class: 'chip', type: 'button', 'aria-pressed': String(!f.other), text: t('city_alanya'), onclick: function () { f.other = false; if (f.delivery === 'cargo') f.delivery = 'pickup'; renderSheet(); } });
-    var bO = el('button', { class: 'chip', type: 'button', 'aria-pressed': String(f.other), text: t('city_other'), onclick: function () { f.other = true; f.delivery = 'cargo'; if (f.payment === 'cash') f.payment = 'card'; renderSheet(); setTimeout(function () { var c = $('#fCity'); if (c) c.focus(); }, 50); } });
-    row.appendChild(bA); row.appendChild(bO);
-    cityBox.appendChild(row); cityBox.appendChild(cityInput); form.appendChild(cityBox);
-    var tt = E.totals(cart, f.delivery, C);
-    var dBox = el('div', { class: 'f' }, [el('span', { class: 'lbl', text: t('f_dlv') })]);
-    var radios = el('div', { class: 'radios', role: 'radiogroup' });
-    C.delivery.forEach(function (d) {
-      if (f.other && d.id !== 'cargo') return;
-      var price = d.free_from && tt.subtotal >= d.free_from ? 0 : d.price;
-      var lab = el('label', { class: 'radio' }, [
-        el('input', { type: 'radio', name: 'delivery', value: d.id, onchange: function () { f.delivery = d.id; if (d.id === 'cargo' && f.payment === 'cash') f.payment = 'card'; renderSheet(); } }),
-        el('span', {}, [el('b', { text: delivName(d) }), el('small', {}, [icon('i-clock'), document.createTextNode(etaOf(d) + (d.free_from ? ' · ' + t('free_from', { f: fm(d.free_from) }) : ''))])]),
-        el('span', { class: 'pr' + (price ? '' : ' free'), text: price ? fm(price) : t('free') })
-      ]);
-      var note = d.id === 'pickup' ? t('dlv_pickup_note') : d.id === 'cargo' ? t('dlv_cargo_note') : '';
-      if (note) lab.appendChild(el('span', { class: 'note', text: note }));
-      lab.querySelector('input').checked = f.delivery === d.id;
-      radios.appendChild(lab);
+
+  /* ---------- checkout steps (CEO 11.10): one action per step, one primary button, "Назад", "Шаг n из m".
+     Steps that have nothing to ask are skipped and the counter follows: cargo has no time window (it asks the city instead)
+     and no payment step (cargo is card only). Choices live in state.form, so closing the popup loses nothing. ---------- */
+  function wzSteps() {
+    var f = state.form, s = ['cart', 'how', E.windowKind(f.delivery) ? 'when' : 'where'];
+    if (f.delivery !== 'cargo') s.push('pay');
+    s.push('contact', 'review');
+    return s;
+  }
+  function curStep() {
+    var s = wzSteps(), st = state.step || 'cart';
+    if (s.indexOf(st) < 0) st = (st === 'when' || st === 'where') ? s[2] : st === 'pay' ? 'contact' : 'cart';
+    return (state.step = st);
+  }
+  function wzMeta(n, m) {
+    var meta = $('#wzMeta'), prog = $('#wzProg');
+    if (n == null) { meta.hidden = true; prog.hidden = true; return; }
+    meta.hidden = false; prog.hidden = false;
+    meta.textContent = t('wz_step', { n: n, m: m });
+    $('#wzBar').style.width = (n / m * 100).toFixed(1) + '%';
+  }
+  /* '' = the step is complete; otherwise the message to show under it */
+  function wzCheck(st) {
+    var f = state.form, tt = E.totals(cart, f.delivery, C);
+    if (st === 'cart') return !tt.count ? t('cart_empty') : tt.belowMin ? t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) : '';
+    if (st === 'when') return E.windowValid(E.siteWindows(LIVE), f.delivery, f.windowId, f.windowDate) ? '' : t('err_window');
+    if (st === 'where') return f.other && !f.city.trim() ? t('err_city') : '';
+    if (st === 'contact') return !f.name.trim() || !E.orderContact(f.phone) ? t('err_contact_ord') : '';
+    return '';
+  }
+  function wzGo(st, msg) {
+    state.step = st; renderSheet();
+    $('#sheetBody').scrollTop = 0;
+    var e = $('#formErr'); if (e && msg) e.textContent = msg;
+    if (msg && st === 'contact') { var bad = !state.form.name.trim() ? $('#fName') : $('#fPhone'); if (bad) { bad.setAttribute('aria-invalid', 'true'); bad.focus(); } return; }
+    if (msg && st === 'where') { var c = $('#fCity'); if (c) { c.setAttribute('aria-invalid', 'true'); c.focus(); } return; }
+    $('#sheetTitle').focus({ preventScroll: true });
+  }
+  function wzNext() {
+    var st = curStep(), s = wzSteps(), msg = wzCheck(st);
+    if (st === 'contact') { var hp = $('#fWebsite'); if (hp) state.form.website = hp.value; }
+    if (msg) { var e = $('#formErr'); if (e) e.textContent = msg; if (st === 'contact' || st === 'where') wzGo(st, msg); return; }
+    /* came here from "Изменить" on the check screen: back to it, unless a later step now needs an answer (pickup -> cargo asks the city) */
+    if (state.wzReturn) {
+      for (var i = s.indexOf(st) + 1; i < s.length - 1; i++) if (wzCheck(s[i])) { wzGo(s[i]); return; }
+      state.wzReturn = false; wzGo('review'); return;
+    }
+    wzGo(s[s.indexOf(st) + 1]);
+  }
+  function wzBack() { var s = wzSteps(), i = s.indexOf(curStep()); state.wzReturn = false; if (i > 0) wzGo(s[i - 1]); }
+  /* refs (Instacart, Wolt tiles): tapping an option IS the action - it shows as chosen, then the next step opens by itself;
+     "Дальше" stays for keeping the preselected option */
+  function wzPicked() {
+    if (state.wzBusy) return; state.wzBusy = true;
+    renderSheet(); var b = $('#sheetBody .opt[aria-checked="true"]'); if (b) b.focus({ preventScroll: true });
+    setTimeout(function () { state.wzBusy = false; if ($('#sheet').classList.contains('on') && state.view === 'cart') wzNext(); }, 260);
+  }
+  /* a big tappable option (delivery / payment): the whole row is the target */
+  function wzOpt(sel, ico, title, sub, price, note, onpick) {
+    return el('button', { class: 'opt', type: 'button', role: 'radio', 'aria-checked': String(sel), onclick: onpick }, [
+      el('span', { class: 'opt-ico' }, [icon(ico)]),
+      el('span', { class: 'opt-txt' }, [el('b', { text: title }), sub ? el('small', { text: sub }) : null, note ? el('small', { class: 'opt-note', text: note }) : null]),
+      price != null ? el('span', { class: 'opt-pr' + (price ? '' : ' free'), text: price ? fm(price) : t('free') }) : null
+    ]);
+  }
+  function lineRows(box, tt) {
+    tt.lines.forEach(function (l) {
+      var it = C.byId[l.id];
+      box.appendChild(el('div', { class: 'rv-row' }, [el('span', { text: nm(it) + ', ' + E.fmtWeight(it, l.qty, lang) + (l.pre ? ' · ' + t('pre_tag') : '') }), el('span', { text: l.sum == null ? E.priceTbd(lang) : E.fmtMoney(l.sum, l.cur) })]));
     });
-    dBox.appendChild(radios); form.appendChild(dBox);
-    /* v5: the time window sits right under the delivery choice (pickup / courier); cargo has none */
-    if (E.windowKind(f.delivery)) { form.appendChild(renderWindows()); form.lastChild.id = 'fWhen'; }
-    var pBox = el('div', { class: 'f' }, [el('span', { class: 'lbl', text: t('f_pay') })]);
-    var pr = el('div', { class: 'radios', role: 'radiogroup' });
-    C.payment.forEach(function (p) {
-      if (p.id === 'cash' && f.delivery === 'cargo') return;
-      var lab = el('label', { class: 'radio' }, [el('input', { type: 'radio', name: 'payment', value: p.id, onchange: function () { f.payment = p.id; } }), el('span', {}, [el('b', { text: t('pay_' + p.id) })]), el('span')]);
-      lab.querySelector('input').checked = f.payment === p.id;
-      pr.appendChild(lab);
-    });
-    pBox.appendChild(pr); form.appendChild(pBox);
-    if (!E.windowKind(f.delivery)) form.appendChild(renderDate());
-    form.appendChild(field(t('f_comment'), el('textarea', { id: 'fComment', placeholder: t('f_comment_ph'), oninput: function (e) { f.comment = e.target.value; } }), f.comment));
-    /* honeypot for bots (the worker rejects an order with it filled); invisible and unreachable for people */
-    var hp = el('div', { 'aria-hidden': 'true', style: 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden' }, [el('input', { type: 'text', id: 'fWebsite', name: 'website', tabindex: '-1', autocomplete: 'off' })]);
-    form.appendChild(hp);
-    return form;
+  }
+  function renderStep(body, foot, tt) {
+    var f = state.form, st = curStep(), s = wzSteps(), idx = s.indexOf(st), title = $('#sheetTitle');
+    wzMeta(idx + 1, s.length);
+    var box = el('div', { class: 'wz wz-' + st });
+    var primary = el('button', { class: 'btn fill', type: 'button', id: 'wzNext', text: t('wz_next'), onclick: wzNext });
+    if (st === 'cart') {
+      title.textContent = t('cart_title');
+      tt.lines.forEach(function (l) {
+        var it = C.byId[l.id];
+        box.appendChild(el('div', { class: 'line' }, [
+          el('div', { class: 'nm', text: nm(it) + (l.pre ? ' · ' + t('pre_tag') : '') }),
+          el('div', { class: 'sum', text: l.sum == null ? E.priceTbd(lang) : E.fmtMoney(l.sum, l.cur) }),
+          el('div', { class: 'step' }, [
+            el('button', { type: 'button', 'aria-label': t('less'), text: '−', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, -1)); E.saveCart(cart); renderCartUI(); } }),
+            el('output', { text: E.fmtWeight(it, l.qty, lang) }),
+            el('button', { type: 'button', 'aria-label': t('more'), text: '+', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, 1)); E.saveCart(cart); renderCartUI(); } })
+          ]),
+          el('button', { class: 'rm', type: 'button', text: t('remove'), onclick: function () { cart = E.cartSet(cart, l.id, 0); E.saveCart(cart); renderCartUI(); } })
+        ]));
+      });
+      box.appendChild(el('div', { class: 'tots' }, [el('div', { class: 'grand' }, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })])]));
+      if (tt.unpriced.length) box.appendChild(el('p', { class: 'minnote tbd', text: t('unpriced_note', { n: tt.lines.filter(function (l) { return l.sum == null; }).map(function (l) { return nm(C.byId[l.id]); }).join(', ') }) }));
+      if (tt.belowMin) { box.appendChild(el('p', { class: 'minnote', text: t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) })); primary.textContent = t('min_btn', { m: fm(tt.minOrder) }); primary.disabled = true; }
+    } else if (st === 'how') {
+      title.textContent = t('wz_how');
+      var opts = el('div', { class: 'opts', role: 'radiogroup', 'aria-labelledby': 'sheetTitle' });
+      var ICO = { pickup: 'i-bag', alanya: 'i-pin', cargo: 'i-truck' };
+      C.delivery.forEach(function (d) {
+        var price = d.free_from && tt.subtotal >= d.free_from ? 0 : d.price;
+        var sub = etaOf(d) + (d.free_from && price ? ' · ' + t('free_from', { f: fm(d.free_from) }) : '');
+        var note = d.id === 'pickup' ? t('dlv_pickup_note') : d.id === 'cargo' ? t('dlv_cargo_note') : '';
+        opts.appendChild(wzOpt(f.delivery === d.id, ICO[d.id] || 'i-truck', delivName(d), sub, price, note, function () {
+          f.delivery = d.id; f.other = d.id === 'cargo'; if (d.id === 'cargo' && f.payment === 'cash') f.payment = 'card';
+          wzPicked();
+        }));
+      });
+      box.appendChild(opts);
+    } else if (st === 'when') {
+      title.textContent = t(E.windowKind(f.delivery) === 'pickup' ? 'f_when_pickup' : 'f_when_courier');
+      var w = renderWindows(); w.removeChild(w.firstChild); w.id = 'fWhen'; box.appendChild(w);
+    } else if (st === 'where') {
+      title.textContent = t('wz_where');
+      box.appendChild(field(t('f_city'), el('input', { type: 'text', id: 'fCity', autocomplete: 'address-level2', enterkeyhint: 'done', placeholder: t('city_ph'), oninput: function (e) { f.city = e.target.value; e.target.removeAttribute('aria-invalid'); $('#formErr').textContent = ''; },
+        onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); wzNext(); } } }), f.city));
+      box.appendChild(el('p', { class: 'hint', text: etaOf(C.deliveryById.cargo) + '. ' + t('dlv_cargo_note') }));
+      box.appendChild(renderDate());
+    } else if (st === 'pay') {
+      title.textContent = t('wz_pay');
+      var po = el('div', { class: 'opts', role: 'radiogroup', 'aria-labelledby': 'sheetTitle' });
+      C.payment.forEach(function (p) {
+        if (p.id === 'cash' && f.delivery === 'cargo') return;
+        po.appendChild(wzOpt(f.payment === p.id, p.id === 'card' ? 'i-card' : 'i-cash', t('pay_' + p.id), p.id === 'card' ? t('wz_card_note') : '', null, '', function () {
+          f.payment = p.id; wzPicked();
+        }));
+      });
+      box.appendChild(po);
+    } else if (st === 'contact') {
+      title.textContent = t('wz_contact');
+      var clr = function (e) { e.target.removeAttribute('aria-invalid'); var x = $('#formErr'); if (x) x.textContent = ''; };
+      var enter = function (next) { return function (e) { if (e.key === 'Enter') { e.preventDefault(); if (next) $(next).focus(); else wzNext(); } }; };
+      box.appendChild(field(t('f_name'), el('input', { type: 'text', id: 'fName', autocomplete: 'name', autocapitalize: 'words', enterkeyhint: 'next', placeholder: t('f_name_ph'), oninput: function (e) { f.name = e.target.value; clr(e); }, onkeydown: enter('#fPhone') }), f.name));
+      /* CEO live test 11.10: a phone OR a Telegram nick (type=text: the tel keypad has no letters) */
+      box.appendChild(field(t('f_contact'), el('input', { type: 'text', id: 'fPhone', autocomplete: 'tel', inputmode: 'text', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', enterkeyhint: 'next', placeholder: t('f_contact_ph'), oninput: function (e) { f.phone = e.target.value; clr(e); }, onkeydown: enter('#fComment') }), f.phone));
+      box.appendChild(field(t('sp_comment'), el('textarea', { id: 'fComment', rows: '2', placeholder: t('f_comment_ph'), oninput: function (e) { f.comment = e.target.value; } }), f.comment));
+      /* honeypot for bots (the worker rejects an order with it filled); invisible and unreachable for people */
+      box.appendChild(el('div', { 'aria-hidden': 'true', style: 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden' }, [el('input', { type: 'text', id: 'fWebsite', name: 'website', tabindex: '-1', autocomplete: 'off', value: f.website || '', oninput: function (e) { f.website = e.target.value; } })]));
+    } else if (st === 'review') {
+      title.textContent = t('wz_review');
+      var d = C.deliveryById[f.delivery];
+      var block = function (label, to, rows) {
+        var b = el('section', { class: 'rv-blk' }, [el('div', { class: 'rv-h' }, [el('h3', { text: label }), to ? el('button', { class: 'rv-edit', type: 'button', text: t('wz_edit'), 'data-to': to, onclick: function () { state.wzReturn = true; wzGo(to); } }) : null])]);
+        rows.forEach(function (r) { if (r) b.appendChild(r); });
+        box.appendChild(b);
+      };
+      var items = el('div', { class: 'rv-rows' }); lineRows(items, tt);
+      block(t('wz_items'), 'cart', [items]);
+      block(t('wz_get'), 'how', [el('div', { class: 'rv-row' }, [el('span', { text: delivName(d) }), el('span', { class: tt.delivery ? '' : 'free', text: tt.delivery ? fm(tt.delivery) : t('free') })])]);
+      if (E.windowKind(f.delivery)) block(t('done_when'), 'when', [el('p', { class: 'rv-p', id: 'rvWhen', text: windowText(f) })]);
+      else block(t('f_city'), 'where', [el('p', { class: 'rv-p', text: f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : '') })]);
+      block(t('f_pay'), f.delivery === 'cargo' ? null : 'pay', [el('p', { class: 'rv-p', text: t('pay_' + f.payment) })]);
+      block(t('wz_contacts'), 'contact', [el('p', { class: 'rv-p', text: f.name.trim() + ' · ' + f.phone.trim() }), el('p', { class: 'rv-p sub', text: f.comment.trim() || t('wz_no_comment') })]);
+      box.appendChild(el('div', { class: 'tots' }, [
+        el('div', {}, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })]),
+        el('div', {}, [el('span', { text: delivName(d) }), el('span', { class: tt.delivery ? '' : 'free', text: tt.delivery ? fm(tt.delivery) : t('free') })]),
+        el('div', { class: 'grand' }, [el('span', { text: t('total_dlv') }), el('span', { text: E.fmtPair(tt.total, tt.usd) })])
+      ]));
+      primary = el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') }), el('span', { class: 'sum', text: E.fmtPair(tt.total, tt.usd) })]);
+      foot.appendChild(el('p', { class: 'tgnote', id: 'tgNote', text: t('tg_note') }));
+    }
+    /* refs (Uber Eats, Glovo, Shop): the button carries the running total, so it never has to be scrolled for */
+    if (primary.id === 'wzNext' && !primary.disabled) { primary.textContent = ''; primary.appendChild(el('span', { text: t('wz_next') })); primary.appendChild(el('span', { class: 'sum', text: E.fmtPair(st === 'cart' ? tt.subtotal : tt.total, tt.usd) })); }
+    body.appendChild(box);
+    var row = el('div', { class: 'wz-foot' });
+    if (idx > 0) row.appendChild(el('button', { class: 'wz-back', type: 'button', id: 'wzBack', onclick: wzBack }, [el('span', { 'aria-hidden': 'true', text: '‹' }), el('span', { text: t('wz_back') })]));
+    row.appendChild(primary);
+    foot.appendChild(row);
+    if (st === 'review') foot.appendChild(consentLine());
+    foot.appendChild(el('p', { class: 'err', id: 'formErr', role: 'alert' }));
   }
   /* v5 (CEO 11.10): day chips (today / tomorrow, real dates, Alanya time) + window chips from the bot settings; a window that ends
      within 60 min is not offered today; required for pickup / courier. Windows: live catalog `windows`, else placeholders. */
@@ -1169,16 +1282,12 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   function submit() {
     var f = state.form, err = $('#formErr');
     if (state.sending) return;
-    if (!f.name.trim() || !E.orderContact(f.phone)) { err.textContent = t('err_contact_ord'); (f.name.trim() ? $('#fPhone') : $('#fName')).focus(); return; }
-    if (f.other && !f.city.trim()) { err.textContent = t('err_city'); $('#fCity').focus(); return; }
-    var tt = E.totals(cart, f.delivery, C);
-    if (tt.belowMin) return;
-    if (E.windowKind(f.delivery) && !E.windowValid(E.siteWindows(LIVE), f.delivery, f.windowId, f.windowDate)) {
-      renderSheet(); /* the clock may have passed the cut-off while the cart was open: redraw, the stale window is gone */
-      var ew = $('#formErr'); if (ew) ew.textContent = t('err_window'); var wb = $('#fWhen'); if (wb) wb.scrollIntoView({ block: 'center' }); return;
-    }
+    /* every step is checked again (the clock may have passed a window's cut-off while the popup was open): the first
+       step that is not complete opens with its message - cart minimum, window, cargo city, name and contact */
+    var s = wzSteps();
+    for (var i = 0; i < s.length - 1; i++) { var m = wzCheck(s[i]); if (m) { wzGo(s[i], m); return; } }
     if (E.windowKind(f.delivery)) f.date = f.windowDate; else { f.windowId = null; f.windowDate = null; }
-    var hp = $('#fWebsite'); f.website = hp ? hp.value : '';
+    var hp = $('#fWebsite'); f.website = hp ? hp.value : (f.website || '');
     var payload = E.sitePayload(cart, f, lang, '');
     var key = JSON.stringify(payload); /* the same checkout retried keeps its nonce: the worker returns the same order, never a second one */
     if (state.orderKey !== key || !state.orderNonce) { state.orderKey = key; state.orderNonce = E.orderNonce(); }
@@ -1196,7 +1305,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       E.saveOrder(order); /* the owner demo page (bot.html) still reads the browser copy; the number is the bot's */
       E.saveCustomer({ name: order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment });
       state.lastOrder = order; state.orderNonce = null; state.orderKey = null; cart = []; E.saveCart(cart); f.windowId = null; f.windowDate = null;
-      state.view = 'done'; renderSheet(); $('#sheetBody').scrollTop = 0;
+      state.step = 'cart'; state.wzReturn = false; state.view = 'done'; renderSheet(); $('#sheetBody').scrollTop = 0;
       /* CEO live test 11.10: after EVERY order the bot chat opens (t.me/uafoodsbot?start=o<nonce>), the customer taps Start and
          the bot confirms the order there. Phone: a direct navigation (never popup-blocked, iOS Safari included). Desktop: a new tab
          (allowed while the click's activation lasts); if the browser blocks it, the big button on the done screen does the same. */
