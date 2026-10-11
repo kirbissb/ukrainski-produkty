@@ -340,9 +340,13 @@
     }
     return w.replace(/([бвгджзклмнпрстфхцчшщ])[ое]к$/, '$1к');   /* fleeting vowel: сосисок -> сосиск, колбасок -> колбаск */
   }
+  /* "с икрой" in a search key describes the item, it does not name it (CEO 11.10: «икра» must not find тарань «с икрой»);
+     names keep every word, keys and aliases lose a with-phrase */
+  var S_WITH = /(^|\s)(с|со|з|із|with)\s.*$/;
   function sTokens(it) {
-    var out = [];
+    var out = [], names = [norm(it.name_ru), norm(it.name_uk), norm(it.name_en)];
     phrases(it).concat([it.brand_en || '']).forEach(function (ph) {
+      if (names.indexOf(ph) < 0) ph = ph.replace(S_WITH, '');
       sFold(ph).split(/[\s,()&/+-]+/).forEach(function (tk) { if (tk && out.indexOf(tk) < 0) out.push(tk); });
     });
     return out;
@@ -362,7 +366,10 @@
     }
     /* whole words first ("сала" = salo, not "салат"); only when nothing matches, read the query as an unfinished word ("сос") */
     var hit = pass(false);
-    return hit.length ? hit : pass(true);
+    if (!hit.length) hit = pass(true);
+    /* "тарань с икрой" typed in full: the with-phrase is not a token any more, so read the query without it */
+    if (!hit.length && S_WITH.test(sFold(query)) && sFold(query).replace(S_WITH, '').trim()) return searchItems(sFold(query).replace(S_WITH, ''), pool);
+    return hit;
   }
 
   /* ---------- delivery rules (placeholders until agreed with the owners) ---------- */
