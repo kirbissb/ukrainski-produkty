@@ -1,0 +1,53 @@
+# Monobank TRY/USD -> UAH rate for the shop bot (Cloudflare Worker ukr-alanya-bot-test).
+# Monobank answers HTTP 429 to the Worker (Cloudflare's shared IPs), so this job fetches the public rate list every 30 min and POSTs
+# {try_uah, usd_uah, fetched_at} to the Worker's /rate-push (header x-rate-key = secret RATE_PUSH_SECRET). While a pushed rate is
+# younger than 90 min the Worker does not call Monobank itself; NBU stays its fallback. This job does not touch the Pages site.
+name: monobank-rate
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monobank-rate
+  cancel-in-progress: false
+
+jobs:
+  push-rate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      WORKER: https://ukr-alanya-bot-test.bot-engine.workers.dev
+    steps:
+      - name: Fetch Monobank rates
+        id: mono
+        run: |
+          set -euo pipefail
+          # Monobank allows about 1 request per 5 min; curl retries 429/5xx a few times with a pause
+          curl -sS --fail --retry 4 --retry-delay 30 --retry-max-time 200 --retry-all-errors --max-time 20 \
+            -H 'accept: application/json' -o mono.json https://api.monobank.ua/bank/currency
+          FETCHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          TRY_UAH="$(jq -r '[.[] | select(.currencyCodeA == 949 and .currencyCodeB == 980)][0] | (.rateCross // .rateSell // empty)' mono.json)"
+          USD_UAH="$(jq -r '[.[] | select(.currencyCodeA == 840 and .currencyCodeB == 980)][0] | (.rateSell // .rateCross // empty)' mono.json)"
+          [ -n "$TRY_UAH" ] || { echo "::error::Monobank: no TRY/UAH (949/980) entry"; exit 1; }
+          [ -n "$USD_UAH" ] || { echo "::error::Monobank: no USD/UAH (840/980) entry"; exit 1; }
+          echo "Monobank: TRY/UAH $TRY_UAH, USD/UAH $USD_UAH, fetched $FETCHED_AT"
+          jq -n --argjson t "$TRY_UAH" --argjson u "$USD_UAH" --arg f "$FETCHED_AT" '{try_uah: $t, usd_uah: $u, fetched_at: $f}' > body.json
+          cat body.json
+
+      - name: Push to the Worker
+        env:
+          RATE_PUSH_SECRET: ${{ secrets.RATE_PUSH_SECRET }}
+        run: |
+          set -euo pipefail
+          [ -n "$RATE_PUSH_SECRET" ] || { echo "::error::secret RATE_PUSH_SECRET is not set"; exit 1; }
+          # the key goes through a curl config on stdin: never in argv or the log
+          CODE="$(printf 'header = "x-rate-key: %s"\n' "$RATE_PUSH_SECRET" | curl -sS -K - --max-time 20 -o resp.json -w '%{http_code}' \
+            -X POST -H 'content-type: application/json' --data @body.json "$WORKER/rate-push")"
+          echo "Worker answered HTTP $CODE"
+          cat resp.json; echo
+          [ "$CODE" = "200" ] || { echo "::error::rate-push failed with HTTP $CODE"; exit 1; }
