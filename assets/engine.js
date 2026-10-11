@@ -432,18 +432,43 @@
   /* "с икрой" in a search key describes the item, it does not name it (CEO 11.10: «икра» must not find тарань «с икрой»);
      names keep every word, keys and aliases lose a with-phrase */
   var S_WITH = /(^|\s)(с|со|з|із|with)\s.*$/;
+  /* "сырые" (raw) folds to the same stem as "сыр"/"сир" (cheese): CEO 11.10, «сыр» found «Колбаса домашняя» through its alias
+     «колбаски домашние сырые». The raw forms become one token of their own, before folding, on both sides. */
+  var S_RAW = /(^|\s)(сыр(ой|ая|ое|ые|ых|ым|ую|ыми)|сир(ий|а|е|ого|ої|ою|их|ими))(?=\s|$)/g;
+  function sRaw(s) { return norm(s).replace(S_RAW, '$1rawsyr'); }
+  /* section tags (CEO 11.10): the group words of the item's section ("сладкое", "молочное", "мясо"), from build-catalog.py */
   function sTokens(it) {
     var out = [], names = [norm(it.name_ru), norm(it.name_uk), norm(it.name_en)];
-    phrases(it).concat([it.brand_en || '']).forEach(function (ph) {
+    phrases(it).concat([it.brand_en || ''], (it.tags || []).map(norm)).forEach(function (ph) {
       if (names.indexOf(ph) < 0) ph = ph.replace(S_WITH, '');
-      sFold(ph).split(/[\s,()&/+-]+/).forEach(function (tk) { if (tk && out.indexOf(tk) < 0) out.push(tk); });
+      sFold(sRaw(ph)).split(/[\s,()&/+-]+/).forEach(function (tk) { if (tk && out.indexOf(tk) < 0) out.push(tk); });
     });
     return out;
   }
-  function searchItems(query, items) {
+  /* "сыр и молочное": a joining word is not something to find; dropped while other words remain */
+  var S_JOIN = { 'и': 1, 'та': 1, 'й': 1, 'and': 1 };
+  function sWords(q) {
+    var w = sFold(sRaw(q)).split(/[\s,()&/+-]+/).filter(Boolean), keep = w.filter(function (x) { return !S_JOIN[x]; });
+    return keep.length ? keep : w;
+  }
+  /* the section name typed in full ("икра и рыба", "сыр і молочне", "другое") = that whole section */
+  function sSections(query, cats) {
+    var q = sWords(query).join(' '), out = {};
+    (cats || []).forEach(function (c) {
+      [c.name_ru, c.name_uk, c.name_en].forEach(function (n) { if (n && sWords(n).join(' ') === q) out[c.id] = 1; });
+    });
+    return out;
+  }
+  function searchItems(query, items, cats) {
     var pool = items || (CATALOG && CATALOG.items) || [];
-    var words = sFold(query).split(/[\s,()&/+-]+/).filter(Boolean);
+    if (cats === undefined && !items && CATALOG) cats = CATALOG.categories;
+    var words = sWords(query);
     if (!words.length) return [];
+    var sec = sSections(query, cats);
+    if (Object.keys(sec).length) {
+      var rest = searchItems(query, pool, null);
+      return pool.filter(function (it) { return sec[it.cat] || rest.indexOf(it) >= 0; });
+    }
     var stems = words.map(sStem), toks = pool.map(sTokens);
     function pass(loose) {
       return pool.filter(function (it, i) {
@@ -457,7 +482,7 @@
     var hit = pass(false);
     if (!hit.length) hit = pass(true);
     /* "тарань с икрой" typed in full: the with-phrase is not a token any more, so read the query without it */
-    if (!hit.length && S_WITH.test(sFold(query)) && sFold(query).replace(S_WITH, '').trim()) return searchItems(sFold(query).replace(S_WITH, ''), pool);
+    if (!hit.length && S_WITH.test(sFold(query)) && sFold(query).replace(S_WITH, '').trim()) return searchItems(sFold(query).replace(S_WITH, ''), pool, null);
     return hit;
   }
 
