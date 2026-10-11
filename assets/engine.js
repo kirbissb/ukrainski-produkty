@@ -624,10 +624,70 @@
   function tgStartLink(nonce) { return /^[A-Za-z0-9_-]{8,63}$/.test(String(nonce || '')) ? BOT_LINK + '?start=o' + nonce : BOT_LINK; }
   function orderNonce() { var a = '', c = 'abcdefghijklmnopqrstuvwxyz0123456789'; for (var i = 0; i < 20; i++) a += c.charAt(Math.floor(Math.random() * c.length)); return a; }
   /* the request body: cart lines as {id, qty} (grams for weighed items, pieces for pc), the form as typed; website = honeypot (empty) */
+  /* v5 (CEO 11.10): pickup / city courier carry a time window (window_id + window_date YYYY-MM-DD); cargo has none (null) */
   function sitePayload(cart, form, lang, nonce) {
+    var kind = windowKind(form.delivery);
     return { items: cart.map(function (l) { return { id: l.id, qty: l.qty }; }), name: String(form.name || '').trim(), contact: orderContact(form.phone) || String(form.phone || '').trim(),
       delivery: form.delivery, city: form.other ? String(form.city || '').trim() : '', payment: form.payment, comment: String(form.comment || '').trim(),
-      date: form.date || '', lang: lang === 'uk' || lang === 'en' ? lang : 'ru', nonce: nonce, website: String(form.website || '') };
+      date: form.date || '', lang: lang === 'uk' || lang === 'en' ? lang : 'ru', nonce: nonce, website: String(form.website || ''),
+      window_id: kind && form.windowId ? String(form.windowId) : null, window_date: kind && form.windowDate ? String(form.windowDate) : null };
+  }
+
+  /* ---------- v5 time windows (pickup / city courier). Source: GET /api/catalog -> windows:{pickup:[{id,label}], courier:[{id,label}]}
+     (label "HH:MM-HH:MM", same shape as the cabinet settings); until the bot sends them - the placeholders below (spec v3).
+     "Today" is Alanya time (Europe/Istanbul, UTC+3 all year); a window is not offered today once it ends within CUTOFF_MIN. ---------- */
+  var WINDOWS_DEFAULT = { pickup: [{ id: 'p1', label: '10:00-13:00' }, { id: 'p2', label: '13:00-16:00' }, { id: 'p3', label: '16:00-19:00' }],
+    courier: [{ id: 'c1', label: '12:00-15:00' }, { id: 'c2', label: '17:00-20:00' }] };
+  var WINDOW_CUTOFF_MIN = 60;
+  function windowKind(delivery) { return delivery === 'pickup' ? 'pickup' : delivery === 'alanya' || delivery === 'courier' ? 'courier' : null; }
+  function hm(s) { var m = /^(\d{1,2}):(\d{2})$/.exec(String(s || '').trim()); if (!m || +m[1] > 24 || +m[2] > 59) return null; return +m[1] * 60 + +m[2]; }
+  function parseWindow(w) {
+    if (!w || w.id == null || String(w.id).trim() === '') return null;
+    var label = String(w.label || '').replace(/[\u2013\u2014]/g, '-').replace(/\s+/g, ''), parts = label.split('-');
+    var from = parts.length === 2 ? hm(parts[0]) : null, to = parts.length === 2 ? hm(parts[1]) : null;
+    if (from == null || to == null || to <= from) return null;
+    return { id: String(w.id), label: label, from: from, to: to };
+  }
+  function siteWindows(live) {
+    var src = live && live.windows && typeof live.windows === 'object' ? live.windows : null, out = {};
+    ['pickup', 'courier'].forEach(function (k) {
+      var list = src && Array.isArray(src[k]) ? src[k].map(parseWindow).filter(Boolean) : [];
+      out[k] = list.length ? list : WINDOWS_DEFAULT[k].map(parseWindow);
+    });
+    return out;
+  }
+  /* -> { date: 'YYYY-MM-DD', min: minutes since midnight } in Alanya */
+  function alanyaClock(nowMs) {
+    var d = new Date(nowMs == null ? Date.now() : nowMs);
+    try {
+      var p = {}; new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+        .formatToParts(d).forEach(function (x) { p[x.type] = x.value; });
+      if (p.year && p.hour) return { date: p.year + '-' + p.month + '-' + p.day, min: (+p.hour % 24) * 60 + +p.minute };
+    } catch (e) { /* no Intl time zones: fixed UTC+3 below */ }
+    var t = new Date(d.getTime() + 3 * 3600000);
+    return { date: t.toISOString().slice(0, 10), min: t.getUTCHours() * 60 + t.getUTCMinutes() };
+  }
+  function addDaysIso(iso, n) { var p = iso.split('-'); var t = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + n)); return t.toISOString().slice(0, 10); }
+  /* -> [{key:'today', date, wins}, {key:'tomorrow', date, wins}] ; today's list drops windows ending within the cut-off */
+  function windowDays(windows, kind, nowMs) {
+    var list = (windows && windows[kind]) || [], c = alanyaClock(nowMs);
+    return [
+      { key: 'today', date: c.date, wins: list.filter(function (w) { return w.to - c.min > WINDOW_CUTOFF_MIN; }) },
+      { key: 'tomorrow', date: addDaysIso(c.date, 1), wins: list.slice() }
+    ];
+  }
+  /* keeps a still-valid choice; otherwise the first day that still has windows and NO window (the buyer picks it); null for cargo */
+  function pickWindow(windows, delivery, choice, nowMs) {
+    var kind = windowKind(delivery); if (!kind) return null;
+    var days = windowDays(windows, kind, nowMs), ch = choice || {};
+    var day = days.filter(function (d) { return d.date === ch.date && d.wins.length; })[0] || days.filter(function (d) { return d.wins.length; })[0];
+    if (!day) return null;
+    var w = day.wins.filter(function (x) { return x.id === ch.id; })[0];
+    return { date: day.date, id: w ? w.id : null };
+  }
+  function windowValid(windows, delivery, id, date, nowMs) {
+    var kind = windowKind(delivery); if (!kind) return true;
+    return windowDays(windows, kind, nowMs).some(function (d) { return d.date === date && d.wins.some(function (w) { return w.id === id; }); });
   }
   /* -> Promise<{ok:true, data}> | {ok:false, kind:'network'|'rejected', status, error}. Never throws; 'network' = no answer at all
      (the order may or may not exist: a retry with the SAME nonce returns the same order, never a second one) */
@@ -666,6 +726,7 @@
     saveNotify: saveNotify, loadNotify: loadNotify,
     cardsVariant: cardsVariant, cardsIsB: cardsIsB, quickNavVisible: quickNavVisible, stepQty: stepQty, cardInfo: cardInfo, groupByCategory: groupByCategory, pluralIdx: pluralIdx,
     contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
-    ORDER_URL: ORDER_URL, orderContact: orderContact, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder
+    ORDER_URL: ORDER_URL, orderContact: orderContact, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder,
+    WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickWindow: pickWindow, windowValid: windowValid
   };
 });
