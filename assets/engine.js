@@ -57,7 +57,11 @@
     if (item.unit === '100g') return u.per100;
     return item.pack_g ? '/' + item.pack_g + ' ' + u.g : u.perpc;
   }
-  function priceLabel(item, lang) { return fmtMoney(item.price, item.currency) + unitLabel(item, lang); }
+  /* live catalog (CEO 11.10): a price Margo has not named yet is null -> the card says so, the item can still be ordered */
+  var PRICE_TBD = { ru: 'цена уточняется', uk: 'ціна уточнюється', en: 'price on request' };
+  function priceTbd(lang) { return PRICE_TBD[lang] || PRICE_TBD.ru; }
+  function hasPrice(item) { return item.price != null && isFinite(Number(item.price)); }
+  function priceLabel(item, lang) { return hasPrice(item) ? fmtMoney(item.price, item.currency) + unitLabel(item, lang) : priceTbd(lang); }
   /* money in two currencies, never converted: "<TRY> ₺ + <USD> $" (dollar items are priced in $ by the seller) */
   function fmtPair(tryAmt, usdAmt) {
     if (usdAmt && !tryAmt) return fmtMoney(usdAmt, 'USD');
@@ -120,6 +124,87 @@
   function addNewItem(item) { var list = readJSON(KEYS.newitems, []); list.push(item); writeJSON(KEYS.newitems, list); return item; }
   function resetOverrides() { writeJSON(KEYS.stock, {}); writeJSON(KEYS.prices, {}); writeJSON(KEYS.newitems, []); writeJSON(KEYS.delivery, {}); }
 
+  /* ---------- live catalog (CEO 11.10, spec "Live catalog contract"): GET /api/catalog on the bot's worker ->
+     { updated_at, min_order:{sum, currency}, items:[{id, price_per|null, currency, unit:"g"|"pcs", in_stock, state}],
+       added:[{id, name, unit, price_per, currency, in_stock}] }; price_per is per kg for "g", per piece for "pcs".
+     mergeLiveCatalog is pure: a NEW catalog = static + live (price, currency, unit, stock per id; cabinet goods in their own
+     first category "Новинки", no photo; the order minimum). Anything malformed is skipped, never thrown. ---------- */
+  var CATALOG_URL = 'https://ukr-alanya-bot-test.bot-engine.workers.dev/api/catalog';
+  var SITE_STATES = { in_stock: 1, few_left: 1, sold_out: 1, preorder: 1, not_now: 1, new_batch: 1 };
+  var NEW_CAT = { id: 'new', name_ru: 'Новинки', name_uk: 'Новинки', name_en: 'New in' };
+  var WEIGHT_STEPS = [250, 500, 1000];
+  function liveNum(v) { return v == null || v === '' || !isFinite(Number(v)) ? null : Number(v); }
+  function livePrice(siteUnit, pricePer) {
+    var p = liveNum(pricePer); if (p == null || p < 0) return null;
+    return siteUnit === '100g' ? Math.round(p * 10) / 100 : p;   /* per kg -> per 100 g for items the site prices per 100 g */
+  }
+  function liveCur(cur, fallback) { return cur === 'USD' || cur === 'TRY' ? cur : fallback; }
+  /* stock: the bot's state wins; in_stock:false can only be sold_out / preorder / not_now; the site's "new batch" badge stays
+     on an item the bot reports in stock */
+  function liveState(staticState, li) {
+    var s = li.state;
+    if (li.in_stock === false) return s === 'preorder' || s === 'not_now' ? s : 'sold_out';
+    if (s === 'few_left' || s === 'preorder' || s === 'not_now') return s;
+    if (li.in_stock === true || s === 'in_stock') return staticState === 'new_batch' ? 'new_batch' : 'in_stock';
+    return SITE_STATES[s] ? s : staticState;
+  }
+  function indexCatalog(c) {
+    c.byId = {}; c.catById = {}; c.deliveryById = {}; c.paymentById = {};
+    c.items.forEach(function (it, idx) { it.order = idx; c.byId[it.id] = it; });
+    c.categories.forEach(function (cat) { c.catById[cat.id] = cat; });
+    (c.delivery || []).forEach(function (d) { c.deliveryById[d.id] = d; });
+    (c.payment || []).forEach(function (p) { c.paymentById[p.id] = p; });
+    return c;
+  }
+  function liveOk(live) { return !!(live && typeof live === 'object' && Array.isArray(live.items)); }
+  function mergeLiveCatalog(catalog, live) {
+    var src = catalog || CATALOG;
+    var c = JSON.parse(JSON.stringify({ shop: src.shop, categories: src.categories, items: src.items, delivery: src.delivery, payment: src.payment, rules: src.rules || {}, reviews: src.reviews }));
+    indexCatalog(c);
+    if (!liveOk(live)) return c;
+    live.items.forEach(function (li) {
+      var it = li && c.byId[li.id]; if (!it) return;
+      var u = li.unit === 'pcs' || li.unit === 'pc' ? 'pc' : li.unit === 'g' || li.unit === 'kg' ? 'w' : null;
+      if (u === 'pc' && it.unit !== 'pc') { it.unit = 'pc'; it.steps_g = [1]; it.pack_g = null; }
+      else if (u === 'w' && it.unit === 'pc') { it.unit = 'kg'; it.steps_g = WEIGHT_STEPS.slice(); it.pack_g = null; }
+      if (Object.prototype.hasOwnProperty.call(li, 'price_per')) { it.price = livePrice(it.unit, li.price_per); it.demo = false; }
+      it.currency = liveCur(li.currency, it.currency);
+      var before = it.state || 'in_stock', st = liveState(before, li);
+      if (st !== before) { it.state = st; it.qty = null; if (st !== 'sold_out' && st !== 'preorder') it.day = null; if (st !== 'new_batch') it.since = null; }
+      if (li.next_day && (st === 'sold_out' || st === 'preorder')) it.day = li.next_day;
+      it.live = true;
+    });
+    var added = (Array.isArray(live.added) ? live.added : []).filter(function (a) { return a && a.id && String(a.name || '').trim() && !c.byId[a.id]; });
+    if (added.length) {
+      if (!c.catById[NEW_CAT.id]) c.categories.unshift(JSON.parse(JSON.stringify(NEW_CAT)));
+      added.forEach(function (a) {
+        var pc = a.unit === 'pcs' || a.unit === 'pc', name = String(a.name).trim();
+        c.items.push({ id: String(a.id), cat: NEW_CAT.id, name_ru: name, name_uk: String(a.name_uk || name).trim(), name_en: String(a.name_en || name).trim(),
+          desc_ru: '', desc_uk: '', desc_en: '', unit: pc ? 'pc' : 'kg', price: livePrice(pc ? 'pc' : 'kg', a.price_per), currency: liveCur(a.currency, 'TRY'),
+          steps_g: pc ? [1] : WEIGHT_STEPS.slice(), pack_g: null, demo: false, photo: null, keys: [name.toLowerCase().replace(/ё/g, 'е')],
+          state: a.in_stock === false ? 'sold_out' : 'in_stock', added: true, live: true });
+      });
+    }
+    var mo = live.min_order;
+    if (mo && liveNum(mo.sum) != null && (mo.currency == null || mo.currency === 'TRY')) c.rules.min_order = liveNum(mo.sum);
+    c.live = { updated_at: live.updated_at || null, added: added.length };
+    return indexCatalog(c);
+  }
+  /* -> Promise<live | null>; null on timeout (3 s), network error, non-200 or a malformed body. Never throws. */
+  function fetchLiveCatalog(fetchFn, url, timeoutMs) {
+    var f = fetchFn || (typeof fetch !== 'undefined' ? fetch : null);
+    if (!f) return Promise.resolve(null);
+    var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, timer = null;
+    var timeout = new Promise(function (res) { timer = setTimeout(function () { if (ctl) try { ctl.abort(); } catch (e) { /* ignore */ } res(null); }, timeoutMs || 3000); });
+    var req;
+    try { req = Promise.resolve(f(url || CATALOG_URL, ctl ? { signal: ctl.signal, cache: 'no-cache' } : {})); } catch (e) { req = Promise.resolve(null); }
+    req = req.then(function (r) {
+      if (!r || !r.ok) return null;
+      return r.json().then(function (j) { return liveOk(j) ? j : null; }, function () { return null; });
+    }, function () { return null; });
+    return Promise.race([req, timeout]).then(function (v) { clearTimeout(timer); return v; });
+  }
+
   var STATE_ORDER = { new_batch: 0, in_stock: 1, preorder: 2, few_left: 3, sold_out: 4, not_now: 5 };
   /* front page order (SPEC item 5): new_batch, in_stock, preorder, few_left, sold_out; not_now hidden from "all" */
   function sortItems(items, cat, now) {
@@ -141,6 +226,7 @@
   /* ---------- cart ---------- */
   /* cart = [{id, qty}] ; qty in grams for kg/100g items, pieces for pc items */
   function lineSum(item, qty) {
+    if (!hasPrice(item)) return null;
     var base = item.unit === 'kg' ? item.price * qty / 1000 : item.unit === '100g' ? item.price * qty / 100 : item.price * qty;
     return Math.round(base);
   }
@@ -165,18 +251,21 @@
   }
   /* subtotal/delivery/total = TRY part only; usd = dollar part, kept separate (no rate). Minimum order applies to the TRY part only */
   function totals(cart, deliveryId, catalog) {
-    var c = catalog || CATALOG, lines = [], subtotal = 0, usd = 0;
+    var c = catalog || CATALOG, lines = [], subtotal = 0, usd = 0, unpriced = [];
     cart.forEach(function (l) {
       var it = c.byId[l.id]; if (!it) return;
       var sum = lineSum(it, l.qty);
-      if (it.currency === 'USD') usd += sum; else subtotal += sum;
+      if (sum == null) unpriced.push(it.name_ru); else if (it.currency === 'USD') usd += sum; else subtotal += sum;
       var st = itemState(it);
       lines.push({ id: it.id, name: it.name_ru, qty: l.qty, unit: it.unit, price: it.price, cur: it.currency, sum: sum, weight: fmtWeight(it, l.qty, 'ru'), pre: st === 'preorder' || (!!l.pre && (st === 'sold_out' || st === 'not_now')) });
     });
     var delivery = deliveryPrice(c.deliveryById[deliveryId], subtotal);
     var min = (c.rules && c.rules.min_order) || 0;
     var hasTry = lines.some(function (x) { return x.cur !== 'USD'; });
-    return { lines: lines, subtotal: subtotal, usd: usd, delivery: delivery, total: subtotal + delivery, belowMin: hasTry && subtotal < min, minOrder: min, count: lines.length };
+    /* a lira line without a price yet (live catalog, price_per null) cannot be counted: the minimum is not enforced then -
+       Margo names the price when she confirms the order */
+    var tryUnpriced = lines.some(function (x) { return x.cur !== 'USD' && x.sum == null; });
+    return { lines: lines, subtotal: subtotal, usd: usd, delivery: delivery, total: subtotal + delivery, belowMin: hasTry && !tryUnpriced && subtotal < min, minOrder: min, count: lines.length, unpriced: unpriced };
   }
 
   /* ---------- orders ---------- */
@@ -538,6 +627,7 @@
   return {
     KEYS: KEYS, THIN: THIN, STATE_ORDER: STATE_ORDER, DAYS: DAYS, NEW_BATCH_HOURS: NEW_BATCH_HOURS,
     setStore: function (s) { store = s; },
+    CATALOG_URL: CATALOG_URL, mergeLiveCatalog: mergeLiveCatalog, fetchLiveCatalog: fetchLiveCatalog, livePrice: livePrice, priceTbd: priceTbd, hasPrice: hasPrice,
     fmtMoney: fmtMoney, fmtWeight: fmtWeight, fmtKg: fmtKg, priceLabel: priceLabel, unitLabel: unitLabel, fmtPair: fmtPair,
     parseCatalog: parseCatalog, applyOverrides: applyOverrides, setStock: setStock, setPrice: setPrice, setState: setState, setNextBatch: setNextBatch,
     itemState: itemState, sortItems: sortItems, dayKey: dayKey, addNewItem: addNewItem, resetOverrides: resetOverrides,

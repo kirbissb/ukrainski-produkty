@@ -795,3 +795,19 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 @media (max-width: 386px) { .hdr .brand .mark { display: none; } }
 /* 340 px and below (iPhone SE 1st gen) even the bare name does not fit: the mark alone, the name stays visually hidden for screen readers */
 @media (max-width: 340px) { .hdr .brand .mark { display: block; } .hdr .brand > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
+
+/* CEO 11.10: goods added in Margo's cabinet come from the live catalog without a photo - a quiet framed placeholder */
+.ph-new {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 18px;
+  background: radial-gradient(120% 90% at 50% 38%, #2a2418 0%, #17140f 55%, #0f0e0c 100%); text-align: center;
+}
+.ph-new::before { content: ""; position: absolute; inset: 10px; border: 1px solid var(--hair); border-radius: 10px; pointer-events: none; }
+.ph-tag { font-size: 10.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+.ph-nm { font-family: var(--display); font-size: 19px; line-height: 1.2; color: var(--ink); max-width: 92%; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.ph-nm:empty { display: none; }
+.card.cb.no-photo { aspect-ratio: 4 / 3; }
+.card.cb .ph-new { padding-top: 22%; }
+.cb-tile .ph-new { z-index: 0; }
+.cb-tile .ph-tag { display: none; }
+.cb-price.tbd b { font-size: 18px; color: rgba(255, 255, 255, 0.86); }
+.minnote.tbd { color: var(--ink-2); }
