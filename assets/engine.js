@@ -496,10 +496,22 @@
   /* ---------- real orders (CEO 10.10): the checkout goes to the test bot's worker, POST /site-order (bot-engine src/site-order.ts).
      The № on the done screen is the one the worker returns (the bot's own counter); nothing is numbered in the browser. ---------- */
   var ORDER_URL = 'https://ukr-alanya-bot-test.bot-engine.workers.dev/site-order';
+  /* CEO live test 11.10: the checkout contact is a phone OR a Telegram nick (he never shows his phone in Telegram).
+     -> the normalized contact ('@nick' / the phone as typed) or '' when it is neither. The worker accepts 9+ digits or
+     @?[A-Za-z][A-Za-z0-9_]{4,31}; a t.me link and a nick without @ become '@nick'. */
+  function orderContact(c) {
+    c = clean(c);
+    var m = c.match(/^(?:https?:\/\/)?t\.me\/@?([A-Za-z][A-Za-z0-9_]{4,31})\/?$/) || c.match(/^@?([A-Za-z][A-Za-z0-9_]{4,31})$/);
+    if (m) return '@' + m[1];
+    return /^[+()\d\s.\/-]+$/.test(c) && c.replace(/\D/g, '').length >= 9 ? c : '';
+  }
+  /* after EVERY site order the bot chat opens with /start o<nonce> (the bot binds the chat to the order by the checkout's nonce) */
+  var BOT_LINK = 'https://t.me/uafoodsbot';
+  function tgStartLink(nonce) { return /^[A-Za-z0-9_-]{8,63}$/.test(String(nonce || '')) ? BOT_LINK + '?start=o' + nonce : BOT_LINK; }
   function orderNonce() { var a = '', c = 'abcdefghijklmnopqrstuvwxyz0123456789'; for (var i = 0; i < 20; i++) a += c.charAt(Math.floor(Math.random() * c.length)); return a; }
   /* the request body: cart lines as {id, qty} (grams for weighed items, pieces for pc), the form as typed; website = honeypot (empty) */
   function sitePayload(cart, form, lang, nonce) {
-    return { items: cart.map(function (l) { return { id: l.id, qty: l.qty }; }), name: String(form.name || '').trim(), contact: String(form.phone || '').trim(),
+    return { items: cart.map(function (l) { return { id: l.id, qty: l.qty }; }), name: String(form.name || '').trim(), contact: orderContact(form.phone) || String(form.phone || '').trim(),
       delivery: form.delivery, city: form.other ? String(form.city || '').trim() : '', payment: form.payment, comment: String(form.comment || '').trim(),
       date: form.date || '', lang: lang === 'uk' || lang === 'en' ? lang : 'ru', nonce: nonce, website: String(form.website || '') };
   }
@@ -539,6 +551,6 @@
     saveNotify: saveNotify, loadNotify: loadNotify,
     cardsVariant: cardsVariant, cardsIsB: cardsIsB, quickNavVisible: quickNavVisible, stepQty: stepQty, cardInfo: cardInfo, groupByCategory: groupByCategory, pluralIdx: pluralIdx,
     contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
-    ORDER_URL: ORDER_URL, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder
+    ORDER_URL: ORDER_URL, orderContact: orderContact, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder
   };
 });

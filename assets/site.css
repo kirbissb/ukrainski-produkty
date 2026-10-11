@@ -294,6 +294,7 @@ input, textarea, select { font: inherit; color: var(--ink); }
 .done .lines .t { font-weight: 600; color: var(--ink); }
 .done .lines .t span:last-child { color: var(--gold); }
 .done .promise { font-size: 17px; margin: 14px 0; }
+.done .promise.tgnext { margin-top: -4px; font-weight: 600; }
 .done ol { margin: 0 0 18px; padding-left: 20px; color: var(--ink-2); display: grid; gap: 6px; }
 .done .cta { display: grid; gap: 10px; }
 
@@ -317,6 +318,7 @@ input, textarea, select { font: inherit; color: var(--ink); }
 .doc-body h3 { font-size: 16px; margin: 20px 0 4px; }
 .doc-body p { color: var(--ink-2); margin: 0 0 10px; }
 .doc-body p.ph { color: var(--gold); font-style: italic; }
+.sheet .foot .tgnote { margin: 0 0 8px; color: var(--ink-2); font-size: 13.5px; line-height: 1.4; text-align: center; }
 .sheet .foot .consent { margin: 8px 0 0; color: var(--ink-3); font-size: 12.5px; line-height: 1.4; text-align: center; }
 .sheet .foot .consent a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
 
