@@ -627,11 +627,18 @@
   /* v5 (CEO 11.10): pickup / city courier carry a time window (window_id + window_date YYYY-MM-DD); cargo has none (null) */
   function sitePayload(cart, form, lang, nonce) {
     var kind = windowKind(form.delivery);
-    return { items: cart.map(function (l) { return { id: l.id, qty: l.qty }; }), name: String(form.name || '').trim(), contact: orderContact(form.phone) || String(form.phone || '').trim(),
+    var p = { items: cart.map(function (l) { return { id: l.id, qty: l.qty }; }), name: String(form.name || '').trim(), contact: orderContact(form.phone) || String(form.phone || '').trim(),
       delivery: form.delivery, city: form.other ? String(form.city || '').trim() : '', payment: form.payment, comment: String(form.comment || '').trim(),
       date: form.date || '', lang: lang === 'uk' || lang === 'en' ? lang : 'ru', nonce: nonce, website: String(form.website || ''),
       window_id: kind && form.windowId ? String(form.windowId) : null, window_date: kind && form.windowDate ? String(form.windowDate) : null };
+    /* CEO 11.10: the city courier carries the street address (bot: optional string, max 200, asked in Telegram when missing);
+       pickup and cargo send no address key at all, so their payload stays byte-identical to before */
+    if (kind === 'courier') p.address = clean(form.address).slice(0, ADDRESS_MAX);
+    return p;
   }
+  /* courier address: 5-200 characters after trimming (район, улица, дом, квартира) */
+  var ADDRESS_MIN = 5, ADDRESS_MAX = 200;
+  function addressOk(a) { var n = clean(a).length; return n >= ADDRESS_MIN && n <= ADDRESS_MAX; }
 
   /* ---------- v5 time windows (pickup / city courier). Source: GET /api/catalog -> windows:{pickup:[{id,label}], courier:[{id,label}]}
      (label "HH:MM-HH:MM", same shape as the cabinet settings); until the bot sends them - the placeholders below (spec v3).
@@ -726,7 +733,7 @@
     saveNotify: saveNotify, loadNotify: loadNotify,
     cardsVariant: cardsVariant, cardsIsB: cardsIsB, quickNavVisible: quickNavVisible, stepQty: stepQty, cardInfo: cardInfo, groupByCategory: groupByCategory, pluralIdx: pluralIdx,
     contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
-    ORDER_URL: ORDER_URL, orderContact: orderContact, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder,
+    ORDER_URL: ORDER_URL, orderContact: orderContact, addressOk: addressOk, ADDRESS_MIN: ADDRESS_MIN, ADDRESS_MAX: ADDRESS_MAX, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder,
     WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickWindow: pickWindow, windowValid: windowValid
   };
 });

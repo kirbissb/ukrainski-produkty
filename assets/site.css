@@ -882,3 +882,6 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 .sec-tag { display: inline-block; align-self: flex-start; margin: 0 0 6px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; line-height: 1.5; letter-spacing: 0.02em; background: var(--card); color: var(--ink-2); border: 1px solid var(--hair); }
 .card.cb .sec-tag { background: rgba(0, 0, 0, 0.38); color: rgba(255, 255, 255, 0.9); border-color: rgba(255, 255, 255, 0.28); text-shadow: none; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .card .body .sec-tag { margin: 0; }
+/* CEO 11.10: courier address - wraps on the done screen (the other right-hand values stay on one line) */
+.done .lines #doneAddr span:last-child { white-space: normal; flex: 1 1 auto; text-align: right; overflow-wrap: anywhere; }
+.rv-p#rvAddr { overflow-wrap: anywhere; }
