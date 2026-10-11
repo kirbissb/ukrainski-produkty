@@ -858,7 +858,9 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 }
 /* below 380 px the row (brand, RU/UA/EN, magnifier, cart = 4 x 44 px targets) leaves the brand ~53 px: the name goes first,
    the gold mark is dropped there so "Украинские / Українські" is not cut */
-@media (max-width: 386px) { .hdr .brand .mark { display: none; } }
+/* CEO 11.10: the mark must not disappear on iPhone SE/mini and many Androids (341-386 px) - there the mark stays and the name is
+   visually hidden (screen readers keep it); the shop name is in the hero right below */
+@media (max-width: 386px) { .hdr .brand > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
 /* 340 px and below (iPhone SE 1st gen) even the bare name does not fit: the mark alone, the name stays visually hidden for screen readers */
 @media (max-width: 340px) { .hdr .brand .mark { display: block; } .hdr .brand > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } }
 
