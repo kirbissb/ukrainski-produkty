@@ -238,7 +238,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       case 'confirm': return confirmOrder(cmd.no);
       case 'weight': return weigh(cmd);
       case 'paid': { var o = E.updateOrder(cmd.no, { status: 'paid' }); if (!o) return say('Не нашёл заказ ' + E.orderNo(cmd.no) + '.'); return say(E.orderNo(o.no) + ': оплачен. Клиенту отправлено: «получили, собираем».'); }
-      case 'shipped': { var s = E.updateOrder(cmd.no, { status: 'shipped', track: cmd.track }); if (!s) return say('Не нашёл заказ ' + E.orderNo(cmd.no) + '.'); return say(E.orderNo(s.no) + ': отправлен' + (cmd.track ? ', трек <b>' + esc(cmd.track) + '</b>' : '') + '. Клиенту отправлено: трек и срок (' + (s.delivery === 'cargo' ? '2-3 дня' : 'сегодня или завтра') + ').'); }
+      case 'shipped': { var s = E.updateOrder(cmd.no, { status: 'shipped', track: cmd.track }); if (!s) return say('Не нашёл заказ ' + E.orderNo(cmd.no) + '.'); return say(E.orderNo(s.no) + ': отправлен' + (cmd.track ? ', трек <b>' + esc(cmd.track) + '</b>' : '') + '. Клиенту отправлено.'); }
       case 'today': return today();
       case 'week': return week();
       case 'broadcast': return broadcast();
