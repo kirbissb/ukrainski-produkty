@@ -9,7 +9,8 @@ window.SHOP_FACTS = {
   },
   {
    "id": "alanya",
-   "price": null
+   "price": 300,
+   "price_from": true
   },
   {
    "id": "cargo",
@@ -34,14 +35,16 @@ window.SHOP_FACTS = {
    "pickup_fee": "бесплатно",
    "pickup_hours": "часы уточним",
    "courier": "курьер по Алании",
-   "courier_note": "доставку оплачивают отдельно, на карту курьера, в гривнах",
-   "courier_fees": "Махмутлар - 300 грн, другие районы - уточним",
+   "courier_note": "это минимальная цена, точную по району уточним",
+   "courier_fees": "от 300 ₺",
    "cargo": "карго по Турции",
    "cargo_via": "Юртичи",
    "cargo_note": "номер отправления пришлём вам",
    "cargo_fee": "цену и срок уточним",
    "cargo_cities": "Белек, Анталия, Сиде, Манавгат, Кемер, Газипаша, Стамбул, Анкара и любой другой город Турции",
-   "pay": "перевод на украинскую карту в гривнах (за товар - на карту магазина, за доставку курьером - на карту курьера)",
+   "pay": "перевод на украинскую карту в гривнах",
+   "pay_full": "перевод на украинскую карту в гривнах (за товар - на карту магазина, за доставку курьером - на карту курьера)",
+   "pay_detail": "за товар - на карту магазина, за доставку курьером - на карту курьера",
    "min": "минимального заказа нет"
   },
   "uk": {
@@ -53,14 +56,16 @@ window.SHOP_FACTS = {
    "pickup_fee": "безкоштовно",
    "pickup_hours": "години уточнимо",
    "courier": "кур'єр по Аланії",
-   "courier_note": "доставку оплачують окремо, на картку кур'єра, у гривнях",
-   "courier_fees": "Махмутлар - 300 грн, інші райони - уточнимо",
+   "courier_note": "це мінімальна ціна, точну по району уточнимо",
+   "courier_fees": "від 300 ₺",
    "cargo": "карго по Туреччині",
    "cargo_via": "Юртічі",
    "cargo_note": "номер відправлення надішлемо вам",
    "cargo_fee": "ціну й термін уточнимо",
    "cargo_cities": "Белек, Анталія, Сіде, Манавгат, Кемер, Газіпаша, Стамбул, Анкара і будь-яке інше місто Туреччини",
-   "pay": "переказ на українську картку в гривнях (за товар - на картку магазину, за доставку кур'єром - на картку кур'єра)",
+   "pay": "переказ на українську картку в гривнях",
+   "pay_full": "переказ на українську картку в гривнях (за товар - на картку магазину, за доставку кур'єром - на картку кур'єра)",
+   "pay_detail": "за товар - на картку магазину, за доставку кур'єром - на картку кур'єра",
    "min": "мінімального замовлення немає"
   },
   "en": {
@@ -72,14 +77,16 @@ window.SHOP_FACTS = {
    "pickup_fee": "free",
    "pickup_hours": "hours to be confirmed",
    "courier": "courier in Alanya",
-   "courier_note": "delivery is paid separately, to the courier's card, in hryvnias",
-   "courier_fees": "Mahmutlar - 300 UAH, other areas - to be confirmed",
+   "courier_note": "this is the minimum price, we'll confirm the exact one for your area",
+   "courier_fees": "from 300 ₺",
    "cargo": "cargo across Turkey",
    "cargo_via": "Yurtiçi",
    "cargo_note": "we will send you the tracking number",
    "cargo_fee": "price and timing to be confirmed",
    "cargo_cities": "Belek, Antalya, Side, Manavgat, Kemer, Gazipaşa, Istanbul, Ankara and any other city in Turkey",
-   "pay": "transfer to a Ukrainian card in hryvnias (the goods to the shop's card, courier delivery to the courier's card)",
+   "pay": "transfer to a Ukrainian card in hryvnias",
+   "pay_full": "transfer to a Ukrainian card in hryvnias (the goods to the shop's card, courier delivery to the courier's card)",
+   "pay_detail": "the goods to the shop's card, courier delivery to the courier's card",
    "min": "no minimum order"
   }
  },
