@@ -1020,7 +1020,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     if (state.view === 'done') { $('#sheetTitle').textContent = t('done_title'); renderDone(body, foot); return; }
     if (state.view === 'notify' || state.view === 'notify_ok') { renderNotify(body, foot); return; }
     if (state.view === 'special' || state.view === 'special_ok') { renderSpecial(body, foot); return; }
-    var tt = E.totals(cart, state.form.delivery, C);
+    var tt = fromAdjust(E.totals(cart, state.form.delivery, C), C.deliveryById[state.form.delivery]);
     if (!tt.count) {
       $('#sheetTitle').textContent = t('cart_title');
       body.appendChild(el('p', { class: 'empty', text: t('cart_empty') }));
@@ -1105,11 +1105,19 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     setTimeout(function () { state.wzBusy = false; if ($('#sheet').classList.contains('on') && state.view === 'cart') wzNext(); }, 260);
   }
   /* a big tappable option (delivery / payment): the whole row is the target */
-  function wzOpt(sel, ico, title, sub, price, note, onpick) {
+  /* CEO 19.10: a delivery price with price_from (shop-facts.js) is a minimum - shown as «от 300 ₺», never counted as an exact total */
+  var FROM_WORD = { ru: 'от', uk: 'від', en: 'from' };
+  function dlvPriceText(price, from) { return price ? (from ? FROM_WORD[lang] + ' ' : '') + fm(price) : t('free'); }
+  function fromAdjust(tt, d) {
+    if (!d || !d.price_from || !tt.delivery) return tt;
+    var x = {}; for (var k in tt) x[k] = tt[k];
+    x.total = tt.total - tt.delivery; x.deliveryFrom = tt.delivery; x.delivery = 0; return x;
+  }
+  function wzOpt(sel, ico, title, sub, price, note, onpick, from) {
     return el('button', { class: 'opt', type: 'button', role: 'radio', 'aria-checked': String(sel), onclick: onpick }, [
       el('span', { class: 'opt-ico' }, [icon(ico)]),
       el('span', { class: 'opt-txt' }, [el('b', { text: title }), sub ? el('small', { text: sub }) : null, note ? el('small', { class: 'opt-note', text: note }) : null]),
-      price != null ? el('span', { class: 'opt-pr' + (price ? '' : ' free'), text: price ? fm(price) : t('free') }) : null
+      price != null ? el('span', { class: 'opt-pr' + (price ? '' : ' free'), text: dlvPriceText(price, from) }) : null
     ]);
   }
   function lineRows(box, tt) {
@@ -1150,7 +1158,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
         opts.appendChild(wzOpt(f.delivery === d.id, ICO[d.id] || 'i-truck', delivName(d), t('dlv_' + d.id + '_sub'), d.price, t('dlv_' + d.id + '_note'), function () {
           f.delivery = d.id; f.other = d.id === 'cargo'; if (!C.paymentById[f.payment]) f.payment = C.payment[0].id;
           wzPicked();
-        }));
+        }, !!d.price_from));
       });
       box.appendChild(opts);
     } else if (st === 'addr') {
@@ -1210,7 +1218,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       };
       var items = el('div', { class: 'rv-rows' }); lineRows(items, tt);
       block(t('wz_items'), 'cart', [items]);
-      block(t('wz_get'), 'how', [el('div', { class: 'rv-row' }, [el('span', { text: delivName(d) }), d.price != null ? el('span', { class: d.price ? '' : 'free', text: d.price ? fm(d.price) : t('free') }) : null]), el('p', { class: 'rv-p sub', text: t('dlv_' + d.id + '_sub') })]);
+      block(t('wz_get'), 'how', [el('div', { class: 'rv-row' }, [el('span', { text: delivName(d) }), d.price != null ? el('span', { class: d.price ? '' : 'free', text: dlvPriceText(d.price, d.price_from) }) : null]), el('p', { class: 'rv-p sub', text: t('dlv_' + d.id + '_sub') })]);
       if (E.windowKind(f.delivery) === 'courier') block(t('wz_addr_h'), 'addr', [el('p', { class: 'rv-p', id: 'rvAddr', text: f.address.replace(/\s+/g, ' ').trim() })]);
       if (s.indexOf('when') >= 0) block(t('done_when'), 'when', [el('p', { class: 'rv-p', id: 'rvWhen', text: windowText(f) })]);
       else if (s.indexOf('where') >= 0) block(t('f_city'), 'where', [el('p', { class: 'rv-p', text: f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : '') })]);
