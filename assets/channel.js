@@ -1,7 +1,8 @@
 /* CEO 19.10: where this visit came from - the SAME site opened in three ways.
    1. Telegram Mini App (the bot's menu button «Магазин» or a web_app button): Telegram puts #tgWebAppData=<initData> into the URL.
       The initData is kept for this tab (sessionStorage) and sent with the checkout; the worker checks its signature (bot token HMAC)
-      and puts the order straight into the customer's chat with the bot. The checkout does not ask the name / Telegram contact.
+      and puts the order straight into the customer's chat with the bot. The checkout does not ask the name, but asks the PHONE
+      (CEO 19.10 evening; «Поделиться номером» = requestContact).
    2. Instagram / WhatsApp: the bot's link carries ?c=<signed chat marker>; it is kept 14 days (localStorage) and sent with the checkout,
       so the order lands back in that Instagram / WhatsApp conversation.
    3. Anything else: nothing changes. Never throws; storage may be blocked (private mode) - then only this page view knows. */
@@ -36,7 +37,7 @@
     document.documentElement.classList.add('in-tg');
     /* the official script: ready / expand / close. Loaded only inside Telegram (no third-party request for other visitors) */
     var w0 = webApp();
-    var setup = function () { var w = webApp(); if (!w) return; try { w.ready(); w.expand(); } catch (e) { /* older client */ } };
+    var setup = function () { var w = webApp(); if (!w) return; try { w.ready(); w.expand(); } catch (e) { /* older client */ } try { window.dispatchEvent(new Event('shop-tg-ready')); } catch (e) { /* old browser */ } };
     if (w0) setup();
     else { var sc = document.createElement('script'); sc.src = 'https://telegram.org/js/telegram-web-app.js'; sc.async = true; sc.onload = setup; document.head.appendChild(sc); }
   }
@@ -52,6 +53,26 @@
     close: function () { var w = webApp(); if (w && w.close) { try { w.close(); return true; } catch (e) { /* fall through */ } } return false; },
     /* a t.me link from inside the Mini App: Telegram opens it itself */
     openTg: function (url) { var w = webApp(); if (w && w.openTelegramLink && /^https:\/\/t\.me\//.test(url)) { try { w.openTelegramLink(url); return true; } catch (e) { /* fall through */ } } return false; },
+    /* CEO 19.10 evening: «Поделиться номером» - Telegram.WebApp.requestContact (Telegram 6.9+). The client shows its own confirm popup;
+       on «share» Telegram also posts the contact into the chat with the bot (the bot ignores it). */
+    canShareContact: function () { var w = webApp(); try { return !!(w && typeof w.requestContact === 'function' && (!w.isVersionAtLeast || w.isVersionAtLeast('6.9'))); } catch (e) { return false; } },
+    /* cb(phone | null): the shared number with a leading +, or null (declined, an older client that returns no data, an error) */
+    shareContact: function (cb) {
+      var w = webApp(), done = false, fin = function (p) { if (!done) { done = true; cb(p); } };
+      if (!w || typeof w.requestContact !== 'function') return fin(null);
+      try {
+        w.requestContact(function (ok, res) {
+          var p = '';
+          try {
+            var c = res && res.responseUnsafe && res.responseUnsafe.contact;
+            if (!c && res && typeof res.response === 'string') c = JSON.parse(new URLSearchParams(res.response).get('contact') || 'null');
+            p = c && c.phone_number ? String(c.phone_number).replace(/[^\d+]/g, '') : '';
+          } catch (e) { p = ''; }
+          if (p && p.charAt(0) !== '+') p = '+' + p;
+          fin(ok && p.replace(/\D/g, '').length >= 9 ? p : null);
+        });
+      } catch (e) { fin(null); }
+    },
     /* the checkout body gets the proof of where it came from */
     decorate: function (payload) {
       var d = initData(); if (d) payload.tg_init_data = d; else if (marker) payload.chat_marker = marker;
