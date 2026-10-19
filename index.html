@@ -214,10 +214,13 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
 <script src="img/w/dims.js"></script>
 <script src="assets/shop-facts.js"></script>
 <script src="assets/engine.js"></script>
+<script src="assets/channel.js"></script>
 <script>
 (function () {
   'use strict';
   var E = window.Engine;
+  /* CEO 19.10: Telegram Mini App / Instagram / WhatsApp (assets/channel.js); null = a plain visit */
+  var CH = window.SHOP_CHANNEL || null, inTg = !!(CH && CH.inTelegram());
   /* CEO 19.10: delivery, payment, pickup, minimum and supply come ONLY from assets/shop-facts.js, generated from the bot's
      bot-engine/data/shop.json (scripts/gen-site-facts.ts): the site and the bot cannot disagree. Texts carry {F:key} / {f:key}. */
   var F = window.SHOP_FACTS;
@@ -272,7 +275,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       checkout: 'Оформление', f_name: 'Имя', f_name_ph: 'Как к вам обращаться', f_phone: 'Телефон (Telegram или WhatsApp)', f_city: 'Город', city_alanya: 'Алания', city_other: 'Другой город', city_ph: 'Какой город',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Желаемая дата доставки (необязательно)', f_date_ph: 'Выбрать в календаре', no_date: 'Без даты', prev_m: 'Предыдущий месяц', next_m: 'Следующий месяц',
       f_comment: 'Комментарий', f_comment_ph: 'Например: позвонить перед доставкой', send: 'Отправить заказ', err_contact: 'Укажите имя и телефон, чтобы мы могли подтвердить заказ.', err_send: 'Заказ не отправлен: нет связи с сервером. Корзина сохранена - попробуйте ещё раз.', err_reject: 'Заказ не отправлен: проверьте корзину и данные или напишите нам в Telegram. Корзина сохранена.', f_contact: 'Телефон или ник в Telegram', f_contact_ph: '+90 5xx xxx xx xx или @ник', err_contact_ord: 'Укажите имя и телефон или ник в Telegram - подойдёт любое: +90 5xx xxx xx xx или @ник.', tg_note: 'После заказа откроется Telegram - там вы увидите заказ и подтвердите его одной кнопкой.', f_when_pickup: 'Когда удобно забрать?', f_when_courier: 'Когда удобно принять курьера?', day_today: 'Сегодня', day_tomorrow: 'Завтра', day_none: 'окон больше нет', err_window: 'Выберите день и время, когда вам удобно.', done_when: 'Время', done_tg_msg: 'Сейчас откроется Telegram - там вы увидите заказ и подтвердите его одной кнопкой. Если Telegram не открылся, нажмите кнопку ниже.', done_tg_btn: 'Открыть Telegram', err_city: 'Укажите город для карго.',
-      wz_step: 'Шаг {n} из {m}', wz_next: 'Дальше', wz_back: 'Назад', wz_how: 'Как получить заказ?', wz_where: 'Куда отправить?', wz_addr: 'Куда привезти?', addr_ph: 'Район, улица, дом, квартира', err_addr: 'Напишите адрес: район, улица и дом', wz_addr_h: 'Адрес', wz_pay: 'Как удобно оплатить?', wz_contact: 'Как с вами связаться?', wz_review: 'Проверьте заказ', wz_edit: 'Изменить', wz_items: 'Товары', wz_get: 'Получение', wz_card_note: 'Реквизиты и сумму в гривнах пришлём в Telegram', wz_contacts: 'Контакты', wz_no_comment: 'без комментария',
+      wz_step: 'Шаг {n} из {m}', wz_next: 'Дальше', wz_back: 'Назад', wz_how: 'Как получить заказ?', wz_where: 'Куда отправить?', wz_addr: 'Куда привезти?', addr_ph: 'Район, улица, дом, квартира', err_addr: 'Напишите адрес: район, улица и дом', wz_addr_h: 'Адрес', wz_pay: 'Как удобно оплатить?', wz_contact: 'Как с вами связаться?', wz_review: 'Проверьте заказ', wz_edit: 'Изменить', wz_items: 'Товары', wz_get: 'Получение', wz_card_note: 'Реквизиты и сумму в гривнах пришлём в Telegram', wz_contacts: 'Контакты', wz_tg_note: 'Вы в Telegram как {n}. Заказ придёт в этот чат с ботом.', done_in_tg: 'Заказ уже в вашем чате с ботом. Там же подтверждение и статус.', done_tg_back: 'Вернуться в чат', done_in_instagram: 'Заказ отправлен в ваш чат в Instagram. Там же подтверждение и статус.', done_in_whatsapp: 'Заказ отправлен в ваш чат в WhatsApp. Там же подтверждение и статус.', err_tg_auth: 'Telegram не подтвердил вход. Закройте магазин и откройте его снова из чата с ботом.', wz_no_comment: 'без комментария',
       dlv_pickup: '{F:pickup}', dlv_pickup_sub: '{F:pickup_addr}', dlv_pickup_note: '{F:pickup_hours}.', dlv_alanya: '{F:courier}', dlv_alanya_sub: '{F:courier_fees}', dlv_alanya_note: '{F:courier_note}.', dlv_cargo: '{F:cargo}', dlv_cargo_sub: '{F:cargo_via}, {f:cargo_fee}', dlv_cargo_note: '{F:cargo_note}.',
       pay_card: '{F:pay}',
       done_title: 'Заказ принят', done_no: 'Заказ', done_date: 'желаемая дата', tg_btn: 'Написать в Telegram', back: 'Вернуться в каталог',
@@ -341,7 +344,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       checkout: 'Оформлення', f_name: 'Ім\'я', f_name_ph: 'Як до вас звертатися', f_phone: 'Номер телефону (Telegram або WhatsApp)', f_city: 'Місто', city_alanya: 'Аланія', city_other: 'Інше місто', city_ph: 'Яке місто',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Бажана дата доставки (необов\'язково)', f_date_ph: 'Обрати в календарі', no_date: 'Без дати', prev_m: 'Попередній місяць', next_m: 'Наступний місяць',
       f_comment: 'Коментар', f_comment_ph: 'Наприклад: подзвонити перед доставкою', send: 'Надіслати замовлення', err_contact: 'Вкажіть ім\'я та номер телефону, щоб ми могли підтвердити замовлення.', err_send: 'Замовлення не надіслано: немає зв\'язку з сервером. Кошик збережено - спробуйте ще раз.', err_reject: 'Замовлення не надіслано: перевірте кошик і дані або напишіть нам у Telegram. Кошик збережено.', f_contact: 'Номер телефону або нік у Telegram', f_contact_ph: '+90 5xx xxx xx xx або @нік', err_contact_ord: 'Вкажіть ім\'я та номер телефону або нік у Telegram - підійде будь-що: +90 5xx xxx xx xx або @нік.', tg_note: 'Після замовлення відкриється Telegram - там ви побачите замовлення і підтвердите його однією кнопкою.', f_when_pickup: 'Коли зручно забрати?', f_when_courier: 'Коли зручно прийняти кур\'єра?', day_today: 'Сьогодні', day_tomorrow: 'Завтра', day_none: 'вікон більше немає', err_window: 'Оберіть день і час, коли вам зручно.', done_when: 'Час', done_tg_msg: 'Зараз відкриється Telegram - там ви побачите замовлення і підтвердите його однією кнопкою. Якщо Telegram не відкрився, натисніть кнопку нижче.', done_tg_btn: 'Відкрити Telegram', err_city: 'Вкажіть місто для карго.',
-      wz_step: 'Крок {n} з {m}', wz_next: 'Далі', wz_back: 'Назад', wz_how: 'Як отримати замовлення?', wz_where: 'Куди надіслати?', wz_addr: 'Куди привезти?', addr_ph: 'Район, вулиця, будинок, квартира', err_addr: 'Напишіть адресу: район, вулицю і будинок', wz_addr_h: 'Адреса', wz_pay: 'Як зручно оплатити?', wz_contact: 'Як з вами зв\'язатися?', wz_review: 'Перевірте замовлення', wz_edit: 'Змінити', wz_items: 'Товари', wz_get: 'Отримання', wz_card_note: 'Реквізити та суму в гривнях надішлемо в Telegram', wz_contacts: 'Контакти', wz_no_comment: 'без коментаря',
+      wz_step: 'Крок {n} з {m}', wz_next: 'Далі', wz_back: 'Назад', wz_how: 'Як отримати замовлення?', wz_where: 'Куди надіслати?', wz_addr: 'Куди привезти?', addr_ph: 'Район, вулиця, будинок, квартира', err_addr: 'Напишіть адресу: район, вулицю і будинок', wz_addr_h: 'Адреса', wz_pay: 'Як зручно оплатити?', wz_contact: 'Як з вами зв\'язатися?', wz_review: 'Перевірте замовлення', wz_edit: 'Змінити', wz_items: 'Товари', wz_get: 'Отримання', wz_card_note: 'Реквізити та суму в гривнях надішлемо в Telegram', wz_contacts: 'Контакти', wz_tg_note: 'Ви в Telegram як {n}. Замовлення прийде в цей чат із ботом.', done_in_tg: 'Замовлення вже у вашому чаті з ботом. Там же підтвердження і статус.', done_tg_back: 'Повернутися в чат', done_in_instagram: 'Замовлення надіслано у ваш чат в Instagram. Там же підтвердження і статус.', done_in_whatsapp: 'Замовлення надіслано у ваш чат у WhatsApp. Там же підтвердження і статус.', err_tg_auth: 'Telegram не підтвердив вхід. Закрийте магазин і відкрийте його знову з чату з ботом.', wz_no_comment: 'без коментаря',
       dlv_pickup: '{F:pickup}', dlv_pickup_sub: '{F:pickup_addr}', dlv_pickup_note: '{F:pickup_hours}.', dlv_alanya: '{F:courier}', dlv_alanya_sub: '{F:courier_fees}', dlv_alanya_note: '{F:courier_note}.', dlv_cargo: '{F:cargo}', dlv_cargo_sub: '{F:cargo_via}, {f:cargo_fee}', dlv_cargo_note: '{F:cargo_note}.',
       pay_card: '{F:pay}',
       done_title: 'Замовлення прийнято', done_no: 'Замовлення', done_date: 'бажана дата', tg_btn: 'Написати в Telegram', back: 'Повернутися в каталог',
@@ -410,7 +413,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       checkout: 'Checkout', f_name: 'Name', f_name_ph: 'What should we call you', f_phone: 'Phone (Telegram or WhatsApp)', f_city: 'City', city_alanya: 'Alanya', city_other: 'Other city', city_ph: 'Which city',
       f_dlv: 'Delivery', f_pay: 'Payment', f_date: 'Preferred delivery date (optional)', f_date_ph: 'Pick a date', no_date: 'No date', prev_m: 'Previous month', next_m: 'Next month',
       f_comment: 'Comment', f_comment_ph: 'e.g. call before delivery', send: 'Confirm order', err_contact: 'Add your name and phone so we can confirm the order.', err_send: 'The order was not sent: no connection to the server. Your cart is saved - please try again.', err_reject: 'The order was not sent: please check your cart and details or message us on Telegram. Your cart is saved.', f_contact: 'Phone or Telegram username', f_contact_ph: '+90 5xx xxx xx xx or @username', err_contact_ord: 'Add your name and a phone number or Telegram username - either works: +90 5xx xxx xx xx or @username.', tg_note: 'After you order, Telegram opens - you\'ll see your order there and confirm it with one tap.', f_when_pickup: 'When would you like to pick it up?', f_when_courier: 'When can you receive the courier?', day_today: 'Today', day_tomorrow: 'Tomorrow', day_none: 'no slots left', err_window: 'Pick a day and a time that suits you.', done_when: 'Time', done_tg_msg: 'Telegram will now open - you\'ll see your order there and confirm it with one tap. If Telegram didn\'t open, tap the button below.', done_tg_btn: 'Open Telegram', err_city: 'Enter your city for cargo delivery.',
-      wz_step: 'Step {n} of {m}', wz_next: 'Next', wz_back: 'Back', wz_how: 'How would you like to get it?', wz_where: 'Where should we ship it?', wz_addr: 'Where should we deliver?', addr_ph: 'Area, street, building, flat', err_addr: 'Add your address: area, street and building', wz_addr_h: 'Address', wz_pay: 'How would you like to pay?', wz_contact: 'How can we reach you?', wz_review: 'Check your order', wz_edit: 'Edit', wz_items: 'Items', wz_get: 'Delivery', wz_card_note: 'We\'ll send the card details and the amount in UAH on Telegram', wz_contacts: 'Contact details', wz_no_comment: 'no comment',
+      wz_step: 'Step {n} of {m}', wz_next: 'Next', wz_back: 'Back', wz_how: 'How would you like to get it?', wz_where: 'Where should we ship it?', wz_addr: 'Where should we deliver?', addr_ph: 'Area, street, building, flat', err_addr: 'Add your address: area, street and building', wz_addr_h: 'Address', wz_pay: 'How would you like to pay?', wz_contact: 'How can we reach you?', wz_review: 'Check your order', wz_edit: 'Edit', wz_items: 'Items', wz_get: 'Delivery', wz_card_note: 'We\'ll send the card details and the amount in UAH on Telegram', wz_contacts: 'Contact details', wz_tg_note: 'You are in Telegram as {n}. The order will come to this chat with the bot.', done_in_tg: 'Your order is already in your chat with the bot. Confirmation and status are there too.', done_tg_back: 'Back to the chat', done_in_instagram: 'Your order is in your Instagram chat with us. Confirmation and status are there too.', done_in_whatsapp: 'Your order is in your WhatsApp chat with us. Confirmation and status are there too.', err_tg_auth: 'Telegram did not confirm your login. Close the shop and open it again from the chat with the bot.', wz_no_comment: 'no comment',
       dlv_pickup: '{F:pickup}', dlv_pickup_sub: '{F:pickup_addr}', dlv_pickup_note: '{F:pickup_hours}.', dlv_alanya: '{F:courier}', dlv_alanya_sub: '{F:courier_fees}', dlv_alanya_note: '{F:courier_note}.', dlv_cargo: '{F:cargo}', dlv_cargo_sub: '{F:cargo_via}, {f:cargo_fee}', dlv_cargo_note: '{F:cargo_note}.',
       pay_card: '{F:pay}',
       done_title: 'Order received', done_no: 'Order', done_date: 'preferred date', tg_btn: 'Message us on Telegram', back: 'Back to catalog',
@@ -1061,7 +1064,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     if (st === 'when') return E.windowValid(siteWins(), f.delivery, f.windowId, f.windowDate) ? '' : t('err_window');
     if (st === 'where') return f.other && !f.city.trim() ? t('err_city') : '';
     if (st === 'addr') return E.addressOk(f.address) ? '' : t('err_addr');
-    if (st === 'contact') return !f.name.trim() || !E.orderContact(f.phone) ? t('err_contact_ord') : '';
+    if (st === 'contact') return inTg ? '' : !f.name.trim() || !E.orderContact(f.phone) ? t('err_contact_ord') : ''; /* CEO 19.10: Telegram knows who he is */
     return '';
   }
   function wzGo(st, msg) {
@@ -1172,9 +1175,13 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       title.textContent = t('wz_contact');
       var clr = function (e) { e.target.removeAttribute('aria-invalid'); var x = $('#formErr'); if (x) x.textContent = ''; };
       var enter = function (next) { return function (e) { if (e.key === 'Enter') { e.preventDefault(); if (next) $(next).focus(); else wzNext(); } }; };
+      /* CEO 19.10 Mini App: no name / contact fields - the order goes to his chat with the bot (the worker verifies who he is) */
+      if (inTg) box.appendChild(el('p', { class: 'hint', id: 'tgWho', text: t('wz_tg_note', { n: CH.tgName() || 'Telegram' }) }));
+      else {
       box.appendChild(field(t('f_name'), el('input', { type: 'text', id: 'fName', autocomplete: 'name', autocapitalize: 'words', enterkeyhint: 'next', placeholder: t('f_name_ph'), oninput: function (e) { f.name = e.target.value; clr(e); }, onkeydown: enter('#fPhone') }), f.name));
       /* CEO live test 11.10: a phone OR a Telegram nick (type=text: the tel keypad has no letters) */
       box.appendChild(field(t('f_contact'), el('input', { type: 'text', id: 'fPhone', autocomplete: 'tel', inputmode: 'text', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', enterkeyhint: 'next', placeholder: t('f_contact_ph'), oninput: function (e) { f.phone = e.target.value; clr(e); }, onkeydown: enter('#fComment') }), f.phone));
+      }
       box.appendChild(field(t('sp_comment'), el('textarea', { id: 'fComment', rows: '2', placeholder: t('f_comment_ph'), oninput: function (e) { f.comment = e.target.value; } }), f.comment));
       /* honeypot for bots (the worker rejects an order with it filled); invisible and unreachable for people */
       box.appendChild(el('div', { 'aria-hidden': 'true', style: 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden' }, [el('input', { type: 'text', id: 'fWebsite', name: 'website', tabindex: '-1', autocomplete: 'off', value: f.website || '', oninput: function (e) { f.website = e.target.value; } })]));
@@ -1193,14 +1200,14 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       if (s.indexOf('when') >= 0) block(t('done_when'), 'when', [el('p', { class: 'rv-p', id: 'rvWhen', text: windowText(f) })]);
       else if (s.indexOf('where') >= 0) block(t('f_city'), 'where', [el('p', { class: 'rv-p', text: f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : '') })]);
       block(t('f_pay'), s.indexOf('pay') >= 0 ? 'pay' : null, [el('p', { class: 'rv-p', text: t('pay_' + f.payment) })]);
-      block(t('wz_contacts'), 'contact', [el('p', { class: 'rv-p', text: f.name.trim() + ' · ' + f.phone.trim() }), el('p', { class: 'rv-p sub', text: f.comment.trim() || t('wz_no_comment') })]);
+      block(t('wz_contacts'), 'contact', [el('p', { class: 'rv-p', text: inTg ? (CH.tgName() || 'Telegram') + ' · Telegram' : f.name.trim() + ' · ' + f.phone.trim() }), el('p', { class: 'rv-p sub', text: f.comment.trim() || t('wz_no_comment') })]);
       box.appendChild(el('div', { class: 'tots' }, [
         el('div', {}, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })]),
         tt.delivery ? el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: fm(tt.delivery) })]) : null,
         el('div', { class: 'grand' }, [el('span', { text: t(tt.delivery ? 'total_dlv' : 'total') }), el('span', { text: E.fmtPair(tt.total, tt.usd) })])
       ]));
       primary = el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') }), el('span', { class: 'sum', text: E.fmtPair(tt.total, tt.usd) })]);
-      foot.appendChild(el('p', { class: 'tgnote', id: 'tgNote', text: t('tg_note') }));
+      if (!inTg && !(CH && CH.marker())) foot.appendChild(el('p', { class: 'tgnote', id: 'tgNote', text: t('tg_note') })); /* CEO 19.10: nothing opens in Telegram / IG / WA */
     }
     /* refs (Uber Eats, Glovo, Shop): the button carries the running total, so it never has to be scrolled for */
     if (primary.id === 'wzNext' && !primary.disabled) { primary.textContent = ''; primary.appendChild(el('span', { text: t('wz_next') })); primary.appendChild(el('span', { class: 'sum', text: E.fmtPair(st === 'cart' ? tt.subtotal : tt.total, tt.usd) })); }
@@ -1302,26 +1309,33 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     if (wzSteps().indexOf('when') >= 0) f.date = f.windowDate; else { f.windowId = null; f.windowDate = null; }
     var hp = $('#fWebsite'); f.website = hp ? hp.value : (f.website || '');
     var payload = E.sitePayload(cart, f, lang, '');
+    /* CEO 19.10: in Telegram the worker takes name + contact from the verified initData; IG / WA send the chat marker */
+    if (inTg) { payload.name = ''; payload.contact = ''; }
     var key = JSON.stringify(payload); /* the same checkout retried keeps its nonce: the worker returns the same order, never a second one */
     if (state.orderKey !== key || !state.orderNonce) { state.orderKey = key; state.orderNonce = E.orderNonce(); }
     payload.nonce = state.orderNonce;
+    if (CH) CH.decorate(payload);
     var btn = $('#sendBtn'); state.sending = true; err.textContent = ''; if (btn) { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
     E.sendOrder(payload).then(function (r) {
       state.sending = false; if (btn) { btn.disabled = false; btn.removeAttribute('aria-busy'); }
-      if (!r.ok) { var e2 = $('#formErr'); if (e2) e2.textContent = t(r.kind === 'network' ? 'err_send' : 'err_reject'); return; }
+      if (!r.ok) { var e2 = $('#formErr'); if (e2) e2.textContent = t(r.error === 'tg_auth' ? 'err_tg_auth' : r.kind === 'network' ? 'err_send' : 'err_reject'); return; }
       var d = r.data, cityRu = f.other ? f.city.trim() : 'Аланья', tgLink = E.tgStartLink(payload.nonce);
       var lines = d.lines.map(function (l) { var it = C.byId[l.item_id]; return { id: l.item_id, name: it ? it.name_ru : l.item_id, qty: l.quantity, unit: it ? it.unit : '', cur: l.currency, sum: l.amount, weight: it ? E.fmtWeight(it, l.quantity, 'ru') : String(l.quantity), pre: !!l.preorder }; });
       var wl = payload.window_id ? ((siteWins()[E.windowKind(f.delivery)] || []).filter(function (w) { return w.id === payload.window_id; })[0] || {}).label || '' : '';
-      var order = { no: d.no, customer: { name: f.name.trim(), phone: f.phone.trim(), city: cityRu, address: payload.address || '' }, delivery: f.delivery, payment: f.payment, date: f.date, comment: f.comment.trim(),
+      var bound = d.bound === 'telegram' || d.bound === 'instagram' || d.bound === 'whatsapp' ? d.bound : null;
+      var order = { no: d.no, bound: bound, customer: { name: inTg ? (CH.tgName() || 'Telegram') : f.name.trim(), phone: inTg ? '' : f.phone.trim(), city: cityRu, address: payload.address || '' }, delivery: f.delivery, payment: f.payment, date: f.date, comment: f.comment.trim(),
         windowId: payload.window_id, windowDate: payload.window_date, windowLabel: wl,
         lines: lines, subtotal: d.subtotal_try, usd: d.usd_total || 0, deliveryPrice: d.fee_try || 0, total: d.total_try != null ? d.total_try : d.subtotal_try + (d.fee_try || 0), status: 'new', tg: tgLink };
       E.saveOrder(order); /* the owner demo page (bot.html) still reads the browser copy; the number is the bot's */
-      E.saveCustomer({ name: order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment, address: payload.address || (E.loadCustomer() || {}).address || '' });
+      if (!inTg) E.saveCustomer({ name: order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment, address: payload.address || (E.loadCustomer() || {}).address || '' });
       state.lastOrder = order; state.orderNonce = null; state.orderKey = null; cart = []; E.saveCart(cart); renderCartUI(); /* CEO 11.10: the header badge kept «2» after the order */ f.windowId = null; f.windowDate = null;
       state.step = 'cart'; state.wzReturn = false; state.view = 'done'; renderSheet(); $('#sheetBody').scrollTop = 0;
       /* CEO live test 11.10: after EVERY order the bot chat opens (t.me/uafoodsbot?start=o<nonce>), the customer taps Start and
          the bot confirms the order there. Phone: a direct navigation (never popup-blocked, iOS Safari included). Desktop: a new tab
          (allowed while the click's activation lasts); if the browser blocks it, the big button on the done screen does the same. */
+      /* CEO 19.10: Telegram Mini App / Instagram / WhatsApp - the order is ALREADY in that chat: nothing to open */
+      if (bound) return;
+      if (inTg) { setTimeout(function () { if (!CH.openTg(tgLink)) location.href = tgLink; }, 700); return; }
       var coarse = window.matchMedia && matchMedia('(pointer: coarse)').matches;
       setTimeout(function () {
         if (coarse) { location.href = tgLink; return; }
@@ -1342,9 +1356,11 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     wrap.appendChild(lines);
     /* owner 10.10: one message, no other promises (was: confirm within an hour, weighing, delivery and review steps) */
     wrap.appendChild(el('p', { class: 'promise', id: 'doneMsg', text: t('done_msg') }));
-    wrap.appendChild(el('p', { class: 'promise tgnext', id: 'doneTgMsg', text: t('done_tg_msg') }));
+    wrap.appendChild(el('p', { class: 'promise tgnext', id: 'doneTgMsg', text: t(o.bound === 'telegram' ? 'done_in_tg' : o.bound ? 'done_in_' + o.bound : 'done_tg_msg') }));
     wrap.appendChild(el('div', { class: 'cta' }, [
-      el('a', { class: 'btn fill', id: 'doneTg', href: o.tg || C.shop.telegram, target: '_blank', rel: 'noopener', text: t('done_tg_btn') }),
+      o.bound === 'telegram' ? el('button', { class: 'btn fill', type: 'button', id: 'doneTg', text: t('done_tg_back'), onclick: function () { if (!CH || !CH.close()) { closeSheet(); location.hash = '#catalog'; } } })
+        : o.bound ? null
+        : el('a', { class: 'btn fill', id: 'doneTg', href: o.tg || C.shop.telegram, target: '_blank', rel: 'noopener', text: t('done_tg_btn') }),
       el('button', { class: 'btn', type: 'button', text: t('back'), onclick: function () { closeSheet(); location.hash = '#catalog'; } })
     ]));
     body.appendChild(wrap);
