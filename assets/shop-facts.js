@@ -20,6 +20,9 @@ window.SHOP_FACTS = {
  "payment": [
   {
    "id": "card"
+  },
+  {
+   "id": "cash"
   }
  ],
  "rules": {
@@ -43,7 +46,9 @@ window.SHOP_FACTS = {
    "cargo_fee": "цену и срок уточним",
    "cargo_cities": "Белек, Анталия, Сиде, Манавгат, Кемер, Газипаша, Стамбул, Анкара и любой другой город Турции",
    "pay": "перевод на украинскую карту в гривнах",
-   "pay_full": "перевод на украинскую карту в гривнах (за товар - на карту магазина, за доставку курьером - на карту курьера)",
+   "pay_cash": "наличными в лирах при получении",
+   "pay_all": "перевод на украинскую карту в гривнах или наличными в лирах при получении",
+   "pay_full": "перевод на украинскую карту в гривнах (за товар - на карту магазина, за доставку курьером - на карту курьера) или наличными в лирах при получении (самовывоз и курьер по Алании; карго - только перевод на карту)",
    "pay_detail": "за товар - на карту магазина, за доставку курьером - на карту курьера",
    "min": "минимального заказа нет"
   },
@@ -64,7 +69,9 @@ window.SHOP_FACTS = {
    "cargo_fee": "ціну й термін уточнимо",
    "cargo_cities": "Белек, Анталія, Сіде, Манавгат, Кемер, Газіпаша, Стамбул, Анкара і будь-яке інше місто Туреччини",
    "pay": "переказ на українську картку в гривнях",
-   "pay_full": "переказ на українську картку в гривнях (за товар - на картку магазину, за доставку кур'єром - на картку кур'єра)",
+   "pay_cash": "готівкою в лірах при отриманні",
+   "pay_all": "переказ на українську картку в гривнях або готівкою в лірах при отриманні",
+   "pay_full": "переказ на українську картку в гривнях (за товар - на картку магазину, за доставку кур'єром - на картку кур'єра) або готівкою в лірах при отриманні (самовивіз і кур'єр по Аланії; карго - тільки переказ на картку)",
    "pay_detail": "за товар - на картку магазину, за доставку кур'єром - на картку кур'єра",
    "min": "мінімального замовлення немає"
   },
@@ -85,7 +92,9 @@ window.SHOP_FACTS = {
    "cargo_fee": "price and timing to be confirmed",
    "cargo_cities": "Belek, Antalya, Side, Manavgat, Kemer, Gazipaşa, Istanbul, Ankara and any other city in Turkey",
    "pay": "transfer to a Ukrainian card in hryvnias",
-   "pay_full": "transfer to a Ukrainian card in hryvnias (the goods to the shop's card, courier delivery to the courier's card)",
+   "pay_cash": "cash in lira on receipt",
+   "pay_all": "transfer to a Ukrainian card in hryvnias or cash in lira on receipt",
+   "pay_full": "transfer to a Ukrainian card in hryvnias (the goods to the shop's card, courier delivery to the courier's card) or cash in lira on receipt (pickup and the Alanya courier; cargo is card transfer only)",
    "pay_detail": "the goods to the shop's card, courier delivery to the courier's card",
    "min": "no minimum order"
   }
