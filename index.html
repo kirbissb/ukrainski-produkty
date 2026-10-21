@@ -1492,11 +1492,13 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     if (which === 'legal') renderLegal(doc || 'dlv');
     if (which === 'bot') { $('#botFrame').src = 'bot.html?t=' + Date.now(); }
     o.classList.add('on'); o.setAttribute('aria-hidden', 'false'); document.body.classList.add('locked');
+    $('#bar').style.visibility = 'hidden';   /* 22.10: the sticky cart bar showed under the full-screen text pages; back on close */
   }
   function refresh() { C = buildCatalog(); if (state.cat !== 'all' && !C.catById[state.cat]) state.cat = 'all'; renderChips(); renderGrid(); renderFaq(); renderDelivery(); renderCartUI(); if (typeof srchRender === 'function') srchRender(); }
   function closeOverlays() {
     [$('#ovlBot'), $('#ovlLegal')].forEach(function (o) { o.classList.remove('on'); o.setAttribute('aria-hidden', 'true'); });
     $('#botFrame').src = 'about:blank';
+    $('#bar').style.visibility = '';
     if (location.hash === '#personal-data') history.replaceState(null, '', location.pathname + location.search);
     if (!$('#sheet').classList.contains('on')) document.body.classList.remove('locked');
     refresh();

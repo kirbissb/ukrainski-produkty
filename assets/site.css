@@ -887,3 +887,9 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 /* CEO 11.10: courier address - wraps on the done screen (the other right-hand values stay on one line) */
 .done .lines #doneAddr span:last-child { white-space: normal; flex: 1 1 auto; text-align: right; overflow-wrap: anywhere; }
 .rv-p#rvAddr { overflow-wrap: anywhere; }
+/* 22.10: on a phone the legal text page (86dvh, centred) left a strip at the bottom where the shop page and the cart bar
+   showed through; below 720 px it now fills the whole screen. The cart bar is hidden while it is open (index.html openOverlay). */
+@media (max-width: 719px) {
+  .ovl.doc { background: var(--bg); }
+  .ovl.doc .frame { height: 100%; padding-top: calc(60px + env(safe-area-inset-top)); padding-bottom: env(safe-area-inset-bottom); }
+}
