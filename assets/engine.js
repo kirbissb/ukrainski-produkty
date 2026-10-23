@@ -181,7 +181,7 @@
         var pc = a.unit === 'pcs' || a.unit === 'pc', name = String(a.name).trim();
         c.items.push({ id: String(a.id), cat: NEW_CAT.id, name_ru: name, name_uk: String(a.name_uk || name).trim(), name_en: String(a.name_en || name).trim(),
           desc_ru: '', desc_uk: '', desc_en: '', unit: pc ? 'pc' : 'kg', price: livePrice(pc ? 'pc' : 'kg', a.price_per), currency: liveCur(a.currency, 'TRY'),
-          steps_g: pc ? [1] : WEIGHT_STEPS.slice(), pack_g: null, demo: false, photo: null, keys: [name.toLowerCase().replace(/ё/g, 'е')],
+          steps_g: pc ? [1] : WEIGHT_STEPS.slice(), pack_g: null, demo: false, photo: typeof a.photo === 'string' && /^https:\/\//.test(a.photo) ? a.photo : null, keys: [name.toLowerCase().replace(/ё/g, 'е')],
           state: a.in_stock === false ? 'sold_out' : 'in_stock', added: true, live: true });
       });
     }
