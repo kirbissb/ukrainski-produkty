@@ -236,7 +236,8 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   var CH = window.SHOP_CHANNEL || null, inTg = !!(CH && CH.inTelegram());
   /* CEO 19.10: delivery, payment, pickup, minimum and supply come ONLY from assets/shop-facts.js, generated from the bot's
      bot-engine/data/shop.json (scripts/gen-site-facts.ts): the site and the bot cannot disagree. Texts carry {F:key} / {f:key}. */
-  var F = window.SHOP_FACTS;
+  /* CEO 24.10: F = the generated facts with the owner's live values over them (E.liveFacts, refreshed with every live catalog) */
+  var F_BASE = window.SHOP_FACTS, F = F_BASE;
   CATALOG_RAW.delivery = F.delivery; CATALOG_RAW.payment = F.payment; CATALOG_RAW.rules = F.rules;
 
   /* ---------- ONE dictionary per page: I18N.ru / .uk / .en ---------- */
@@ -284,7 +285,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       producer: 'Производитель: {b}',
       cb_few: 'Осталось {q}', cb_items: ['товар', 'товара', 'товаров'], cb_sections: 'Разделы', cb_all: 'Все товары', cb_in_cart_cap: 'В корзине', cb_live_in: 'В корзине: {q}', cb_live_out: 'Удалено из корзины', cb_switch: 'Карточки', cb_add: 'В корзину', cb_next_batch: 'Ближайшая поставка', cb_in_cart: 'В корзине: {q}. Открыть корзину',
       cart_title: 'Корзина', cart_empty: 'Корзина пуста. Выберите продукты в каталоге.', to_catalog: 'В каталог', subtotal: 'Продукты', free: 'бесплатно', total: 'Итого',
-      total_dlv: 'Итого с доставкой', min_note: 'Минимальный заказ - {m}. Не хватает {x}.', min_btn: 'Минимальный заказ - {m}', unpriced_note: 'Цену уточним при подтверждении заказа: {n}.', ph_new: 'Новинка', pos: ['позиция', 'позиции', 'позиций'],
+      total_dlv: 'Итого с доставкой', min_note: 'Минимальный заказ - {m}. Не хватает {x}.', min_btn: 'Минимальный заказ - {m}', unpriced_note: 'Цену уточним при подтверждении заказа: {n}.', live_price: 'Цена обновилась: {n} - теперь {p}', ph_new: 'Новинка', pos: ['позиция', 'позиции', 'позиций'],
       checkout: 'Оформление', f_name: 'Имя', f_name_ph: 'Как к вам обращаться', f_phone: 'Телефон (Telegram или WhatsApp)', f_city: 'Город', city_alanya: 'Алания', city_other: 'Другой город', city_ph: 'Какой город',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Желаемая дата доставки (необязательно)', f_date_ph: 'Выбрать в календаре', no_date: 'Без даты', prev_m: 'Предыдущий месяц', next_m: 'Следующий месяц',
       f_comment: 'Комментарий', f_comment_ph: 'Например: позвонить перед доставкой', send: 'Отправить заказ', err_contact: 'Укажите имя и телефон, чтобы мы могли подтвердить заказ.', err_send: 'Заказ не отправлен: нет связи с сервером. Корзина сохранена - попробуйте ещё раз.', err_reject: 'Заказ не отправлен: проверьте корзину и данные или напишите нам в Telegram. Корзина сохранена.', f_contact: 'Номер телефона', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Укажите имя и номер телефона, чтобы мы могли связаться с вами по заказу.', err_phone_tg: 'Укажите номер телефона, чтобы мы могли связаться с вами по заказу.', share_phone: 'Поделиться номером', tg_note: 'После заказа откроется Telegram - там вы увидите заказ и подтвердите его одной кнопкой.', f_when_pickup: 'Когда удобно забрать?', f_when_courier: 'Когда удобно принять курьера?', day_today: 'Сегодня', day_tomorrow: 'Завтра', day_none: 'окон больше нет', err_window: 'Выберите день и время, когда вам удобно.', done_when: 'Время', done_tg_msg: 'Сейчас откроется Telegram - там вы увидите заказ и подтвердите его одной кнопкой. Если Telegram не открылся, нажмите кнопку ниже.', done_tg_btn: 'Открыть Telegram', err_city: 'Укажите город для карго.',
@@ -355,7 +356,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       producer: 'Виробник: {b}',
       cb_few: 'Залишилось {q}', cb_items: ['товар', 'товари', 'товарів'], cb_sections: 'Розділи', cb_all: 'Усі товари', cb_in_cart_cap: 'У кошику', cb_live_in: 'У кошику: {q}', cb_live_out: 'Видалено з кошика', cb_switch: 'Картки', cb_add: 'У кошик', cb_next_batch: 'Найближча поставка', cb_in_cart: 'У кошику: {q}. Відкрити кошик',
       cart_title: 'Кошик', cart_empty: 'Кошик порожній. Оберіть продукти в каталозі.', to_catalog: 'До каталогу', subtotal: 'Продукти', free: 'безкоштовно', total: 'Разом',
-      total_dlv: 'Разом з доставкою', min_note: 'Мінімальне замовлення - {m}. Не вистачає {x}.', min_btn: 'Мінімальне замовлення - {m}', unpriced_note: 'Ціну уточнимо під час підтвердження замовлення: {n}.', ph_new: 'Новинка', pos: ['позиція', 'позиції', 'позицій'],
+      total_dlv: 'Разом з доставкою', min_note: 'Мінімальне замовлення - {m}. Не вистачає {x}.', min_btn: 'Мінімальне замовлення - {m}', unpriced_note: 'Ціну уточнимо під час підтвердження замовлення: {n}.', live_price: 'Ціна оновилася: {n} - тепер {p}', ph_new: 'Новинка', pos: ['позиція', 'позиції', 'позицій'],
       checkout: 'Оформлення', f_name: 'Ім\'я', f_name_ph: 'Як до вас звертатися', f_phone: 'Номер телефону (Telegram або WhatsApp)', f_city: 'Місто', city_alanya: 'Аланія', city_other: 'Інше місто', city_ph: 'Яке місто',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Бажана дата доставки (необов\'язково)', f_date_ph: 'Обрати в календарі', no_date: 'Без дати', prev_m: 'Попередній місяць', next_m: 'Наступний місяць',
       f_comment: 'Коментар', f_comment_ph: 'Наприклад: подзвонити перед доставкою', send: 'Надіслати замовлення', err_contact: 'Вкажіть ім\'я та номер телефону, щоб ми могли підтвердити замовлення.', err_send: 'Замовлення не надіслано: немає зв\'язку з сервером. Кошик збережено - спробуйте ще раз.', err_reject: 'Замовлення не надіслано: перевірте кошик і дані або напишіть нам у Telegram. Кошик збережено.', f_contact: 'Номер телефону', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Вкажіть ім\'я та номер телефону, щоб ми могли зв\'язатися з вами щодо замовлення.', err_phone_tg: 'Вкажіть номер телефону, щоб ми могли зв\'язатися з вами щодо замовлення.', share_phone: 'Поділитися номером', tg_note: 'Після замовлення відкриється Telegram - там ви побачите замовлення і підтвердите його однією кнопкою.', f_when_pickup: 'Коли зручно забрати?', f_when_courier: 'Коли зручно прийняти кур\'єра?', day_today: 'Сьогодні', day_tomorrow: 'Завтра', day_none: 'вікон більше немає', err_window: 'Оберіть день і час, коли вам зручно.', done_when: 'Час', done_tg_msg: 'Зараз відкриється Telegram - там ви побачите замовлення і підтвердите його однією кнопкою. Якщо Telegram не відкрився, натисніть кнопку нижче.', done_tg_btn: 'Відкрити Telegram', err_city: 'Вкажіть місто для карго.',
@@ -426,7 +427,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       producer: 'Producer: {b}',
       cb_few: 'Only {q} left', cb_items: ['item', 'items', 'items'], cb_sections: 'Sections', cb_all: 'All products', cb_in_cart_cap: 'In your cart', cb_live_in: 'In your cart: {q}', cb_live_out: 'Removed from cart', cb_switch: 'Cards', cb_add: 'Add to cart', cb_next_batch: 'With the next batch', cb_in_cart: 'In your cart: {q}. Open cart',
       cart_title: 'Cart', cart_empty: 'Your cart is empty. Browse the catalog to add products.', to_catalog: 'Browse the catalog', subtotal: 'Subtotal', free: 'free', total: 'Total',
-      total_dlv: 'Total with delivery', min_note: 'Minimum order - {m}. {x} more to go.', min_btn: 'Minimum order - {m}', unpriced_note: 'We will name the price when we confirm the order: {n}.', ph_new: 'New in', pos: ['item', 'items', 'items'],
+      total_dlv: 'Total with delivery', min_note: 'Minimum order - {m}. {x} more to go.', min_btn: 'Minimum order - {m}', unpriced_note: 'We will name the price when we confirm the order: {n}.', live_price: 'Price updated: {n} - now {p}', ph_new: 'New in', pos: ['item', 'items', 'items'],
       checkout: 'Checkout', f_name: 'Name', f_name_ph: 'What should we call you', f_phone: 'Phone (Telegram or WhatsApp)', f_city: 'City', city_alanya: 'Alanya', city_other: 'Other city', city_ph: 'Which city',
       f_dlv: 'Delivery', f_pay: 'Payment', f_date: 'Preferred delivery date (optional)', f_date_ph: 'Pick a date', no_date: 'No date', prev_m: 'Previous month', next_m: 'Next month',
       f_comment: 'Comment', f_comment_ph: 'e.g. call before delivery', send: 'Confirm order', err_contact: 'Add your name and phone so we can confirm the order.', err_send: 'The order was not sent: no connection to the server. Your cart is saved - please try again.', err_reject: 'The order was not sent: please check your cart and details or message us on Telegram. Your cart is saved.', f_contact: 'Phone number', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Add your name and phone number so we can reach you about your order.', err_phone_tg: 'Add your phone number so we can reach you about your order.', share_phone: 'Share my number', tg_note: 'After you order, Telegram opens - you\'ll see your order there and confirm it with one tap.', f_when_pickup: 'When would you like to pick it up?', f_when_courier: 'When can you receive the courier?', day_today: 'Today', day_tomorrow: 'Tomorrow', day_none: 'no slots left', err_window: 'Pick a day and a time that suits you.', done_when: 'Time', done_tg_msg: 'Telegram will now open - you\'ll see your order there and confirm it with one tap. If Telegram didn\'t open, tap the button below.', done_tg_btn: 'Open Telegram', err_city: 'Enter your city for cargo delivery.',
@@ -462,7 +463,10 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     if (v && typeof v === 'object') { var o = {}; Object.keys(v).forEach(function (k) { o[k] = factFill(v[k], L); }); return o; }
     return v;
   }
-  Object.keys(I18N).forEach(function (L) { I18N[L] = factFill(I18N[L], L); });
+  /* the texts with their {F:..} tokens are kept: a live fact (CEO 24.10) fills them again */
+  var I18N_RAW = I18N; I18N = {};
+  function fillFacts() { Object.keys(I18N_RAW).forEach(function (L) { I18N[L] = factFill(I18N_RAW[L], L); }); }
+  fillFacts();
   var LOC = { ru: 'ru-RU', uk: 'uk-UA', en: 'en-GB' };
   var lang = E.loadLang();
   function t(k, vars) {
@@ -1020,6 +1024,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); $('#sheet').setAttribute('aria-hidden', 'true'); ['top', 'bottom', 'height', 'maxHeight'].forEach(function (k) { $('#sheet').style[k] = ''; });
     document.body.classList.remove('locked');
     if (state.view === 'done' || state.view === 'notify' || state.view === 'notify_ok' || state.view === 'special' || state.view === 'special_ok') state.view = 'cart';
+    state.priceNote = null;   /* CEO 24.10: the «price updated» note was seen in the cart */
     renderCartUI();
   }
   function renderCartUI() {
@@ -1169,6 +1174,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
         ]));
       });
       box.appendChild(el('div', { class: 'tots' }, [el('div', { class: 'grand' }, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })])]));
+      if (state.priceNote && state.priceNote.length) box.insertBefore(el('p', { class: 'minnote live-upd', role: 'status', text: priceNoteText(state.priceNote) }), box.firstChild);
       if (tt.unpriced.length) box.appendChild(el('p', { class: 'minnote tbd', text: t('unpriced_note', { n: tt.lines.filter(function (l) { return l.sum == null; }).map(function (l) { return nm(C.byId[l.id]); }).join(', ') }) }));
       if (tt.belowMin) { box.appendChild(el('p', { class: 'minnote', text: t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) })); primary.textContent = t('min_btn', { m: fm(tt.minOrder) }); primary.disabled = true; }
     } else if (st === 'how') {
@@ -1586,13 +1592,100 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   }
   document.querySelectorAll('.lang button').forEach(function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); }); });
 
+  /* ---------- CEO 24.10: the open tab follows the owner's Cabinet (prices, stock, «мало», «закончилось», shop facts) ----------
+     Every 60-120 s (E.livePollDelay) and when the tab comes back (visibilitychange) the page asks /api/catalog again. Nothing is
+     redrawn when the answer is the same (E.liveSig; the worker answers an unchanged catalog with an empty 304). A change waits while
+     the buyer is busy - a finger on the screen, a scroll still moving, a field in focus, the search open, a form other than the cart -
+     and is then drawn in place: the card under the eyes stays where it was, the cart and every choice stay (they live in state / cart),
+     the cart sheet keeps its scroll. A new price of something already in the cart shows a short note (cart + a toast). */
+  var LIVE_SIG = '', LIVE_PENDING = null, livePollT = null, liveRetryT = null, liveBusy = false, touchDown = false, lastScroll = 0, lastTouch = 0;
+  function applyLiveFacts() {
+    var nf = E.liveFacts(F_BASE, LIVE); var changed = JSON.stringify(nf.t) !== JSON.stringify(F.t);
+    F = nf; CATALOG_RAW.delivery = F.delivery; CATALOG_RAW.rules = F.rules; if (changed) fillFacts(); return changed;
+  }
+  /* the static texts that carry facts, without the parts the buyer may be holding open (reviews carousel, an open FAQ answer) */
+  function applyFactTexts() {
+    document.querySelectorAll('[data-i18n]').forEach(function (n) { var v = t(n.getAttribute('data-i18n')); if (n.textContent !== v) n.textContent = v; });
+    document.querySelectorAll('[data-i18n-html]').forEach(function (n) { var v = t(n.getAttribute('data-i18n-html')); if (n.innerHTML !== v) n.innerHTML = v; });
+    renderDelivery();
+    if ($('#ovlLegal').classList.contains('on')) { var sc = $('#legalBody'), y = [sc.scrollTop, sc.parentNode ? sc.parentNode.scrollTop : 0]; renderLegal(); sc.scrollTop = y[0]; if (sc.parentNode) sc.parentNode.scrollTop = y[1]; }
+  }
+  function faqOpen() { var o = []; document.querySelectorAll('#faqBox details').forEach(function (d, i) { if (d.open) o.push(i); }); return o; }
+  function busyNow() {
+    var a = document.activeElement, sheetOn = $('#sheet').classList.contains('on');
+    if (touchDown || Date.now() - lastTouch < 700 || Date.now() - lastScroll < 500) return true;
+    if (a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return true;
+    if (srchIsOpen() || $('#ovlBot').classList.contains('on')) return true;
+    if (sheetOn && state.view !== 'cart') return true;   /* «сообщить», «привезти под заказ», the done screen: drawn when they are closed */
+    return false;
+  }
+  /* the card nearest the top of the screen and its offset: after the redraw the same card is put back at the same height */
+  function gridAnchor() {
+    var cards = document.querySelectorAll('#grid [data-id], #grid .card'), best = null, top = 0;
+    for (var i = 0; i < cards.length; i++) { var r = cards[i].getBoundingClientRect(); if (r.bottom > 60) { best = cards[i]; top = r.top; break; } }
+    if (!best) return null;
+    var id = best.getAttribute('data-id'), h = best.querySelector('h3');
+    return { id: id, name: id ? null : (h ? h.textContent : null), top: top };
+  }
+  function restoreAnchor(a) {
+    if (!a) return;
+    var n = null;
+    if (a.id) n = document.querySelector('#grid [data-id="' + a.id.replace(/"/g, '') + '"]');
+    else if (a.name) Array.prototype.some.call(document.querySelectorAll('#grid .card h3'), function (h) { if (h.textContent === a.name) { n = h.closest('.card'); return true; } return false; });
+    if (!n) return;
+    var d = n.getBoundingClientRect().top - a.top; if (Math.abs(d) >= 1) window.scrollTo({ top: window.scrollY + d, behavior: 'instant' });
+  }
+  function priceNoteText(ch) {
+    return ch.map(function (c) { var it = C.byId[c.id]; return it ? t('live_price', { n: nm(it), p: E.priceLabel(it, lang) }) : ''; }).filter(Boolean).join(' · ');
+  }
+  function liveToast(text) {
+    var n = $('#liveNote'); if (!n) { n = el('div', { id: 'liveNote', class: 'live-note', role: 'status', 'aria-live': 'polite' }); document.body.appendChild(n); }
+    n.textContent = text; n.classList.add('on'); clearTimeout(n._t); n._t = setTimeout(function () { n.classList.remove('on'); }, 7000);
+  }
+  function liveApply() {
+    clearTimeout(liveRetryT);
+    if (!LIVE_PENDING) return;
+    if (busyNow()) { liveRetryT = setTimeout(liveApply, 1200); return; }
+    var live = LIVE_PENDING; LIVE_PENDING = null;
+    var before = C, anchor = gridAnchor(), open = faqOpen(), sb = $('#sheetBody'), sbTop = sb ? sb.scrollTop : 0, chips = $('#chips').scrollLeft;
+    LIVE = live; LIVE_SIG = E.liveSig(live);
+    var factsChanged = applyLiveFacts();
+    C = buildCatalog(); if (state.cat !== 'all' && !C.catById[state.cat]) state.cat = 'all';
+    var ch = E.cartPriceChanges(cart, before, C);
+    if (ch.length) state.priceNote = ch;
+    if (factsChanged) applyFactTexts();
+    renderChips(); $('#chips').scrollLeft = chips; renderGrid(); restoreAnchor(anchor);
+    renderFaq(); document.querySelectorAll('#faqBox details').forEach(function (d, i) { if (open.indexOf(i) >= 0) d.open = true; });
+    renderCartUI();   /* redraws the open cart sheet too (renderCartUI -> renderSheet) */
+    if (sb && $('#sheet').classList.contains('on')) sb.scrollTop = sbTop;
+    if (ch.length && !$('#sheet').classList.contains('on')) liveToast(priceNoteText(ch));
+    window.__liveApplied = (window.__liveApplied || 0) + 1;
+  }
+  function livePoll() {
+    clearTimeout(livePollT); livePollT = null;
+    if (document.hidden || liveBusy) return;   /* a hidden tab asks nothing; it asks at once when it is shown again */
+    liveBusy = true;
+    E.fetchLiveCatalog(null, E.CATALOG_URL, 8000).then(function (live) {
+      liveBusy = false; window.__livePolls = (window.__livePolls || 0) + 1;
+      if (live && E.liveSig(live) !== LIVE_SIG) { LIVE_PENDING = live; liveApply(); }
+      livePlan();
+    });
+  }
+  function livePlan() { clearTimeout(livePollT); if (!document.hidden) livePollT = setTimeout(livePoll, E.livePollDelay()); }
+  document.addEventListener('visibilitychange', function () { if (document.hidden) { clearTimeout(livePollT); livePollT = null; } else livePoll(); });
+  window.addEventListener('pointerdown', function () { touchDown = true; lastTouch = Date.now(); }, { passive: true, capture: true });
+  window.addEventListener('touchstart', function () { touchDown = true; lastTouch = Date.now(); }, { passive: true, capture: true });
+  ['pointerup', 'pointercancel', 'touchend', 'touchcancel'].forEach(function (k) { window.addEventListener(k, function () { touchDown = false; lastTouch = Date.now(); }, { passive: true, capture: true }); });
+  window.addEventListener('scroll', function () { lastScroll = Date.now(); }, { passive: true, capture: true });
+  /* a change that waited for a form or the search: drawn when the buyer closes it */
+  ['click', 'focusout'].forEach(function (k) { document.addEventListener(k, function () { if (LIVE_PENDING) { clearTimeout(liveRetryT); liveRetryT = setTimeout(liveApply, 800); } }); });
+
   cbSwitch();
   applyStatic(); renderChips(); renderGrid(); renderCartUI();
   E.fetchLiveCatalog(null, E.CATALOG_URL, 3000).then(function (live) {
     window.__liveCatalog = live ? 'live' : 'static';
-    if (!live) return;
-    LIVE = live; refresh();
-    if ($('#sheet').classList.contains('on') && state.view === 'cart') renderSheet();
+    if (live) { LIVE = live; LIVE_SIG = E.liveSig(live); if (applyLiveFacts()) applyFactTexts(); refresh(); if ($('#sheet').classList.contains('on') && state.view === 'cart') renderSheet(); }
+    livePlan();
   });
   legalFromHash();
   document.documentElement.classList.remove('boot');   /* texts are in: show the page (site.css "boot") */

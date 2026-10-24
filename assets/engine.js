@@ -182,11 +182,14 @@
         c.items.push({ id: String(a.id), cat: NEW_CAT.id, name_ru: name, name_uk: String(a.name_uk || name).trim(), name_en: String(a.name_en || name).trim(),
           desc_ru: '', desc_uk: '', desc_en: '', unit: pc ? 'pc' : 'kg', price: livePrice(pc ? 'pc' : 'kg', a.price_per), currency: liveCur(a.currency, 'TRY'),
           steps_g: pc ? [1] : WEIGHT_STEPS.slice(), pack_g: null, demo: false, photo: typeof a.photo === 'string' && /^https:\/\//.test(a.photo) ? a.photo : null, keys: [name.toLowerCase().replace(/ё/g, 'е')],
-          state: a.in_stock === false ? 'sold_out' : 'in_stock', added: true, live: true });
+          state: a.in_stock === false ? 'sold_out' : a.state === 'few_left' ? 'few_left' : 'in_stock', added: true, live: true });
       });
     }
     var mo = live.min_order;
     if (mo && liveNum(mo.sum) != null && (mo.currency == null || mo.currency === 'TRY')) c.rules.min_order = liveNum(mo.sum);
+    /* CEO 24.10: the courier fee the owner set in her Cabinet (facts.courier_fee) is the price the cart counts */
+    var cf = live.facts && live.facts.courier_fee, al = c.deliveryById && c.deliveryById.alanya;
+    if (cf && al && (cf.currency == null || cf.currency === 'TRY')) { al.price = liveNum(cf.sum); if (cf.from && al.price > 0) al.price_from = true; else delete al.price_from; }
     c.live = { updated_at: live.updated_at || null, added: added.length };
     return indexCatalog(c);
   }
@@ -203,6 +206,53 @@
       return r.json().then(function (j) { return liveOk(j) ? j : null; }, function () { return null; });
     }, function () { return null; });
     return Promise.race([req, timeout]).then(function (v) { clearTimeout(timer); return v; });
+  }
+
+  /* ---------- CEO 24.10: an open tab follows the owner's Cabinet ----------
+     The page asks /api/catalog again every 60-120 s (random, so many open tabs do not ask together) and when the tab comes back
+     (visibilitychange). The worker answers an unchanged catalog with an empty 304 (ETag); the page redraws only when liveSig changed. */
+  var LIVE_POLL_MIN_MS = 60000, LIVE_POLL_MAX_MS = 120000;
+  function livePollDelay(rnd) { var r = rnd == null ? Math.random() : rnd; return Math.round(LIVE_POLL_MIN_MS + r * (LIVE_POLL_MAX_MS - LIVE_POLL_MIN_MS)); }
+  /* what the page shows from a live answer (updated_at moves with every chat turn of the bot, it is not shown) */
+  function liveSig(live) {
+    if (!liveOk(live)) return '';
+    var o = {}; Object.keys(live).sort().forEach(function (k) { if (k !== 'updated_at') o[k] = live[k]; });
+    return JSON.stringify(o);
+  }
+  /* the cart lines whose unit price changed between two catalogs -> [{id, was, now, cur}] (null = no price) */
+  function cartPriceChanges(cart, before, after) {
+    var out = [];
+    (cart || []).forEach(function (l) {
+      var a = before && before.byId && before.byId[l.id], b = after && after.byId && after.byId[l.id];
+      if (!a || !b) return;
+      var pa = hasPrice(a) ? Number(a.price) : null, pb = hasPrice(b) ? Number(b.price) : null;
+      if (pa !== pb || a.currency !== b.currency || a.unit !== b.unit) { if (!out.some(function (x) { return x.id === l.id; })) out.push({ id: l.id, was: pa, now: pb, cur: b.currency }); }
+    });
+    return out;
+  }
+  /* the shop facts texts with the owner's live values over the generated ones (assets/shop-facts.js); the words are the same as
+     bot-engine/scripts/gen-site-facts.ts (W) so a live fact reads exactly like a generated one. -> a NEW facts object, F untouched */
+  var FW = {
+    from: { ru: 'от {m}', uk: 'від {m}', en: 'from {m}' }, free: { ru: 'бесплатно', uk: 'безкоштовно', en: 'free' },
+    priceTbd: { ru: 'цену уточним', uk: 'ціну уточнимо', en: 'price to be confirmed' },
+    noMin: { ru: 'минимального заказа нет', uk: 'мінімального замовлення немає', en: 'no minimum order' },
+    min: { ru: 'минимальный заказ - {m}', uk: 'мінімальне замовлення - {m}', en: 'minimum order {m}' },
+    pickup: { ru: 'самовывоз', uk: 'самовивіз', en: 'pickup' }   /* a new address: the generated label named the old place */
+  };
+  function liveFacts(F, live) {
+    var out = JSON.parse(JSON.stringify(F || { t: { ru: {}, uk: {}, en: {} }, delivery: [], payment: [], rules: {} }));
+    if (!liveOk(live)) return out;
+    var fx = live.facts || {}, L = ['ru', 'uk', 'en'];
+    L.forEach(function (lg) {
+      var x = out.t[lg] = out.t[lg] || {};
+      var a = fx.pickup_address; if (a && typeof a.ru === 'string' && a.ru.trim()) { x.pickup_addr = String(a[lg] || a.ru).trim(); x.pickup = FW.pickup[lg]; }
+      var h = fx.pickup_hours; if (h && /^\d\d:\d\d$/.test(h.open) && /^\d\d:\d\d$/.test(h.close)) x.pickup_hours = h.open + '-' + h.close;
+      var cf = fx.courier_fee; if (cf && (cf.currency == null || cf.currency === 'TRY')) { var n = liveNum(cf.sum); x.courier_fees = n == null ? FW.priceTbd[lg] : n === 0 ? FW.free[lg] : cf.from ? FW.from[lg].replace('{m}', fmtMoney(n)) : fmtMoney(n); }
+      var mo = live.min_order; if (mo && liveNum(mo.sum) != null && (mo.currency == null || mo.currency === 'TRY') && liveNum(mo.sum) !== ((F && F.rules && F.rules.min_order) || 0)) x.min = liveNum(mo.sum) > 0 ? FW.min[lg].replace('{m}', fmtMoney(liveNum(mo.sum))) : FW.noMin[lg];
+    });
+    var cf2 = fx.courier_fee; if (cf2) (out.delivery || []).forEach(function (d) { if (d.id === 'alanya') { d.price = liveNum(cf2.sum); if (cf2.from && d.price > 0) d.price_from = true; else delete d.price_from; } });
+    if (live.min_order && liveNum(live.min_order.sum) != null) out.rules = Object.assign({}, out.rules, { min_order: liveNum(live.min_order.sum) });
+    return out;
   }
 
   var STATE_ORDER = { new_batch: 0, in_stock: 1, preorder: 2, few_left: 3, sold_out: 4, not_now: 5 };
@@ -719,7 +769,8 @@
   return {
     KEYS: KEYS, THIN: THIN, STATE_ORDER: STATE_ORDER, DAYS: DAYS, NEW_BATCH_HOURS: NEW_BATCH_HOURS,
     setStore: function (s) { store = s; },
-    CATALOG_URL: CATALOG_URL, mergeLiveCatalog: mergeLiveCatalog, fetchLiveCatalog: fetchLiveCatalog, livePrice: livePrice, priceTbd: priceTbd, hasPrice: hasPrice,
+    CATALOG_URL: CATALOG_URL, mergeLiveCatalog: mergeLiveCatalog, fetchLiveCatalog: fetchLiveCatalog,
+    LIVE_POLL_MIN_MS: LIVE_POLL_MIN_MS, LIVE_POLL_MAX_MS: LIVE_POLL_MAX_MS, livePollDelay: livePollDelay, liveSig: liveSig, cartPriceChanges: cartPriceChanges, liveFacts: liveFacts, livePrice: livePrice, priceTbd: priceTbd, hasPrice: hasPrice,
     fmtMoney: fmtMoney, fmtWeight: fmtWeight, fmtKg: fmtKg, priceLabel: priceLabel, unitLabel: unitLabel, fmtPair: fmtPair,
     parseCatalog: parseCatalog, applyOverrides: applyOverrides, setStock: setStock, setPrice: setPrice, setState: setState, setNextBatch: setNextBatch,
     itemState: itemState, sortItems: sortItems, dayKey: dayKey, addNewItem: addNewItem, resetOverrides: resetOverrides,

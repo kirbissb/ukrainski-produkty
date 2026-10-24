@@ -893,3 +893,12 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
   .ovl.doc { background: var(--bg); }
   .ovl.doc .frame { height: 100%; padding-top: calc(60px + env(safe-area-inset-top)); padding-bottom: env(safe-area-inset-bottom); }
 }
+
+/* CEO 24.10: an open tab follows the owner's Cabinet - a price of something already in the cart changed: a short note (cart + toast) */
+.minnote.live-upd { color: var(--gold-2); margin: 0 0 10px; }
+.live-note { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 40; width: max-content; max-width: min(420px, calc(100vw - 32px));
+  transform: translate(-50%, 8px); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+  background: var(--card-2); color: var(--ink); border: 1px solid var(--hair); border-radius: var(--r); padding: 10px 14px; font-size: 14px; line-height: 1.35; box-shadow: 0 6px 24px rgba(0, 0, 0, .45); }
+.live-note.on { opacity: 1; transform: translate(-50%, 0); }
+@media (min-width: 720px) { .live-note { bottom: 24px; } }
+@media (prefers-reduced-motion: reduce) { .live-note { transition: none; } }
