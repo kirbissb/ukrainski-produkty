@@ -239,6 +239,19 @@
     min: { ru: 'минимальный заказ - {m}', uk: 'мінімальне замовлення - {m}', en: 'minimum order {m}' },
     pickup: { ru: 'самовывоз', uk: 'самовивіз', en: 'pickup' }   /* a new address: the generated label named the old place */
   };
+  /* CEO 24.10 point 11: facts.pickup_days = 0-6, Monday = 0 (absent = every day) -> a sorted list, or null when absent / malformed / all 7 */
+  var DAY_SHORT = { ru: ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'], uk: ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'нд'], en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] };
+  function pickupDays(fx) {
+    var d = fx && Array.isArray(fx.pickup_days) ? fx.pickup_days.filter(function (x, i, a) { return x === Math.floor(x) && x >= 0 && x <= 6 && a.indexOf(x) === i; }) : null;
+    return d && d.length && d.length < 7 ? d.slice().sort(function (a, b) { return a - b; }) : null;
+  }
+  /* the days as the bot says them (bot-engine src/site-live.ts daysText): runs of 3+ days as a range 'пн-пт', the rest one by one;
+     the range hyphen is held by word joiners (U+2060), so a phone line never breaks 'пн-' / 'пт' */
+  function daysText(days, lg) {
+    var n = DAY_SHORT[lg] || DAY_SHORT.ru, out = [];
+    for (var i = 0; i < days.length;) { var j = i; while (j + 1 < days.length && days[j + 1] === days[j] + 1) j++; out.push(j - i >= 2 ? n[days[i]] + '\u2060-\u2060' + n[days[j]] : days.slice(i, j + 1).map(function (x) { return n[x]; }).join(', ')); i = j + 1; }
+    return out.join(', ');
+  }
   function liveFacts(F, live) {
     var out = JSON.parse(JSON.stringify(F || { t: { ru: {}, uk: {}, en: {} }, delivery: [], payment: [], rules: {} }));
     if (!liveOk(live)) return out;
@@ -247,6 +260,8 @@
       var x = out.t[lg] = out.t[lg] || {};
       var a = fx.pickup_address; if (a && typeof a.ru === 'string' && a.ru.trim()) { x.pickup_addr = String(a[lg] || a.ru).trim(); x.pickup = FW.pickup[lg]; }
       var h = fx.pickup_hours; if (h && /^\d\d:\d\d$/.test(h.open) && /^\d\d:\d\d$/.test(h.close)) x.pickup_hours = h.open + '-' + h.close;
+      /* CEO 24.10 point 11: the pickup days (sent only when she does not hand out every day) next to the hours: '10:00-19:00, пн-пт' */
+      var pd = pickupDays(fx); if (pd) x.pickup_hours = (x.pickup_hours ? x.pickup_hours + ', ' : '') + daysText(pd, lg);
       var cf = fx.courier_fee; if (cf && (cf.currency == null || cf.currency === 'TRY')) { var n = liveNum(cf.sum); x.courier_fees = n == null ? FW.priceTbd[lg] : n === 0 ? FW.free[lg] : cf.from ? FW.from[lg].replace('{m}', fmtMoney(n)) : fmtMoney(n); }
       var mo = live.min_order; if (mo && liveNum(mo.sum) != null && (mo.currency == null || mo.currency === 'TRY') && liveNum(mo.sum) !== ((F && F.rules && F.rules.min_order) || 0)) x.min = liveNum(mo.sum) > 0 ? FW.min[lg].replace('{m}', fmtMoney(liveNum(mo.sum))) : FW.noMin[lg];
     });
@@ -711,6 +726,7 @@
       var list = src && Array.isArray(src[k]) ? src[k].map(parseWindow).filter(Boolean) : [];
       out[k] = list.length ? list : WINDOWS_DEFAULT[k].map(parseWindow);
     });
+    var pd = pickupDays(live && live.facts); if (pd) out.pickup_days = pd;
     return out;
   }
   /* -> { date: 'YYYY-MM-DD', min: minutes since midnight } in Alanya */
@@ -726,12 +742,19 @@
   }
   function addDaysIso(iso, n) { var p = iso.split('-'); var t = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + n)); return t.toISOString().slice(0, 10); }
   /* -> [{key:'today', date, wins}, {key:'tomorrow', date, wins}] ; today's list drops windows ending within the cut-off */
+  function dowIso(iso) { var p = iso.split('-'); return (new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])).getUTCDay() + 6) % 7; }
+  /* CEO 24.10 point 11: windows.pickup_days (siteWindows / the page copy facts.pickup_days there) - a closed pickup day keeps its chip
+     with no windows (closed:true, disabled), and when tomorrow is closed the next open day is added (key 'day'); absent = as before */
   function windowDays(windows, kind, nowMs) {
     var list = (windows && windows[kind]) || [], c = alanyaClock(nowMs);
-    return [
+    var days = [
       { key: 'today', date: c.date, wins: list.filter(function (w) { return w.to - c.min > WINDOW_CUTOFF_MIN; }) },
       { key: 'tomorrow', date: addDaysIso(c.date, 1), wins: list.slice() }
     ];
+    var open = kind === 'pickup' ? pickupDays(windows) : null; if (!open) return days;
+    days.forEach(function (d) { if (open.indexOf(dowIso(d.date)) < 0) { d.wins = []; d.closed = true; } });
+    if (days[1].closed) for (var n = 2; n <= 7; n++) { var dt = addDaysIso(c.date, n); if (open.indexOf(dowIso(dt)) >= 0) { days.push({ key: 'day', date: dt, wins: list.slice() }); break; } }
+    return days;
   }
   /* keeps a still-valid choice; otherwise the first day that still has windows and NO window (the buyer picks it); null for cargo */
   function pickWindow(windows, delivery, choice, nowMs) {
@@ -785,6 +808,6 @@
     cardsVariant: cardsVariant, cardsIsB: cardsIsB, quickNavVisible: quickNavVisible, stepQty: stepQty, cardInfo: cardInfo, groupByCategory: groupByCategory, pluralIdx: pluralIdx,
     contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
     ORDER_URL: ORDER_URL, orderContact: orderContact, addressOk: addressOk, ADDRESS_MIN: ADDRESS_MIN, ADDRESS_MAX: ADDRESS_MAX, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder,
-    WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickWindow: pickWindow, windowValid: windowValid
+    WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickupDays: pickupDays, daysText: daysText, pickWindow: pickWindow, windowValid: windowValid
   };
 });
