@@ -57,8 +57,9 @@
     if (item.unit === '100g') return u.per100;
     return item.pack_g ? '/' + item.pack_g + ' ' + u.g : u.perpc;
   }
-  /* live catalog (CEO 11.10): a price Margo has not named yet is null -> the card says so, the item can still be ordered */
-  var PRICE_TBD = { ru: 'цена уточняется', uk: 'ціна уточнюється', en: 'price on request' };
+  /* live catalog (CEO 11.10): a price Margo has not named yet is null -> the card says so, the item can still be ordered.
+     CEO 27.10: the same words as the bot (price on request); 999 is an ordinary price, never a placeholder */
+  var PRICE_TBD = { ru: 'цена по запросу', uk: 'ціна за запитом', en: 'price on request' };
   function priceTbd(lang) { return PRICE_TBD[lang] || PRICE_TBD.ru; }
   function hasPrice(item) { return item.price != null && isFinite(Number(item.price)); }
   function priceLabel(item, lang) { return hasPrice(item) ? fmtMoney(item.price, item.currency) + unitLabel(item, lang) : priceTbd(lang); }
@@ -175,11 +176,23 @@
       it.live = true;
     });
     var added = (Array.isArray(live.added) ? live.added : []).filter(function (a) { return a && a.id && String(a.name || '').trim() && !c.byId[a.id]; });
+    /* CEO 27.10: the owner's categories from her Cabinet (renamed, new) and the goods she moved between them; absent = as before */
+    var lcats = Array.isArray(live.categories) ? live.categories : [];
+    lcats.forEach(function (x) {
+      if (!x || !x.id || !String(x.name || '').trim() || x.id === NEW_CAT.id) return;
+      var e = c.catById[x.id], nm = String(x.name).trim();
+      if (e) { e.name_ru = nm; e.name_uk = String(x.name_uk || nm).trim(); }
+      else { e = { id: String(x.id), name_ru: nm, name_uk: String(x.name_uk || nm).trim(), name_en: nm }; c.categories.push(e); c.catById[e.id] = e; }
+    });
+    var lnew = lcats.filter(function (x) { return x && x.id === NEW_CAT.id && String(x.name || '').trim(); })[0];
+    var ic = live.item_cats && typeof live.item_cats === 'object' ? live.item_cats : {};
+    Object.keys(ic).forEach(function (id) { if (c.byId[id] && c.catById[ic[id]]) c.byId[id].cat = ic[id]; });
     if (added.length) {
-      if (!c.catById[NEW_CAT.id]) c.categories.unshift(JSON.parse(JSON.stringify(NEW_CAT)));
+      var needNew = added.some(function (a) { return !(a.cat && c.catById[a.cat]); });
+      if (needNew && !c.catById[NEW_CAT.id]) { var nc = JSON.parse(JSON.stringify(NEW_CAT)); if (lnew) { nc.name_ru = String(lnew.name).trim(); nc.name_uk = String(lnew.name_uk || lnew.name).trim(); } c.categories.unshift(nc); c.catById[nc.id] = nc; }
       added.forEach(function (a) {
         var pc = a.unit === 'pcs' || a.unit === 'pc', name = String(a.name).trim();
-        c.items.push({ id: String(a.id), cat: NEW_CAT.id, name_ru: name, name_uk: String(a.name_uk || name).trim(), name_en: String(a.name_en || name).trim(),
+        c.items.push({ id: String(a.id), cat: a.cat && c.catById[a.cat] ? String(a.cat) : NEW_CAT.id, name_ru: name, name_uk: String(a.name_uk || name).trim(), name_en: String(a.name_en || name).trim(),
           desc_ru: '', desc_uk: '', desc_en: '', unit: pc ? 'pc' : 'kg', price: livePrice(pc ? 'pc' : 'kg', a.price_per), currency: liveCur(a.currency, 'TRY'),
           steps_g: pc ? [1] : WEIGHT_STEPS.slice(), pack_g: null, demo: false, photo: typeof a.photo === 'string' && /^https:\/\//.test(a.photo) ? a.photo : null, keys: [name.toLowerCase().replace(/ё/g, 'е')],
           state: a.in_stock === false ? 'sold_out' : a.state === 'few_left' ? 'few_left' : 'in_stock', added: true, live: true });
