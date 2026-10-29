@@ -1046,7 +1046,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     if (state.view === 'done') { $('#sheetTitle').textContent = t('done_title'); renderDone(body, foot); return; }
     if (state.view === 'notify' || state.view === 'notify_ok') { renderNotify(body, foot); return; }
     if (state.view === 'special' || state.view === 'special_ok') { renderSpecial(body, foot); return; }
-    var tt = fromAdjust(E.totals(cart, state.form.delivery, C), C.deliveryById[state.form.delivery]);
+    var tt = dpAdjust(fromAdjust(E.totals(cart, state.form.delivery, C), C.deliveryById[state.form.delivery]));
     if (!tt.count) {
       $('#sheetTitle').textContent = t('cart_title');
       body.appendChild(el('p', { class: 'empty', text: t('cart_empty') }));
@@ -1074,7 +1074,8 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     var kind = E.windowKind(f.delivery);
     if (kind === 'courier') s.push('addr');
     /* CEO 19.10: windows only from the bot (/api/catalog); none confirmed = no time question */
-    if (kind) { if (siteWins()[kind].length) s.push('when'); } else s.push('where');
+    /* CEO 29.10 (delivery v5): her delivery options (facts.delivery_plan) ask the courier time even without fixed windows */
+    if (kind) { if (dpWhen(kind) || siteWins()[kind].length) s.push('when'); } else s.push('where');
     if (C.payment.length > 1 && f.delivery !== 'cargo') s.push('pay');
     s.push('contact', 'review');
     return s;
@@ -1095,9 +1096,12 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   function wzCheck(st) {
     var f = state.form, tt = E.totals(cart, f.delivery, C);
     if (st === 'cart') return !tt.count ? t('cart_empty') : tt.belowMin ? t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) : '';
+    /* CEO 29.10: the delivery-only minimum (courier, cargo) holds «Как получить»; her options replace the fixed windows */
+    if (st === 'how') { var mm = E.planMinMiss(dplan(), f.delivery, tt.subtotal); return mm ? E.dpText('min_miss', lang, { m: fm(mm), x: fm(mm - tt.subtotal) }) : ''; }
+    if (st === 'when' && dpWhen(E.windowKind(f.delivery))) { dpSync(); return E.planValid(dplan(), f.dm) ? '' : E.dpText(f.dm && f.dm.mode && f.dm.mode !== 'asap' ? 'err_time' : 'err_when', lang); }
     if (st === 'when') return E.windowValid(siteWins(), f.delivery, f.windowId, f.windowDate) ? '' : t('err_window');
     if (st === 'where') return f.other && !f.city.trim() ? t('err_city') : '';
-    if (st === 'addr') return E.addressOk(f.address) ? '' : t('err_addr');
+    if (st === 'addr') return !E.addressOk(f.address) ? t('err_addr') : dpPlaces().length && dpPlaces().indexOf(f.place) < 0 ? E.dpText('err_place', lang) : '';
     /* CEO 19.10 evening: a phone for EVERY order, Telegram too (the courier agrees the delivery by phone / WhatsApp); in Telegram the name comes from Telegram */
     if (st === 'contact') return inTg ? (phoneOk(f.phone) ? '' : t('err_phone_tg')) : !f.name.trim() || !phoneOk(f.phone) ? t('err_contact_ord') : '';
     return '';
@@ -1182,12 +1186,15 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       var ICO = { pickup: 'i-bag', alanya: 'i-pin', cargo: 'i-truck' };
       /* price: a number from the facts (0 = free); null = not confirmed -> no price, the sub line says «уточним» */
       C.delivery.forEach(function (d) {
-        opts.appendChild(wzOpt(f.delivery === d.id, ICO[d.id] || 'i-truck', delivName(d), t('dlv_' + d.id + '_sub'), d.price, t('dlv_' + d.id + '_note'), function () {
+        var dt = dpTile(d, tt);   /* CEO 29.10: the courier tile by her plan (price by place, free from, minimum, hours); null = as before */
+        opts.appendChild(wzOpt(f.delivery === d.id, ICO[d.id] || 'i-truck', delivName(d), dt ? dt.sub : t('dlv_' + d.id + '_sub'), dt ? dt.price : d.price, dt ? dt.note : t('dlv_' + d.id + '_note'), function () {
           f.delivery = d.id; f.other = d.id === 'cargo'; if (!C.paymentById[f.payment]) f.payment = C.payment[0].id;
+          if (E.planMinMiss(dplan(), d.id, tt.subtotal)) { renderSheet(); return; }
           wzPicked();
-        }, !!d.price_from));
+        }, dt ? dt.from : !!d.price_from));
       });
       box.appendChild(opts);
+      dpMinBlock(box, primary, tt);
     } else if (st === 'addr') {
       title.textContent = t('wz_addr');
       /* a textarea (2 rows): a full address is long; Enter = "Дальше", the bot gets one line anyway */
@@ -1195,10 +1202,11 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
         oninput: function (e) { f.address = e.target.value; e.target.removeAttribute('aria-invalid'); $('#formErr').textContent = ''; },
         onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); wzNext(); } } });
       ad.value = f.address || '';
-      box.appendChild(el('div', { class: 'f addr' }, [ad]));
+      if (dpPlaces().length) dpPlaceBlock(box, tt, ad); else box.appendChild(el('div', { class: 'f addr' }, [ad]));
     } else if (st === 'when') {
       title.textContent = t(E.windowKind(f.delivery) === 'pickup' ? 'f_when_pickup' : 'f_when_courier');
-      var w = renderWindows(); w.removeChild(w.firstChild); w.id = 'fWhen'; box.appendChild(w);
+      if (dpWhen(E.windowKind(f.delivery))) box.appendChild(renderPlan());
+      else { var w = renderWindows(); w.removeChild(w.firstChild); w.id = 'fWhen'; box.appendChild(w); }
     } else if (st === 'where') {
       title.textContent = t('wz_where');
       box.appendChild(field(t('f_city'), el('input', { type: 'text', id: 'fCity', autocomplete: 'address-level2', enterkeyhint: 'done', placeholder: t('city_ph'), oninput: function (e) { f.city = e.target.value; e.target.removeAttribute('aria-invalid'); $('#formErr').textContent = ''; },
@@ -1245,15 +1253,15 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       };
       var items = el('div', { class: 'rv-rows' }); lineRows(items, tt);
       block(t('wz_items'), 'cart', [items]);
-      block(t('wz_get'), 'how', [el('div', { class: 'rv-row' }, [el('span', { text: delivName(d) }), d.price != null ? el('span', { class: d.price ? '' : 'free', text: dlvPriceText(d.price, d.price_from) }) : null]), el('p', { class: 'rv-p sub', text: t('dlv_' + d.id + '_sub') })]);
-      if (E.windowKind(f.delivery) === 'courier') block(t('wz_addr_h'), 'addr', [el('p', { class: 'rv-p', id: 'rvAddr', text: f.address.replace(/\s+/g, ' ').trim() })]);
-      if (s.indexOf('when') >= 0) block(t('done_when'), 'when', [el('p', { class: 'rv-p', id: 'rvWhen', text: windowText(f) })]);
+      block(t('wz_get'), 'how', [el('div', { class: 'rv-row' }, [el('span', { text: delivName(d) }), dpFeeSpan(tt) || (d.price != null ? el('span', { class: d.price ? '' : 'free', text: dlvPriceText(d.price, d.price_from) }) : null)]), el('p', { class: 'rv-p sub', text: dpPlaces().length && f.place ? f.place : t('dlv_' + d.id + '_sub') })]);
+      if (E.windowKind(f.delivery) === 'courier') block(t('wz_addr_h'), 'addr', [el('p', { class: 'rv-p', id: 'rvAddr', text: dpPlaces().length ? E.placeAddress(f.place, f.address) : f.address.replace(/\s+/g, ' ').trim() })]);
+      if (s.indexOf('when') >= 0) block(t('done_when'), 'when', [el('p', { class: 'rv-p', id: 'rvWhen', text: dpWhen(E.windowKind(f.delivery)) && f.dm ? E.planText(E.planWindowId(f.dm), f.dm.date, lang, dpDayWord) : windowText(f) })]);
       else if (s.indexOf('where') >= 0) block(t('f_city'), 'where', [el('p', { class: 'rv-p', text: f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : '') })]);
       block(t('f_pay'), s.indexOf('pay') >= 0 ? 'pay' : null, [el('p', { class: 'rv-p', text: t('pay_' + f.payment) })]);
       block(t('wz_contacts'), 'contact', [el('p', { class: 'rv-p', text: (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim() }), el('p', { class: 'rv-p sub', text: f.comment.trim() || t('wz_no_comment') })]);
       box.appendChild(el('div', { class: 'tots' }, [
         el('div', {}, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })]),
-        tt.delivery ? el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: fm(tt.delivery) })]) : null,
+        tt.delivery ? el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: fm(tt.delivery) })]) : tt.feeTbd ? el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: E.dpText('fee_tbd_short', lang) })]) : null,
         el('div', { class: 'grand' }, [el('span', { text: t(tt.delivery ? 'total_dlv' : 'total') }), el('span', { text: E.fmtPair(tt.total, tt.usd) })])
       ]));
       primary = el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') }), el('span', { class: 'sum', text: E.fmtPair(tt.total, tt.usd) })]);
@@ -1273,6 +1281,124 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
      within 60 min is not offered today; asked only when the live catalog has `windows` for that kind (no placeholders, CEO 19.10). */
   function shortDate(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString(LOC[lang], { day: 'numeric', month: 'long' }); }
   function weekdayName(s) { var p = s.split('-'), w = new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString(LOC[lang], { weekday: 'long' }); return w.charAt(0).toUpperCase() + w.slice(1); }
+  /* ---------- CEO 29.10 (delivery v5): the owner's delivery options (facts.delivery_plan from the bot, engine.js deliveryPlan).
+     No plan = nothing here runs and the checkout is exactly as before. With a plan: the courier «Когда» step shows ONLY her options as
+     big tiles (По готовности / Ко времени / В интервал / В течение дня), each with its day and time chips inside her hours and days
+     (past times today and closed days disabled); the courier fee follows her rules (by place / free from / «уточним»); a delivery order
+     under her delivery minimum is held on «Как получить» with the line and a «Самовывоз» switch. ---------- */
+  function dplan() { return E.deliveryPlan(LIVE); }
+  function dpWeekday(s) { var p = s.split('-'), w = new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString(LOC[lang], { weekday: 'long' }); return w.charAt(0).toUpperCase() + w.slice(1); }
+  function dpWhen(kind) { var P = kind === 'courier' ? dplan() : null; return !!(P && P.modes.length); }
+  function dpPlaces() { var P = state.form.delivery === 'alanya' ? dplan() : null; return P ? P.area : []; }
+  function dpBase() { var d = C.deliveryById.alanya || {}; return { price: d.price == null ? null : d.price, from: !!d.price_from }; }
+  function dpFeeText(fe) { return fe.tbd ? E.dpText('fee_tbd_short', lang) : dlvPriceText(fe.sum, fe.from); }
+  function dpDayWord(date) {
+    var c = E.alanyaClock(), w = date === c.date ? t('day_today') : null;
+    if (!w) { var p = c.date.split('-'), tm = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + 1)).toISOString().slice(0, 10); w = date === tm ? t('day_tomorrow') : shortDate(date); }
+    return w.charAt(0).toLowerCase() + w.slice(1);
+  }
+  /* the courier fee of this checkout by the plan (the chosen place, or the range before it is chosen); null = no plan / not courier */
+  function dpFee(subtotal) {
+    var P = dplan(), f = state.form; if (!P || f.delivery !== 'alanya') return null;
+    return P.area.length && P.area.indexOf(f.place) < 0 ? E.planFeeRange(P, subtotal, dpBase()) : E.planFee(P, f.place, subtotal, dpBase());
+  }
+  /* the totals with the plan's fee (the same shape as fromAdjust: a «from» price or «уточним» is not counted in the total) */
+  function dpAdjust(tt) {
+    var fe = dpFee(tt.subtotal); if (!fe) return tt;
+    var x = {}; for (var k in tt) x[k] = tt[k]; delete x.deliveryFrom; delete x.feeTbd;
+    x.delivery = fe.tbd || fe.from ? 0 : fe.sum; if (fe.from && !fe.tbd) x.deliveryFrom = fe.sum; if (fe.tbd) x.feeTbd = true;
+    x.total = tt.subtotal + x.delivery; return x;
+  }
+  function dpFeeSpan(tt) { var fe = dpFee(tt.subtotal); return fe ? el('span', { class: !fe.tbd && fe.sum === 0 ? 'free' : '', text: dpFeeText(fe) }) : null; }
+  /* the courier tile on «Как получить»: price (one, or the lowest with «от»), the places line, free-from and the delivery minimum */
+  function dpTile(d, tt) {
+    var P = dplan(); if (!P || d.id !== 'alanya') return null;
+    var fe = E.planFeeRange(P, tt.subtotal, dpBase()), sub = t('dlv_alanya_sub'), note = [];
+    if (P.area.length > 1) {
+      var groups = []; P.area.forEach(function (pl) { var x = dpFeeText(E.planFee(P, pl, tt.subtotal, dpBase())), g = groups.filter(function (y) { return y.fee === x; })[0]; if (g) g.places.push(pl); else groups.push({ fee: x, places: [pl] }); });
+      sub = groups.length > 1 ? groups.map(function (g) { return g.places.join(', ') + ' ' + g.fee; }).join(' · ') : P.area.join(', ');
+    } else if (fe.tbd) sub = E.dpText('fee_tbd', lang);
+    if (P.freeFrom != null && !fe.tbd) note.push(E.dpText('free_from', lang, { m: fm(P.freeFrom) }));
+    if (P.min) note.push(E.dpText('min_line', lang, { m: fm(P.min) }));
+    return { price: fe.tbd ? null : fe.sum, from: fe.from, sub: sub, note: note.length ? note.join(' · ') : t('dlv_alanya_note') };
+  }
+  /* «Как получить»: a delivery order under her delivery minimum - the line + «Самовывоз», «Дальше» is off */
+  function dpMinBlock(box, primary, tt) {
+    var f = state.form, mm = E.planMinMiss(dplan(), f.delivery, tt.subtotal); if (!mm || !C.deliveryById.pickup) return;
+    /* above the tiles: the reason and the way out are the first thing seen, never under the pinned footer */
+    var top = box.firstChild;
+    box.insertBefore(el('p', { class: 'minnote', id: 'dpMin', role: 'status', text: E.dpText('min_miss', lang, { m: fm(mm), x: fm(mm - tt.subtotal) }) }), top);
+    box.insertBefore(el('button', { class: 'btn dp-pickup', type: 'button', id: 'dpPickup', onclick: function () { f.delivery = 'pickup'; f.other = false; wzPicked(); } }, [icon('i-bag'), el('span', { text: E.dpText('pickup_btn', lang) })]), top);
+    primary.disabled = true;
+  }
+  /* «Куда привезти?» with her places: the place chips (with their fee) above the address */
+  function dpPlaceBlock(box, tt, ad) {
+    var P = dplan(), f = state.form;
+    var row = el('div', { class: 'row dp-places', role: 'radiogroup', 'aria-label': E.dpText('place_q', lang) });
+    P.area.forEach(function (pl) {
+      var on = f.place === pl;
+      row.appendChild(el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(on), 'aria-pressed': String(on), 'data-place': pl,
+        onclick: function () { f.place = pl; var e = $('#formErr'); if (e) e.textContent = ''; renderSheet(); var a = $('#fAddr'); if (a && !a.value.trim()) a.focus({ preventScroll: true }); } },
+        [el('b', { text: pl }), el('small', { text: dpFeeText(E.planFee(P, pl, tt.subtotal, dpBase())) })]));
+    });
+    box.appendChild(el('div', { class: 'f dp-place' }, [el('span', { class: 'lbl', text: E.dpText('place_q', lang) }), row]));
+    box.appendChild(el('div', { class: 'f addr' }, [el('label', { for: 'fAddr', text: t('wz_addr_h') }), ad]));
+  }
+  /* «По готовности» follows the clock: today while a courier can still leave, else her next delivery day */
+  /* a chip tap redraws the step where the finger is (the long time grid would jump back to the top) */
+  function dpRender() { var sb = $('#sheetBody'), y = sb ? sb.scrollTop : 0; renderSheet(); if (sb) sb.scrollTop = y; }
+  function dpSync() { var f = state.form, P = dplan(); if (P && f.dm && f.dm.mode === 'asap') f.dm.date = E.planAsapDate(P); }
+  function renderPlan() {
+    var P = dplan(), f = state.form, dm = f.dm || (f.dm = { mode: null, date: null, from: null, to: null });
+    if (P.modes.indexOf(dm.mode) < 0) { dm.mode = P.modes.length === 1 ? P.modes[0] : null; dm.from = dm.to = null; }
+    dpSync();
+    var wrap = el('div', { class: 'f when dp', id: 'fWhen' });
+    if (P.hours) wrap.appendChild(el('p', { class: 'hint dp-hours', text: E.dpText('hours', lang, { h: E.planHoursText(P, lang) }) }));
+    var ICO = { asap: 'i-truck', time: 'i-clock', interval: 'i-clock', day: 'i-cal' };
+    var opts = el('div', { class: 'opts dp-modes', role: 'radiogroup', 'aria-labelledby': 'sheetTitle' });
+    P.modes.forEach(function (m) {
+      var sub = E.dpText('s_' + m, lang);
+      if (m === 'asap') { var ad = E.planAsapDate(P), oh = P.hours ? P.hours.open : 0; sub = !ad || ad === E.alanyaClock().date ? E.dpText('s_asap_today', lang) : E.dpText('s_asap_next', lang, { d: dpDayWord(ad), a: String(Math.floor(oh / 60)).padStart(2, '0') + ':' + String(oh % 60).padStart(2, '0') }); }
+      var o = wzOpt(dm.mode === m, ICO[m], E.dpText('m_' + m, lang), sub, null, '', function () {
+        var was = dm.mode; dm.mode = m; var e = $('#formErr'); if (e) e.textContent = '';
+        if (m === 'asap') { dm.date = E.planAsapDate(P); dm.from = dm.to = null; wzPicked(); return; }
+        if (was !== m) { dm.from = dm.to = null; }
+        if (!dm.date || !E.planDays(P, m).some(function (d) { return d.date === dm.date && d.ok; })) { var first = E.planDays(P, m).filter(function (d) { return d.ok; })[0]; dm.date = first ? first.date : null; }
+        dpRender(); var pk = $('#dpPick'); if (pk && pk.scrollIntoView) pk.scrollIntoView({ block: 'nearest' });
+      });
+      o.setAttribute('data-mode', m); opts.appendChild(o);
+    });
+    wrap.appendChild(opts);
+    if (dm.mode && dm.mode !== 'asap') {
+      var pick = el('div', { class: 'dp-pick', id: 'dpPick' });
+      var days = E.planDays(P, dm.mode), dRow = el('div', { class: 'row days dp-days', role: 'radiogroup', 'aria-label': E.dpText('day_q', lang) });
+      days.forEach(function (d) {
+        var b = el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(dm.date === d.date), 'aria-pressed': String(dm.date === d.date), 'data-date': d.date,
+          onclick: function () { if (dm.date !== d.date) { dm.date = d.date; if (dm.mode === 'time' && !E.planTimes(P, d.date).some(function (x) { return x.ok && x.min === dm.from; })) dm.from = null; if (dm.mode === 'interval' && !E.planStarts(P, d.date).some(function (x) { return x.ok && x.min === dm.from; })) { dm.from = dm.to = null; } } var e = $('#formErr'); if (e) e.textContent = ''; dpRender(); } }, [
+          el('b', { text: d.key === 'day' ? dpWeekday(d.date) : t('day_' + d.key) }), el('small', { text: d.closed ? t('day_closed') : !d.ok ? E.dpText('day_late', lang) : shortDate(d.date) })]);
+        if (!d.ok) b.disabled = true;
+        dRow.appendChild(b);
+      });
+      pick.appendChild(el('span', { class: 'lbl', text: E.dpText('day_q', lang) })); pick.appendChild(dRow);
+      var chips = function (label, list, cur, set) {
+        var r = el('div', { class: 'row wins dp-grid', role: 'radiogroup', 'aria-label': label });
+        list.forEach(function (x) {
+          var hhmm = String(Math.floor(x.min / 60)).padStart(2, '0') + ':' + String(x.min % 60).padStart(2, '0');
+          var b = el('button', { class: 'chip win', type: 'button', role: 'radio', 'aria-checked': String(cur === x.min), 'aria-pressed': String(cur === x.min), 'data-min': String(x.min), text: hhmm,
+            onclick: function () { set(x.min); var e = $('#formErr'); if (e) e.textContent = ''; dpRender(); } });
+          if (!x.ok) b.disabled = true; r.appendChild(b);
+        });
+        pick.appendChild(el('span', { class: 'lbl', text: label })); pick.appendChild(r);
+      };
+      if (dm.date && dm.mode === 'time') chips(E.dpText('time_q', lang), E.planTimes(P, dm.date), dm.from, function (v) { dm.from = v; });
+      if (dm.date && dm.mode === 'interval') {
+        chips(E.dpText('from_q', lang), E.planStarts(P, dm.date), dm.from, function (v) { dm.from = v; if (dm.to != null && dm.to - v < 60) dm.to = null; });
+        if (dm.from != null) chips(E.dpText('to_q', lang), E.planEnds(P, dm.from), dm.to, function (v) { dm.to = v; });
+      }
+      wrap.appendChild(pick);
+    }
+    return wrap;
+  }
   function siteWins() {
     var src = LIVE && LIVE.windows && typeof LIVE.windows === 'object' ? LIVE.windows : {}, out = {};
     ['pickup', 'courier'].forEach(function (k) { out[k] = Array.isArray(src[k]) ? src[k].map(E.parseWindow).filter(Boolean) : []; });
@@ -1287,6 +1413,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   }
   function windowText(o) {
     if (!o.windowId || !o.windowDate) return '';
+    if (/^dm-/.test(o.windowId)) return E.planText(o.windowId, o.windowDate, lang, dpDayWord);
     var W = siteWins(), k = E.windowKind(o.delivery), w = ((W[k] || []).filter(function (x) { return x.id === o.windowId; })[0]) || { label: o.windowLabel || '' };
     return shortDate(o.windowDate) + ', ' + (o.windowLabel || w.label);
   }
@@ -1359,9 +1486,12 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
        step that is not complete opens with its message - cart minimum, window, cargo city, name and contact */
     var s = wzSteps();
     for (var i = 0; i < s.length - 1; i++) { var m = wzCheck(s[i]); if (m) { wzGo(s[i], m); return; } }
+    /* CEO 29.10: her delivery option IS the order window (dm-asap | dm-day | dm-time-HHMM | dm-int-HHMM-HHMM + its day) */
+    if (wzSteps().indexOf('when') >= 0 && dpWhen(E.windowKind(f.delivery))) { dpSync(); f.windowId = E.planWindowId(f.dm); f.windowDate = f.dm.date; }
     if (wzSteps().indexOf('when') >= 0) f.date = f.windowDate; else { f.windowId = null; f.windowDate = null; }
     var hp = $('#fWebsite'); f.website = hp ? hp.value : (f.website || '');
     var payload = E.sitePayload(cart, f, lang, '');
+    if (dpPlaces().length && payload.address) payload.address = E.placeAddress(f.place, payload.address).slice(0, E.ADDRESS_MAX);
     /* CEO 19.10: in Telegram the worker takes name + contact from the verified initData; IG / WA send the chat marker */
     /* CEO 19.10 evening: the contact is ALWAYS the phone (the worker refuses an order without one) */
     payload.contact = phoneOk(f.phone);
@@ -1376,11 +1506,12 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
       if (!r.ok) { var e2 = $('#formErr'); if (e2) e2.textContent = t(r.error === 'tg_auth' ? 'err_tg_auth' : r.kind === 'network' ? 'err_send' : 'err_reject'); return; }
       var d = r.data, cityRu = f.other ? f.city.trim() : 'Аланья', tgLink = E.tgStartLink(payload.nonce);
       var lines = d.lines.map(function (l) { var it = C.byId[l.item_id]; return { id: l.item_id, name: it ? it.name_ru : l.item_id, qty: l.quantity, unit: it ? it.unit : '', cur: l.currency, sum: l.amount, weight: it ? E.fmtWeight(it, l.quantity, 'ru') : String(l.quantity), pre: !!l.preorder }; });
-      var wl = payload.window_id ? ((siteWins()[E.windowKind(f.delivery)] || []).filter(function (w) { return w.id === payload.window_id; })[0] || {}).label || '' : '';
+      var wl = payload.window_id ? (/^dm-/.test(payload.window_id) ? windowText({ windowId: payload.window_id, windowDate: payload.window_date }) : ((siteWins()[E.windowKind(f.delivery)] || []).filter(function (w) { return w.id === payload.window_id; })[0] || {}).label || '') : '';
       var bound = d.bound === 'telegram' || d.bound === 'instagram' || d.bound === 'whatsapp' ? d.bound : null;
       var order = { no: d.no, bound: bound, customer: { name: inTg ? (CH.tgName() || 'Telegram') : f.name.trim(), phone: f.phone.trim(), city: cityRu, address: payload.address || '' }, delivery: f.delivery, payment: f.payment, date: f.date, comment: f.comment.trim(),
         windowId: payload.window_id, windowDate: payload.window_date, windowLabel: wl,
         lines: lines, subtotal: d.subtotal_try, usd: d.usd_total || 0, deliveryPrice: d.fee_try || 0, total: d.total_try != null ? d.total_try : d.subtotal_try + (d.fee_try || 0), status: 'new', tg: tgLink };
+      if (dplan() && f.delivery === 'alanya' && d.fee_try == null) order.feeTbd = true; /* CEO 29.10: the shop names the courier fee */
       E.saveOrder(order); /* the owner demo page (bot.html) still reads the browser copy; the number is the bot's */
       E.saveCustomer({ name: inTg ? (E.loadCustomer() || {}).name || '' : order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment, address: payload.address || (E.loadCustomer() || {}).address || '' });
       state.lastOrder = order; state.orderNonce = null; state.orderKey = null; cart = []; E.saveCart(cart); renderCartUI(); /* CEO 11.10: the header badge kept «2» after the order */ f.windowId = null; f.windowDate = null;
@@ -1404,7 +1535,7 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
     wrap.appendChild(el('p', { class: 'no', html: t('done_no') + ' <b style="color:var(--gold)">' + E.orderNo(o.no) + '</b>' + (o.windowId ? '' : o.date ? ' · ' + t('done_date') + ' ' + dateLabel(o.date) : '') }));
     var lines = el('div', { class: 'lines' });
     o.lines.forEach(function (l) { var it = C.byId[l.id]; lines.appendChild(el('div', {}, [el('span', { text: (it ? nm(it) : l.name) + ', ' + (it ? E.fmtWeight(it, l.qty, lang) : l.weight) + (l.pre ? ' · ' + t('pre_tag') : '') }), el('span', { text: l.sum != null ? E.fmtMoney(l.sum, l.cur) : '' })])); });
-    lines.appendChild(el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: o.deliveryPrice ? fm(o.deliveryPrice) : t('free') })]));
+    lines.appendChild(el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: o.deliveryPrice ? fm(o.deliveryPrice) : o.feeTbd ? E.dpText('fee_tbd_short', lang) : t('free') })]));
     if (o.customer && o.customer.address) lines.appendChild(el('div', { class: 'when', id: 'doneAddr' }, [el('span', { text: t('wz_addr_h') }), el('span', { text: o.customer.address })]));
     if (o.windowId) lines.appendChild(el('div', { class: 'when', id: 'doneWhen' }, [el('span', { text: t('done_when') }), el('span', { text: windowText(o) })]));
     lines.appendChild(el('div', { class: 't' }, [el('span', { text: t('total') }), el('span', { text: E.fmtPair(o.total, o.usd) })]));

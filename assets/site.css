@@ -902,3 +902,18 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 .live-note.on { opacity: 1; transform: translate(-50%, 0); }
 @media (min-width: 720px) { .live-note { bottom: 24px; } }
 @media (prefers-reduced-motion: reduce) { .live-note { transition: none; } }
+/* CEO 29.10 (delivery v5): the owner's delivery options in the courier «Когда» step (index.html renderPlan); only drawn when the bot sends a plan */
+.wz-when .f.when.dp { margin-top: 2px; gap: 0; }
+.f.when.dp .dp-hours { margin: 0 0 8px; font-size: 14px; }
+.f.when.dp .dp-modes { padding-top: 0; }
+.f.when.dp .dp-modes .opt { min-height: 64px; }
+.dp-pick { margin-top: 6px; }
+.dp-pick .lbl { display: block; margin: 14px 0 6px; font-size: 13.5px; color: var(--ink-2); font-weight: 500; }
+.f .row.dp-days, .f .row.dp-places { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.f .row.dp-days .chip.day, .f .row.dp-places .chip.day { min-height: 60px; min-width: 0; }
+.f .row.dp-places .chip.day b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.f .row.dp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.f .row.dp-grid .chip.win { min-height: 48px; }
+.wz-addr .f.dp-place { margin-top: 2px; }
+.btn.dp-pickup { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 52px; margin: 10px 0 14px; }
+.btn.dp-pickup .ico { width: 20px; height: 20px; }

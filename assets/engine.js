@@ -782,6 +782,177 @@
     var kind = windowKind(delivery); if (!kind) return true;
     return windowDays(windows, kind, nowMs).some(function (d) { return d.date === date && d.wins.some(function (w) { return w.id === id; }); });
   }
+  /* ---------- CEO 29.10 (delivery v5): the owner's delivery options, sent by the bot as facts.delivery_plan (GET /api/catalog;
+     bot-engine src/site-live.ts factsView, src/delivery-plan.ts). ABSENT = every courier rule exactly as before (fixed windows).
+     PRESENT: the courier «Когда» step offers ONLY her options (asap / time / interval / day) inside her delivery hours and days;
+     window_id = dm-asap | dm-day | dm-time-HHMM | dm-int-HHMM-HHMM + window_date (the worker re-checks it, delivery-plan.ts resolveWhen);
+     the fee follows her rules (fixed / by place / free from a sum / she names it); a delivery order under min_delivery is held.
+     The shop's clock = alanyaClock. LEAD = the minutes the shop needs before a courier can leave (delivery-plan.ts lead: 60).
+     Texts DPW are DRAFT (CEO approves the wording). ---------- */
+  var DP_MODES = ['asap', 'time', 'interval', 'day'], DP_LEAD = 60, DP_TIME_STEP = 30, DP_INT_STEP = 60, DP_INT_MIN = 60, DP_DAY_CHIPS = 4;
+  function dpDow(iso) { var p = iso.split('-'); return (new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])).getUTCDay() + 6) % 7; }
+  function dpHHMM(m) { return String(Math.floor(m / 60)).padStart(2, '0') + String(m % 60).padStart(2, '0'); }
+  function dpHm(m) { return String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
+  /* -> the plan or null. facts.courier_zones (her Cabinet rows) ride along: a place with its own row costs that row */
+  function deliveryPlan(live) {
+    var fx = live && live.facts, p = fx && fx.delivery_plan; if (!p || typeof p !== 'object') return null;
+    var modes = DP_MODES.filter(function (m) { return Array.isArray(p.modes) && p.modes.indexOf(m) >= 0; });
+    var h = p.hours, o = h ? hm(h.open) : null, c = h ? hm(h.close) : null, days = h && Array.isArray(h.days) ? h.days.filter(function (x, i, a) { return x === Math.floor(x) && x >= 0 && x <= 6 && a.indexOf(x) === i; }) : null;
+    var fee = p.fee && typeof p.fee === 'object' ? p.fee : {}, km = fee.per_km && liveNum(fee.per_km.rate) > 0 ? { base: liveNum(fee.per_km.base) || 0, rate: liveNum(fee.per_km.rate) } : null;
+    return { modes: modes, hours: o != null && c != null && o < c ? { open: o, close: c, days: days && days.length && days.length < 7 ? days.sort() : null } : null,
+      area: (Array.isArray(p.area) ? p.area : []).map(function (x) { return String(x || '').trim(); }).filter(Boolean),
+      min: liveNum(p.min_delivery) > 0 ? liveNum(p.min_delivery) : null, perKm: km, ownerNamed: !!fee.owner_named,
+      freeFrom: liveNum(fee.free_from), outside: liveNum(fee.outside),
+      zones: (Array.isArray(fx.courier_zones) ? fx.courier_zones : []).filter(function (z) { return z && String(z.name || '').trim(); }).map(function (z) { return { name: String(z.name).trim(), sum: liveNum(z.sum) }; }) };
+  }
+  function dpOpen(P) { return P.hours ? P.hours.open : 0; }
+  function dpClose(P) { return P.hours ? P.hours.close : 24 * 60; }
+  function dpDayOpen(P, date) { return !P.hours || !P.hours.days || P.hours.days.indexOf(dpDow(date)) >= 0; }
+  /* the first minute a courier can still start on that date (today: now + lead) */
+  function dpEarliest(P, date, nowMs) { var c = alanyaClock(nowMs); return date === c.date ? Math.max(dpOpen(P), c.min + DP_LEAD) : dpOpen(P); }
+  /* the times a «Ко времени» order can name that day: every DP_TIME_STEP inside the hours; ok = still possible */
+  function planTimes(P, date, nowMs) {
+    var out = [], e = dpEarliest(P, date, nowMs), shut = !dpDayOpen(P, date);
+    for (var m = Math.ceil(dpOpen(P) / DP_TIME_STEP) * DP_TIME_STEP; m <= dpClose(P); m += DP_TIME_STEP) out.push({ min: m, ok: !shut && m >= e });
+    return out;
+  }
+  /* «В интервал»: the starts (whole hours inside the hours, at least DP_INT_MIN before the close) and the ends after a start */
+  function planStarts(P, date, nowMs) {
+    var out = [], e = dpEarliest(P, date, nowMs), shut = !dpDayOpen(P, date);
+    for (var m = Math.ceil(dpOpen(P) / DP_INT_STEP) * DP_INT_STEP; m + DP_INT_MIN <= dpClose(P); m += DP_INT_STEP) out.push({ min: m, ok: !shut && m >= e });
+    return out;
+  }
+  function planEnds(P, from) {
+    var out = []; if (from == null) return out;
+    for (var m = from + DP_INT_MIN; m <= dpClose(P); m += DP_INT_STEP) out.push({ min: m, ok: true });
+    if (out.length && out[out.length - 1].min !== dpClose(P) && dpClose(P) - from >= DP_INT_MIN) out.push({ min: dpClose(P), ok: true });
+    return out;
+  }
+  /* is a mode possible on that date at all (asap / day: a courier can still start before the close) */
+  function dpDayOk(P, mode, date, nowMs) {
+    if (!dpDayOpen(P, date)) return false;
+    if (mode === 'time') return planTimes(P, date, nowMs).some(function (x) { return x.ok; });
+    if (mode === 'interval') return planStarts(P, date, nowMs).some(function (x) { return x.ok; });
+    return dpEarliest(P, date, nowMs) <= dpClose(P);
+  }
+  /* the day chips: today and tomorrow always (disabled when closed or too late), then the next open days up to DP_DAY_CHIPS chips */
+  function planDays(P, mode, nowMs) {
+    var c = alanyaClock(nowMs), out = [];
+    for (var n = 0; n < 14 && out.length < DP_DAY_CHIPS; n++) {
+      var d = addDaysIso(c.date, n), open = dpDayOpen(P, d);
+      if (n > 1 && !open) continue;
+      out.push({ date: d, key: n === 0 ? 'today' : n === 1 ? 'tomorrow' : 'day', closed: !open, ok: dpDayOk(P, mode, d, nowMs) });
+    }
+    return out;
+  }
+  /* «По готовности»: today while a courier can still start, else the next open day (the worker reads it as «from the opening») */
+  function planAsapDate(P, nowMs) { var c = alanyaClock(nowMs); for (var n = 0; n < 14; n++) { var d = addDaysIso(c.date, n); if (dpDayOk(P, 'asap', d, nowMs)) return d; } return null; }
+  /* choice = {mode, date, from, to} -> the order window id (bot-engine delivery-plan.ts whenId) or null */
+  function planWindowId(ch) {
+    if (!ch || !ch.mode) return null;
+    if (ch.mode === 'asap') return 'dm-asap';
+    if (ch.mode === 'day') return 'dm-day';
+    if (ch.mode === 'time') return ch.from != null ? 'dm-time-' + dpHHMM(ch.from) : null;
+    return ch.from != null && ch.to != null && ch.to > ch.from ? 'dm-int-' + dpHHMM(ch.from) + '-' + dpHHMM(ch.to) : null;
+  }
+  /* the window id back to a choice (the done screen, a reopened checkout) */
+  function planParseId(id) {
+    var m = /^dm-(asap|day|time|int)(?:-(\d{4}))?(?:-(\d{4}))?$/.exec(String(id || '')); if (!m) return null;
+    var v = function (s) { return s ? +s.slice(0, 2) * 60 + +s.slice(2) : null; };
+    return { mode: m[1] === 'int' ? 'interval' : m[1], from: v(m[2]), to: v(m[3]) };
+  }
+  function planValid(P, ch, nowMs) {
+    if (!P || !ch || P.modes.indexOf(ch.mode) < 0 || !ch.date) return false;
+    var c = alanyaClock(nowMs); if (ch.date < c.date || !dpDayOk(P, ch.mode, ch.date, nowMs)) return false;
+    if (ch.mode === 'time') return planTimes(P, ch.date, nowMs).some(function (x) { return x.ok && x.min === ch.from; });
+    if (ch.mode === 'interval') return planStarts(P, ch.date, nowMs).some(function (x) { return x.ok && x.min === ch.from; }) && planEnds(P, ch.from).some(function (x) { return x.min === ch.to; });
+    return true;
+  }
+  /* «пн-сб с 10:00 до 20:00» in the page language */
+  function planHoursText(P, lg) {
+    if (!P || !P.hours) return ''; var w = DPW.from_to[lg] || DPW.from_to.ru;
+    return (P.hours.days ? daysTextDp(P.hours.days, lg) + ' ' : '') + w.replace('{a}', dpHm(P.hours.open)).replace('{b}', dpHm(P.hours.close));
+  }
+  var DP_DAY_SHORT = { ru: ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'], uk: ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'нд'], en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] };
+  function daysTextDp(days, lg) {
+    var n = DP_DAY_SHORT[lg] || DP_DAY_SHORT.ru, out = [];
+    for (var i = 0; i < days.length;) { var j = i; while (j + 1 < days.length && days[j + 1] === days[j] + 1) j++; out.push(j - i >= 2 ? n[days[i]] + '⁠-⁠' + n[days[j]] : days.slice(i, j + 1).map(function (x) { return n[x]; }).join(', ')); i = j + 1; }
+    return out.join(', ');
+  }
+  /* the window as the buyer reads it: «Сегодня к 17:00», «Завтра с 15:00 до 18:00», «Сегодня, по готовности», «Завтра, в течение дня»;
+     dayWord(date) = the page's own day name (today / tomorrow / a date) */
+  function planText(id, date, lg, dayWord, P) {
+    var x = planParseId(id), w = DPW.when[lg] || DPW.when.ru; if (!x) return '';
+    var d = dayWord(date), s = x.mode === 'asap' ? w.asap.replace('{d}', d) : x.mode === 'day' ? w.day.replace('{d}', d) : x.mode === 'time' ? w.time.replace('{d}', d).replace('{a}', dpHm(x.from)) : w.interval.replace('{d}', d).replace('{a}', dpHm(x.from)).replace('{b}', dpHm(x.to));
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+  /* the courier fee of this order by the plan: {sum, from, tbd}. sum null + tbd = the shop names it («стоимость доставки уточним»).
+     The same order as the worker (delivery-plan.ts planFee, then order-flow courierZone): free from a sum -> she names it (tariff /
+     per km: the distance is measured by the worker) -> «outside the city» for a place that is not her first one -> her Cabinet zone row ->
+     the courier price of the shop (base = {price, from} of the courier option, live courier_fee already on it) */
+  function planFee(P, place, subtotal, base) {
+    var b = base || {};
+    if (!P) return { sum: b.price == null ? null : b.price, from: !!b.from, tbd: b.price == null };
+    if (P.freeFrom != null && subtotal >= P.freeFrom) return { sum: 0, from: false, tbd: false };
+    if (P.ownerNamed || P.perKm) return { sum: null, from: false, tbd: true };
+    if (place && P.outside != null && P.area.length && place !== P.area[0] && P.area.indexOf(place) > 0) return { sum: P.outside, from: false, tbd: false };
+    var z = place ? P.zones.filter(function (x) { return x.name.toLowerCase() === String(place).toLowerCase(); })[0] : null;
+    if (z) return { sum: z.sum, from: false, tbd: z.sum == null };
+    return { sum: b.price == null ? null : b.price, from: !!b.from, tbd: b.price == null };
+  }
+  /* the courier tile before a place is chosen: one price, or the lowest with «от» when her places cost differently */
+  function planFeeRange(P, subtotal, base) {
+    var places = P && P.area.length ? P.area : [null], fees = places.map(function (pl) { return planFee(P, pl, subtotal, base); });
+    if (fees.some(function (f) { return f.tbd; })) return fees.every(function (f) { return f.tbd; }) ? fees[0] : { sum: Math.min.apply(null, fees.filter(function (f) { return !f.tbd; }).map(function (f) { return f.sum; })), from: true, tbd: false };
+    var sums = fees.map(function (f) { return f.sum; }), lo = Math.min.apply(null, sums);
+    return { sum: lo, from: fees.some(function (f) { return f.from; }) || sums.some(function (s) { return s !== lo; }), tbd: false };
+  }
+  /* the delivery-only minimum this order misses (lira), null = met / none / pickup (the worker: courier and cargo, minDeliveryMiss) */
+  function planMinMiss(P, delivery, subtotal) { return P && P.min && (delivery === 'alanya' || delivery === 'cargo') && subtotal < P.min ? P.min : null; }
+  /* the address the worker reads: her place first when the typed address does not name it (the worker checks the place, placeIn) */
+  function placeAddress(place, address) {
+    var a = String(address || '').replace(/\s+/g, ' ').trim(); if (!place) return a;
+    var stem = place.toLowerCase().replace(/ё/g, 'е'); stem = stem.length > 5 ? stem.slice(0, stem.length - 2) : stem;
+    return a.toLowerCase().replace(/ё/g, 'е').indexOf(stem) >= 0 ? a : place + ', ' + a;
+  }
+  /* DRAFT texts (CEO approves the wording): RU / UK / EN, gender-neutral */
+  var DPW = {
+    m_asap: { ru: 'По готовности', uk: 'Щойно буде готове', en: 'As soon as it\'s ready' },
+    m_time: { ru: 'Ко времени', uk: 'На певний час', en: 'By a set time' },
+    m_interval: { ru: 'В интервал', uk: 'В інтервал', en: 'Within a time range' },
+    m_day: { ru: 'В течение дня', uk: 'Протягом дня', en: 'Any time that day' },
+    s_asap_today: { ru: 'Сегодня, как только заказ будет готов', uk: 'Сьогодні, щойно замовлення буде готове', en: 'Today, as soon as the order is ready' },
+    s_asap_next: { ru: 'Сегодня уже не успеем - {d} с {a}', uk: 'Сьогодні вже не встигнемо - {d} з {a}', en: 'Too late for today - {d} from {a}' },
+    s_time: { ru: 'Вы выбираете день и час', uk: 'Ви обираєте день і годину', en: 'You pick the day and the hour' },
+    s_interval: { ru: 'Вы выбираете день и промежуток', uk: 'Ви обираєте день і проміжок', en: 'You pick the day and the range' },
+    s_day: { ru: 'Вы выбираете только день', uk: 'Ви обираєте лише день', en: 'You pick only the day' },
+    hours: { ru: 'Доставляем {h}', uk: 'Доставляємо {h}', en: 'We deliver {h}' },
+    from_to: { ru: 'с {a} до {b}', uk: 'з {a} до {b}', en: '{a}-{b}' },
+    day_q: { ru: 'День', uk: 'День', en: 'Day' },
+    time_q: { ru: 'К какому времени', uk: 'На котру годину', en: 'By what time' },
+    from_q: { ru: 'С', uk: 'З', en: 'From' },
+    to_q: { ru: 'До', uk: 'До', en: 'To' },
+    day_late: { ru: 'уже не успеем', uk: 'вже не встигнемо', en: 'too late' },
+    err_when: { ru: 'Выберите, когда привезти заказ.', uk: 'Оберіть, коли привезти замовлення.', en: 'Choose when to deliver the order.' },
+    err_time: { ru: 'Выберите день и время доставки.', uk: 'Оберіть день і час доставки.', en: 'Choose the delivery day and time.' },
+    place_q: { ru: 'Район', uk: 'Район', en: 'Area' },
+    err_place: { ru: 'Выберите район доставки.', uk: 'Оберіть район доставки.', en: 'Choose the delivery area.' },
+    fee_tbd: { ru: 'стоимость доставки уточним', uk: 'вартість доставки уточнимо', en: 'delivery price to be confirmed' },
+    fee_tbd_short: { ru: 'уточним', uk: 'уточнимо', en: 'to be confirmed' },
+    free_from: { ru: 'бесплатно от {m}', uk: 'безкоштовно від {m}', en: 'free from {m}' },
+    min_line: { ru: 'доставка при заказе от {m}', uk: 'доставка при замовленні від {m}', en: 'delivery for orders from {m}' },
+    min_miss: { ru: 'Доставка - при заказе от {m}. Не хватает {x}. Самовывоз - без минимальной суммы.', uk: 'Доставка - при замовленні від {m}. Не вистачає {x}. Самовивіз - без мінімальної суми.', en: 'Delivery is for orders from {m}. {x} more to go. Pickup has no minimum.' },
+    pickup_btn: { ru: 'Самовывоз', uk: 'Самовивіз', en: 'Pickup' },
+    when: {
+      ru: { asap: '{d}, по готовности', day: '{d}, в течение дня', time: '{d} к {a}', interval: '{d} с {a} до {b}' },
+      uk: { asap: '{d}, щойно буде готове', day: '{d}, протягом дня', time: '{d} до {a}', interval: '{d} з {a} до {b}' },
+      en: { asap: '{d}, as soon as it\'s ready', day: '{d}, any time', time: '{d} by {a}', interval: '{d} {a}-{b}' }
+    }
+  };
+  function dpText(key, lg, vars) {
+    var s = (DPW[key] && (DPW[key][lg] || DPW[key].ru)) || ''; vars = vars || {};
+    return s.replace(/\{(\w)\}/g, function (_m, k) { return vars[k] != null ? String(vars[k]) : ''; });
+  }
   /* -> Promise<{ok:true, data}> | {ok:false, kind:'network'|'rejected', status, error}. Never throws; 'network' = no answer at all
      (the order may or may not exist: a retry with the SAME nonce returns the same order, never a second one) */
   function sendOrder(payload, fetchFn, url) {
@@ -821,6 +992,8 @@
     cardsVariant: cardsVariant, cardsIsB: cardsIsB, quickNavVisible: quickNavVisible, stepQty: stepQty, cardInfo: cardInfo, groupByCategory: groupByCategory, pluralIdx: pluralIdx,
     contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
     ORDER_URL: ORDER_URL, orderContact: orderContact, addressOk: addressOk, ADDRESS_MIN: ADDRESS_MIN, ADDRESS_MAX: ADDRESS_MAX, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder,
-    WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickupDays: pickupDays, daysText: daysText, pickWindow: pickWindow, windowValid: windowValid
+    WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickupDays: pickupDays, daysText: daysText, pickWindow: pickWindow, windowValid: windowValid,
+    deliveryPlan: deliveryPlan, planDays: planDays, planTimes: planTimes, planStarts: planStarts, planEnds: planEnds, planAsapDate: planAsapDate, planWindowId: planWindowId, planParseId: planParseId,
+    planValid: planValid, planHoursText: planHoursText, planText: planText, planFee: planFee, planFeeRange: planFeeRange, planMinMiss: planMinMiss, placeAddress: placeAddress, dpText: dpText
   };
 });
