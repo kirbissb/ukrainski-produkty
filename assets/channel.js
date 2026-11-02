@@ -80,3 +80,5 @@
     }
   };
 })();
+/* CEO 02.11 preview only: ?bar=mix alternates the card plaque (site.css) so the owner can compare both on a phone */
+if (/[?&]bar=mix(&|$)/.test(location.search)) document.documentElement.classList.add('bar-mix');

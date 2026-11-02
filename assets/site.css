@@ -917,3 +917,9 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 .wz-addr .f.dp-place { margin-top: 2px; }
 .btn.dp-pickup { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 52px; margin: 10px 0 14px; }
 .btn.dp-pickup .ico { width: 20px; height: 20px; }
+
+/* CEO 02.11 preview only (?bar=mix, assets/channel.js): every second card gets a solid plaque with a gold line instead of the glass bar; the default page is unchanged */
+.bar-mix .card.cb:nth-child(even) .cb-bar {
+  left: 0; right: 0; bottom: 0; padding: 8px 10px; border: 0; border-top: 1px solid #c9a86a; border-radius: 0 0 16px 16px; background: #141414;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
