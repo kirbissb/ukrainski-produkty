@@ -1360,9 +1360,9 @@
      the CEO picks. Rules W-LOOK-12 (20-WEB-CANON): one glance, the total is the hero with a small caption, goods = list label left /
      value right, the blocks as calm rows label · value with one small «Изменить» each, no uppercase labels, gold only on the button,
      the address on one line (tap shows it whole). Same data and the same submit() / POST; only labels already on the page. ---------- */
-  /* CEO TG 1502: C2 is the check screen (default). The other candidates stay reachable for comparison: ?v=a|b|c|b2, ?v=old = the
+  /* CEO TG 1525: D1 is the check screen (default; was C2, CEO TG 1502). The other candidates stay reachable for comparison: ?v=a|b|c|b2, ?v=old = the
      screen before 05.11 */
-  var RVV = ((/[?&]v=([abc]2?|d[12]|old)(?:&|$)/i.exec(location.search) || [])[1] || 'c2').toLowerCase(), rvxAfter = null; if (RVV === 'old') RVV = null;
+  var RVV = ((/[?&]v=([abc]2?|d[12]|old)(?:&|$)/i.exec(location.search) || [])[1] || 'd1').toLowerCase(), rvxAfter = null; if (RVV === 'old') RVV = null;
   function renderReviewV(box, foot, tt, s) {
     /* CEO TG 1492: b2 / c2 = B and C developed: ONE goods block (header «Товары» + «Изменить», the lines under it, no count row);
        the Telegram hint as a quiet line with the Telegram mark right under the button; consent one quiet line (12 px);
@@ -1428,6 +1428,7 @@
      cut); each line is itself the tap target that opens its step (payment and contacts stay reachable), plus ONE «Изменить» for the
      block (opens «Как получить»). No hint under the button: the button says what happens next. DRAFT labels (RU only, not approved):
      d1 «Подтвердить в Telegram» + the Telegram mark, d2 «Отправить и подтвердить в Telegram»; UA / EN keep their approved button + hint */
+  var PICKUP_WORD = { ru: 'Самовывоз', uk: 'Самовивіз', en: 'Pickup' };   /* the shop's own word from shop-facts «pickup», without the town */
   var D_BTN = { d1: 'Подтвердить в Telegram', d2: 'Отправить и подтвердить в Telegram' };
   function reviewD(box, foot, tt, s, total, goods, edit, freeDlv, fv) {
     var f = state.form, d = C.deliveryById[f.delivery], v = RVV;
@@ -1442,7 +1443,10 @@
     var place = dpPlaces().length && f.place ? f.place : t('dlv_' + d.id + '_sub');
     var kind = E.windowKind(f.delivery);
     info.appendChild(el('div', { class: 'rvx-ihead' }, [edit('how', t('wz_get'))]));
-    info.appendChild(line(kind === 'courier' ? 'i-truck' : f.delivery === 'cargo' ? 'i-box' : 'i-pin', t('wz_get'), 'how', delivName(d) + (freeDlv ? ' · ' + fv : ''), kind === 'courier' ? (dpPlaces().length ? E.placeAddress(f.place, f.address) : f.address.replace(/\s+/g, ' ').trim()) : place));
+    /* CEO TG 1525: pickup = «Самовывоз» + the address once (the town is in the address; «бесплатно» is obvious and never said);
+       a paid delivery keeps its fee line in the goods list, as before */
+    var getName = f.delivery === 'pickup' ? PICKUP_WORD[lang] : delivName(d) + (freeDlv ? ' · ' + fv : '');
+    info.appendChild(line(kind === 'courier' ? 'i-truck' : f.delivery === 'cargo' ? 'i-box' : 'i-pin', t('wz_get'), 'how', getName, kind === 'courier' ? (dpPlaces().length ? E.placeAddress(f.place, f.address) : f.address.replace(/\s+/g, ' ').trim()) : place));
     if (s.indexOf('when') >= 0) info.appendChild(line('i-clock', t('done_when'), 'when', dpWhen(kind) && f.dm ? E.planText(E.planWindowId(f.dm), f.dm.date, lang, dpDayWord) : windowText(f)));
     else if (s.indexOf('where') >= 0) info.appendChild(line('i-pin', t('f_city'), 'where', f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : '')));
     info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment)));
