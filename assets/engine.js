@@ -700,7 +700,17 @@
   /* after EVERY site order the bot chat opens with /start o<nonce> (the bot binds the chat to the order by the checkout's nonce) */
   var BOT_LINK = 'https://t.me/uafoodsbot';
   function tgStartLink(nonce) { return /^[A-Za-z0-9_-]{8,63}$/.test(String(nonce || '')) ? BOT_LINK + '?start=o' + nonce : BOT_LINK; }
-  function orderNonce() { var a = '', c = 'abcdefghijklmnopqrstuvwxyz0123456789'; for (var i = 0; i < 20; i++) a += c.charAt(Math.floor(Math.random() * c.length)); return a; }
+  /* security review 05.11 L7: the nonce comes from crypto.getRandomValues (not Math.random); bytes >= 252 are dropped so the 36 letters stay
+     equally likely (252 = 7 x 36). Same shape as before: 20 chars a-z0-9. Math.random only where no Web Crypto exists (very old browsers) */
+  function orderNonce() {
+    var a = '', c = 'abcdefghijklmnopqrstuvwxyz0123456789', cr = (typeof crypto !== 'undefined' && crypto && crypto.getRandomValues) ? crypto : null;
+    while (a.length < 20) {
+      if (!cr) { a += c.charAt(Math.floor(Math.random() * 36)); continue; }
+      var b = new Uint8Array(32); cr.getRandomValues(b);
+      for (var i = 0; i < b.length && a.length < 20; i++) if (b[i] < 252) a += c.charAt(b[i] % 36);
+    }
+    return a;
+  }
   /* the request body: cart lines as {id, qty} (grams for weighed items, pieces for pc), the form as typed; website = honeypot (empty) */
   /* v5 (CEO 11.10): pickup / city courier carry a time window (window_id + window_date YYYY-MM-DD); cargo has none (null) */
   function sitePayload(cart, form, lang, nonce) {

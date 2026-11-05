@@ -1,4 +1,9 @@
 /* demo C - true black, top-view hero, one muted gold accent. Devices C1-C7 from refs/DEVICES-C.md */
+/* fonts (speed 05.11): self-hosted, no Google Fonts request (19-TECH T-PERF-04/05). Golos Text = ONE variable woff2 (weights 400-700),
+   Playfair Display = ONE static 700; both subset to the characters the site uses (Latin, Cyrillic incl. UA, Turkish letters, ₺ №).
+   Source: google/fonts ofl/ (OFL 1.1, licence files next to the fonts); rebuilt by prospects/ukr-product-alanya/tools/prerender/build-fonts.sh (outside this public repo) */
+@font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("fonts/golos-text-var.woff2") format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/playfair-display-700.woff2") format("woff2"); }
 :root {
   color-scheme: dark;
   --bg: #0b0b0b;
@@ -723,7 +728,7 @@ html.boot .grid:empty { min-height: 300vh; }
 .cb-state.s-sold_out .dot, .cb-state.s-not_now .dot { background: rgba(255, 255, 255, 0.45); }
 .cb-state .em { color: #fff; font-weight: 600; }
 .cb-notify {
-  display: inline-flex; align-items: center; gap: 5px; padding: 12px 0; margin: -12px 0; border: 0; background: none; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 5px; min-height: 44px; padding: 0; margin: -14.5px 0; border: 0; background: none; cursor: pointer;   /* speed 05.11: 44 px hit box (was 39), same line height in the layout */
   color: rgba(255, 255, 255, 0.85); font: 400 12px var(--font); text-shadow: inherit;
 }
 .cb-notify span { text-decoration: underline; text-decoration-color: rgba(255, 255, 255, 0.4); text-underline-offset: 3px; }
@@ -753,7 +758,8 @@ html.boot .grid:empty { min-height: 300vh; }
 }
 .cb-sel option { color: #111; background: #fff; }
 .cb-count { display: inline-flex; align-items: stretch; }
-.cb-count button { width: 38px; border: 0; background: none; color: #fff; font: 400 20px var(--font); line-height: 1; cursor: pointer; border-radius: 999px; }
+.cb-count button { width: 44px; min-height: 44px; margin: -1px 0; border: 0;   /* speed 05.11: 44 x 44 hit box (was 38 x 42); the 1 px pill border is overlapped, the look is the same */
+  background: none; color: #fff; font: 400 20px var(--font); line-height: 1; cursor: pointer; border-radius: 999px; }
 .cb-count output { display: grid; place-items: center; min-width: 40px; font-size: 15px; font-weight: 500; }
 .cb-add {
   flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px 0 16px; border: 0; border-radius: 999px;

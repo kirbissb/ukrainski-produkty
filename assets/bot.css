@@ -1,3 +1,6 @@
+/* fonts (speed 05.11): self-hosted like site.css, no Google Fonts request */
+@font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("fonts/golos-text-var.woff2") format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/playfair-display-700.woff2") format("woff2"); }
 /* demo C owner chat: same black world, gold accent, Telegram-like bubbles */
 :root {
   color-scheme: dark;

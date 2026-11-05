@@ -1,0 +1,12 @@
+# 19-TECH T-SEC-12: this repo is published as is (GitHub Pages) - nothing private may land here
+.env*
+.dev.vars
+*.sql
+*.sqlite
+*.db
+*.zip
+*.tar*
+wrangler.toml
+shop.json
+.DS_Store
+QA-REPORT.md
