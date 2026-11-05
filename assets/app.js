@@ -1056,6 +1056,7 @@
     if (idx > 0) row.appendChild(el('button', { class: 'wz-back', type: 'button', id: 'wzBack', onclick: wzBack }, [el('span', { 'aria-hidden': 'true', text: '‹' }), el('span', { text: t('wz_back') })]));
     row.appendChild(primary);
     foot.appendChild(row);
+    if (st === 'review' && rvxAfter) { foot.appendChild(rvxAfter); rvxAfter = null; }
     if (st === 'review') foot.appendChild(consentLine());
     foot.appendChild(el('p', { class: 'err', id: 'formErr', role: 'alert' }));
   }
@@ -1359,10 +1360,13 @@
      the CEO picks. Rules W-LOOK-12 (20-WEB-CANON): one glance, the total is the hero with a small caption, goods = list label left /
      value right, the blocks as calm rows label · value with one small «Изменить» each, no uppercase labels, gold only on the button,
      the address on one line (tap shows it whole). Same data and the same submit() / POST; only labels already on the page. ---------- */
-  var RVV = (/[?&]v=([abc])(?:&|$)/i.exec(location.search) || [])[1]; RVV = RVV ? RVV.toLowerCase() : null;
+  var RVV = (/[?&]v=([abc]2?)(?:&|$)/i.exec(location.search) || [])[1], rvxAfter = null; RVV = RVV ? RVV.toLowerCase() : null;
   function renderReviewV(box, foot, tt, s) {
-    var f = state.form, d = C.deliveryById[f.delivery], v = RVV;
-    $('#sheet').classList.add('rvx', 'rvx-' + v);
+    /* CEO TG 1492: b2 / c2 = B and C developed: ONE goods block (header «Товары» + «Изменить», the lines under it, no count row);
+       the Telegram hint as a quiet line with the Telegram mark right under the button; consent one quiet line (12 px);
+       c2 cuts nothing: every value wraps */
+    var f = state.form, d = C.deliveryById[f.delivery], v = RVV, two = v.length === 2, base = v.charAt(0);
+    $('#sheet').classList.add('rvx', 'rvx-' + base); if (two) $('#sheet').classList.add('rvx2', 'rvx-' + v);
     var edit = function (to, label) {
       return to ? el('button', { class: 'rvx-edit', type: 'button', 'data-to': to, 'aria-label': t('wz_edit') + ': ' + label, text: t('wz_edit'), onclick: function (e) { e.stopPropagation(); state.wzReturn = true; wzGo(to); } }) : null;
     };
@@ -1391,11 +1395,13 @@
     var total = el('div', { class: 'rvx-total' }, [el('span', { class: 'cap', text: t(tt.delivery ? 'total_dlv' : 'total') }), el('b', { class: 'num', text: E.fmtPair(tt.total, tt.usd) })]);
     /* the four blocks as rows; each row label · value + one small «Изменить» */
     var rows = el('div', { class: 'rvx-rows' });
+    if (v === 'c2') clip = function (text, id) { var at = { class: 'v2 full', text: text }; if (id) at.id = id; return el('span', at); };
     var row = function (label, to, value, more) {
       var r = el('div', { class: 'rvx-row' }, [el('span', { class: 'lb', text: label }), el('div', { class: 'vl' }, [el('span', { class: 'v1', text: value })].concat(more || [])), edit(to, label)]);
       rows.appendChild(r);
     };
-    row(t('wz_items'), 'cart', cnt(tt.lines.length));
+    if (!two) row(t('wz_items'), 'cart', cnt(tt.lines.length));
+    else goods = el('section', { class: 'rvx-gblock' }, [el('div', { class: 'rvx-ghead' }, [el('span', { class: 'lb', text: t('wz_items') }), edit('cart', t('wz_items'))]), goods]);
     var place = dpPlaces().length && f.place ? f.place : t('dlv_' + d.id + '_sub');
     row(t('wz_get'), 'how', delivName(d) + (freeDlv ? ' · ' + fv : ''), place ? [clip(place, 'rvxPlace')] : []);
     if (E.windowKind(f.delivery) === 'courier') row(t('wz_addr_h'), 'addr', '', [clip(dpPlaces().length ? E.placeAddress(f.place, f.address) : f.address.replace(/\s+/g, ' ').trim(), 'rvAddr')]);
@@ -1404,9 +1410,14 @@
     row(t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment));
     row(t('wz_contacts'), 'contact', (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim(), f.comment.trim() ? [el('span', { class: 'v2', text: f.comment.trim() })] : []);
     if (v === 'a') { box.appendChild(total); box.appendChild(goods); box.appendChild(rows); }
+    else if (v === 'b2') { box.appendChild(goods); box.appendChild(rows); foot.appendChild(total); }
+    else if (v === 'c2') { box.appendChild(total); box.appendChild(goods); box.appendChild(rows); }
     else if (v === 'b') { box.appendChild(goods); box.appendChild(rows); foot.appendChild(total); }   /* B: the total is pinned above the button, never scrolled away */
     else { box.appendChild(total); box.appendChild(el('div', { class: 'rvx-panel' }, [goods])); box.appendChild(rows); }
-    if (!inTg && !(CH && CH.marker())) foot.appendChild(el('p', { class: 'tgnote rvx-tg', id: 'tgNote', text: t('tg_note') }));
+    if (!inTg && !(CH && CH.marker())) {
+      if (two) rvxAfter = el('p', { class: 'tgnote rvx-tg2', id: 'tgNote' }, [icon('c-tg', 'rvx-tgi'), el('span', { text: t('tg_note') })]);   /* placed under the button by renderStep */
+      else foot.appendChild(el('p', { class: 'tgnote rvx-tg', id: 'tgNote', text: t('tg_note') }));
+    }
     /* the sum is shown once (the hero); the button only sends (S-CO2-06) */
     return el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') })]);
   }

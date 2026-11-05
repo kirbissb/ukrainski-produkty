@@ -978,3 +978,24 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 .rvx-c .rvx-row .vl { grid-column: 2; grid-row: 1; }
 .rvx-c .rvx-row .rvx-edit { grid-column: 3; grid-row: 1; margin: 0; }
 .rvx-c .rvx-row .v1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- CEO TG 1492: b2 / c2 ---------- */
+.rvx-gblock { padding-bottom: 2px; border-bottom: 1px solid var(--line); margin-bottom: 2px; }
+.rvx-ghead { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 2px 0 6px; }
+.rvx-ghead .lb { font-size: 13px; color: var(--ink-3); }
+.rvx-gblock .rvx-goods { border-bottom: 0; padding-bottom: 12px; }
+.rvx-c2 .rvx-gblock { background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; padding: 6px 14px 0; margin-bottom: 4px; }
+.rvx-c2 .rvx-row .v1, .rvx-c2 .rvx-row .v2 { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+.rvx-c2 .rvx-row { display: block; position: relative; padding: 11px 76px 11px 0; min-height: 48px; }
+.rvx-c2 .rvx-row .lb { display: inline; font-size: 13px; }
+.rvx-c2 .rvx-row .lb::after { content: " \00b7  "; white-space: pre; }
+.rvx-c2 .rvx-row .vl { display: inline; }
+.rvx-c2 .rvx-row .v1 { display: inline; line-height: 1.4; }
+.rvx-c2 .rvx-row .v2 { display: block; margin-top: 2px; }
+.rvx-c2 .rvx-row .rvx-edit { position: absolute; right: 0; top: 0; margin: 0; }
+.rvx-c2 .rvx-row .v2.full { font-size: 13px; line-height: 1.4; color: var(--ink-3); }
+/* Telegram hint: a quiet line with the Telegram mark under the button */
+.sheet.rvx2 .foot .tgnote.rvx-tg2 { display: flex; align-items: flex-start; gap: 8px; margin: 10px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--ink-2); text-align: left; }
+.rvx-tgi { width: 16px; height: 16px; flex: 0 0 16px; margin-top: 1px; stroke: var(--ink-2); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+/* consent: one quiet line at the S-MOB-02 floor (12 px), letter-spacing 0, full width */
+.sheet.rvx2 .foot .consent { margin: 8px 0 0; font-size: 12px; line-height: 1.35; letter-spacing: 0; color: var(--ink-3); text-align: left; }
