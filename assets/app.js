@@ -1429,6 +1429,7 @@
      block (opens «Как получить»). No hint under the button: the button says what happens next. DRAFT labels (RU only, not approved):
      d1 «Подтвердить в Telegram» + the Telegram mark, d2 «Отправить и подтвердить в Telegram»; UA / EN keep their approved button + hint */
   var PICKUP_WORD = { ru: 'Самовывоз', uk: 'Самовивіз', en: 'Pickup' };   /* the shop's own word from shop-facts «pickup», without the town */
+  var PAY_SHORT_RU = { card: 'перевод на карту', cash: 'наличными' };   /* CEO TG 1530, approved RU; every method of this shop */
   var D_BTN = { d1: 'Подтвердить в Telegram', d2: 'Отправить и подтвердить в Telegram' };
   function reviewD(box, foot, tt, s, total, goods, edit, freeDlv, fv) {
     var f = state.form, d = C.deliveryById[f.delivery], v = RVV;
@@ -1449,7 +1450,9 @@
     info.appendChild(line(kind === 'courier' ? 'i-truck' : f.delivery === 'cargo' ? 'i-box' : 'i-pin', t('wz_get'), 'how', getName, kind === 'courier' ? (dpPlaces().length ? E.placeAddress(f.place, f.address) : f.address.replace(/\s+/g, ' ').trim()) : place));
     if (s.indexOf('when') >= 0) info.appendChild(line('i-clock', t('done_when'), 'when', dpWhen(kind) && f.dm ? E.planText(E.planWindowId(f.dm), f.dm.date, lang, dpDayWord) : windowText(f)));
     else if (s.indexOf('where') >= 0) info.appendChild(line('i-pin', t('f_city'), 'where', f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : '')));
-    info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment)));
+    /* CEO TG 1530: RU reads as a labelled short line «Оплата: перевод на карту» / «Оплата: наличными»; UA / EN keep their texts */
+    var payText = lang === 'ru' && PAY_SHORT_RU[f.payment] ? 'Оплата: ' + PAY_SHORT_RU[f.payment] : t('pay_' + f.payment);
+    info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, payText));
     info.appendChild(line('i-user', t('wz_contacts'), 'contact', (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim(), f.comment.trim() || null));
     box.appendChild(total); box.appendChild(goods); box.appendChild(info);
     var tgHand = !inTg && !(CH && CH.marker());
