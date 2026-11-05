@@ -1360,7 +1360,9 @@
      the CEO picks. Rules W-LOOK-12 (20-WEB-CANON): one glance, the total is the hero with a small caption, goods = list label left /
      value right, the blocks as calm rows label · value with one small «Изменить» each, no uppercase labels, gold only on the button,
      the address on one line (tap shows it whole). Same data and the same submit() / POST; only labels already on the page. ---------- */
-  var RVV = (/[?&]v=([abc]2?)(?:&|$)/i.exec(location.search) || [])[1], rvxAfter = null; RVV = RVV ? RVV.toLowerCase() : null;
+  /* CEO TG 1502: C2 is the check screen (default). The other candidates stay reachable for comparison: ?v=a|b|c|b2, ?v=old = the
+     screen before 05.11 */
+  var RVV = ((/[?&]v=([abc]2?|old)(?:&|$)/i.exec(location.search) || [])[1] || 'c2').toLowerCase(), rvxAfter = null; if (RVV === 'old') RVV = null;
   function renderReviewV(box, foot, tt, s) {
     /* CEO TG 1492: b2 / c2 = B and C developed: ONE goods block (header «Товары» + «Изменить», the lines under it, no count row);
        the Telegram hint as a quiet line with the Telegram mark right under the button; consent one quiet line (12 px);

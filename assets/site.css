@@ -999,3 +999,13 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 .rvx-tgi { width: 16px; height: 16px; flex: 0 0 16px; margin-top: 1px; stroke: var(--ink-2); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 /* consent: one quiet line at the S-MOB-02 floor (12 px), letter-spacing 0, full width */
 .sheet.rvx2 .foot .consent { margin: 8px 0 0; font-size: 12px; line-height: 1.35; letter-spacing: 0; color: var(--ink-3); text-align: left; }
+
+/* CEO TG 1502: the consent is ONE quiet footnote line at the very bottom (CEO lifts the 12 px floor for this legal line only): the size
+   follows the popup width (container units) so the whole sentence fits; measured at 12 px: RU 421 px, UA / EN 450 px of text. It sits
+   well apart from the Telegram hint, which stays the readable line */
+.sheet.rvx2 .foot { container-type: inline-size; }
+.sheet.rvx2 .foot .consent { white-space: nowrap; margin: 20px -8px 0; letter-spacing: 0; line-height: 1.3; color: var(--ink-3);
+  font-size: min(10.5px, calc((100cqi + 16px) / 35.6)); }
+.sheet.rvx2 .foot .consent:is(:lang(uk), :lang(en)) { font-size: min(10.5px, calc((100cqi + 16px) / 38)); }
+.sheet.rvx2 .foot .consent a { color: var(--ink-3); text-decoration: underline; text-underline-offset: 2px; }
+.sheet.rvx2 .foot .consent a { padding: 17px 0; margin: -17px 0; }   /* the footnote link keeps a 44 px hit box */
