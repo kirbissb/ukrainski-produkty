@@ -814,7 +814,7 @@
   }
   function renderSheet() {
     var body = $('#sheetBody'), foot = $('#sheetFoot');
-    body.innerHTML = ''; foot.innerHTML = ''; wzMeta(null); $('#sheet').classList.remove('wz-on');
+    body.innerHTML = ''; foot.innerHTML = ''; wzMeta(null); $('#sheet').classList.remove('wz-on'); $('#sheet').classList.remove('rvx', 'rvx-a', 'rvx-b', 'rvx-c');
     if (state.view === 'done') { $('#sheetTitle').textContent = t('done_title'); renderDone(body, foot); return; }
     if (state.view === 'notify' || state.view === 'notify_ok') { renderNotify(body, foot); return; }
     if (state.view === 'special' || state.view === 'special_ok') { renderSpecial(body, foot); return; }
@@ -1022,6 +1022,9 @@
       box.appendChild(field(t('sp_comment'), el('textarea', { id: 'fComment', rows: '2', placeholder: t('f_comment_ph'), oninput: function (e) { f.comment = e.target.value; } }), f.comment));
       /* honeypot for bots (the worker rejects an order with it filled); invisible and unreachable for people */
       box.appendChild(el('div', { 'aria-hidden': 'true', style: 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden' }, [el('input', { type: 'text', id: 'fWebsite', name: 'website', tabindex: '-1', autocomplete: 'off', value: f.website || '', oninput: function (e) { f.website = e.target.value; } })]));
+    } else if (st === 'review' && RVV) {
+      title.textContent = t('wz_review');
+      primary = renderReviewV(box, foot, tt, s);
     } else if (st === 'review') {
       title.textContent = t('wz_review');
       var d = C.deliveryById[f.delivery];
@@ -1352,6 +1355,61 @@
   }
 
   /* ---------- special order (10.10): bring something from Ukraine that is not on the site ---------- */
+  /* ---------- CEO TG 1479 (05.11): three candidate «Проверьте заказ» screens, ?v=a | ?v=b | ?v=c; the default (no v) is unchanged until
+     the CEO picks. Rules W-LOOK-12 (20-WEB-CANON): one glance, the total is the hero with a small caption, goods = list label left /
+     value right, the blocks as calm rows label · value with one small «Изменить» each, no uppercase labels, gold only on the button,
+     the address on one line (tap shows it whole). Same data and the same submit() / POST; only labels already on the page. ---------- */
+  var RVV = (/[?&]v=([abc])(?:&|$)/i.exec(location.search) || [])[1]; RVV = RVV ? RVV.toLowerCase() : null;
+  function renderReviewV(box, foot, tt, s) {
+    var f = state.form, d = C.deliveryById[f.delivery], v = RVV;
+    $('#sheet').classList.add('rvx', 'rvx-' + v);
+    var edit = function (to, label) {
+      return to ? el('button', { class: 'rvx-edit', type: 'button', 'data-to': to, 'aria-label': t('wz_edit') + ': ' + label, text: t('wz_edit'), onclick: function (e) { e.stopPropagation(); state.wzReturn = true; wzGo(to); } }) : null;
+    };
+    /* a long line (the pickup address) shows one line; a tap opens the whole text */
+    var clip = function (text, id) {
+      var at = { class: 'rvx-clip', type: 'button', 'aria-expanded': 'false', text: text, onclick: function () { var o = this.getAttribute('aria-expanded') !== 'true'; this.setAttribute('aria-expanded', String(o)); } };
+      if (id) at.id = id;
+      return el('button', at);
+    };
+    var feeVal = function () {
+      var fs = dpFeeSpan(tt); if (fs) return fs.textContent;
+      if (tt.delivery) return fm(tt.delivery);
+      if (tt.feeTbd) return E.dpText('fee_tbd_short', lang);
+      return d.price != null ? dlvPriceText(d.price, d.price_from) : '';
+    };
+    /* goods: one list, label left, value right; the delivery line closes it */
+    var goods = el('ul', { class: 'rvx-goods', 'aria-label': t('wz_items') });
+    tt.lines.forEach(function (l) {
+      var it = C.byId[l.id];
+      goods.appendChild(el('li', {}, [el('span', { class: 'k', text: nm(it) + ', ' + E.fmtWeight(it, l.qty, lang) + (l.pre ? ' · ' + t('pre_tag') : '') }), el('span', { class: 'v', text: l.sum == null ? E.priceTbd(lang) : E.fmtMoney(l.sum, l.cur) })]));
+    });
+    if (tt.delivery) goods.appendChild(el('li', { class: 'sub' }, [el('span', { class: 'k', text: t('subtotal') }), el('span', { class: 'v', text: E.fmtPair(tt.subtotal, tt.usd) })]));
+    /* a free delivery is said in the «Получение» row, not as a goods line */
+    var fv = feeVal(), freeDlv = !tt.delivery && !tt.feeTbd && fv === t('free');
+    if (fv && !freeDlv) goods.appendChild(el('li', { class: 'dlv' }, [el('span', { class: 'k', text: delivName(d) }), el('span', { class: 'v', text: fv })]));
+    var total = el('div', { class: 'rvx-total' }, [el('span', { class: 'cap', text: t(tt.delivery ? 'total_dlv' : 'total') }), el('b', { class: 'num', text: E.fmtPair(tt.total, tt.usd) })]);
+    /* the four blocks as rows; each row label · value + one small «Изменить» */
+    var rows = el('div', { class: 'rvx-rows' });
+    var row = function (label, to, value, more) {
+      var r = el('div', { class: 'rvx-row' }, [el('span', { class: 'lb', text: label }), el('div', { class: 'vl' }, [el('span', { class: 'v1', text: value })].concat(more || [])), edit(to, label)]);
+      rows.appendChild(r);
+    };
+    row(t('wz_items'), 'cart', cnt(tt.lines.length));
+    var place = dpPlaces().length && f.place ? f.place : t('dlv_' + d.id + '_sub');
+    row(t('wz_get'), 'how', delivName(d) + (freeDlv ? ' · ' + fv : ''), place ? [clip(place, 'rvxPlace')] : []);
+    if (E.windowKind(f.delivery) === 'courier') row(t('wz_addr_h'), 'addr', '', [clip(dpPlaces().length ? E.placeAddress(f.place, f.address) : f.address.replace(/\s+/g, ' ').trim(), 'rvAddr')]);
+    if (s.indexOf('when') >= 0) row(t('done_when'), 'when', dpWhen(E.windowKind(f.delivery)) && f.dm ? E.planText(E.planWindowId(f.dm), f.dm.date, lang, dpDayWord) : windowText(f));
+    else if (s.indexOf('where') >= 0) row(t('f_city'), 'where', f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : ''));
+    row(t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment));
+    row(t('wz_contacts'), 'contact', (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim(), f.comment.trim() ? [el('span', { class: 'v2', text: f.comment.trim() })] : []);
+    if (v === 'a') { box.appendChild(total); box.appendChild(goods); box.appendChild(rows); }
+    else if (v === 'b') { box.appendChild(goods); box.appendChild(rows); foot.appendChild(total); }   /* B: the total is pinned above the button, never scrolled away */
+    else { box.appendChild(total); box.appendChild(el('div', { class: 'rvx-panel' }, [goods])); box.appendChild(rows); }
+    if (!inTg && !(CH && CH.marker())) foot.appendChild(el('p', { class: 'tgnote rvx-tg', id: 'tgNote', text: t('tg_note') }));
+    /* the sum is shown once (the hero); the button only sends (S-CO2-06) */
+    return el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') })]);
+  }
   function consentLine() {
     return el('p', { class: 'consent' }, [t('consent_pre'), el('a', { href: '#personal-data', text: t('consent_link'), onclick: function (e) { e.preventDefault(); openOverlay('legal', 'data'); } }), t('consent_post')]);
   }

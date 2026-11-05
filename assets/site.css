@@ -929,3 +929,52 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
   left: 0; right: 0; bottom: 0; padding: 8px 10px; border: 0; border-top: 1px solid #c9a86a; border-radius: 0 0 16px 16px; background: #141414;
   -webkit-backdrop-filter: none; backdrop-filter: none;
 }
+
+/* ---------- CEO TG 1479 (05.11): «Проверьте заказ» candidates ?v=a | b | c (W-LOOK-12). Dark only; gold stays on the send button ---------- */
+.sheet.rvx .head h2 { color: var(--ink); }
+.sheet.rvx .wz-prog i { background: var(--ink-3); }
+.sheet.rvx .wz-back span:first-child { color: var(--ink-2); }
+.sheet.rvx #sendBtn { justify-content: center; }
+.rvx-total { display: flex; flex-direction: column; gap: 2px; padding: 2px 0 12px; }
+.rvx-total .cap { font-size: 13px; color: var(--ink-3); }
+.rvx-total .num { font: 600 32px/1.1 var(--font); color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.rvx-goods { list-style: none; margin: 0; padding: 0 0 12px; display: grid; gap: 8px; border-bottom: 1px solid var(--line); }
+.rvx-goods li { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; font-size: 15px; line-height: 1.3; color: var(--ink); }
+.rvx-goods .k { min-width: 0; }
+.rvx-goods .v { flex: 0 0 auto; white-space: nowrap; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.rvx-goods li.sub, .rvx-goods li.dlv { font-size: 14px; color: var(--ink-2); }
+.rvx-goods li.sub .v, .rvx-goods li.dlv .v { color: var(--ink-3); }
+/* rows: label + one small «Изменить» on the first line, the value under it at full width */
+.rvx-rows { display: grid; }
+.rvx-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; padding: 9px 0 10px; border-bottom: 1px solid var(--line); }
+.rvx-row:last-child { border-bottom: 0; }
+.rvx-row .lb { grid-column: 1; grid-row: 1; align-self: center; font-size: 13px; color: var(--ink-3); }
+.rvx-row .rvx-edit { grid-column: 2; grid-row: 1; }
+.rvx-row .vl { grid-column: 1 / -1; grid-row: 2; min-width: 0; display: grid; gap: 1px; }
+.rvx-row .v1 { font-size: 15px; line-height: 1.35; color: var(--ink); overflow-wrap: anywhere; }
+.rvx-row .v1:empty { display: none; }
+.rvx-row .v2 { font-size: 13px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rvx-edit { min-height: 44px; min-width: 44px; margin: -13px 0; padding: 0 0 0 8px; border: 0; background: none; cursor: pointer; font: 400 13px var(--font); color: var(--ink-2); }
+.rvx-edit:hover { color: var(--ink); }
+.rvx-clip { display: block; width: 100%; min-height: 44px; margin: -11px 0 -12px; padding: 0; border: 0; background: none; text-align: left; cursor: pointer;
+  font: 400 13px/1.4 var(--font); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rvx-clip[aria-expanded="true"] { white-space: normal; overflow: visible; color: var(--ink-2); margin: 0; min-height: 0; padding: 2px 0; }
+.rvx-edit:focus-visible, .rvx-clip:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 2px; }
+.sheet.rvx .foot .tgnote { margin: 0 0 8px; font-size: 12.5px; line-height: 1.35; color: var(--ink-3); text-align: left; }
+.sheet.rvx .foot .consent { font-size: 11.5px; color: var(--ink-3); text-align: left; margin-top: 10px; }
+.sheet.rvx .foot .consent a { color: var(--ink-2); padding: 14px 0; margin: -14px 0; }
+/* B: the total sits in the pinned foot, caption left / number right, right above the button */
+.sheet.rvx-b .foot .rvx-total { flex-direction: row; align-items: baseline; justify-content: space-between; padding: 2px 0 8px; }
+.sheet.rvx-b .foot .rvx-total .cap { font-size: 14px; color: var(--ink-2); }
+.sheet.rvx-b .foot .rvx-total .num { font-size: 28px; }
+/* C: total centred on top, goods on one quiet dark panel, each block ONE line «label · value» (a long value opens on tap) */
+.rvx-c .rvx-total { align-items: center; }
+.rvx-c .rvx-total .num { font-size: 34px; }
+.rvx-panel { background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 0; margin-bottom: 4px; }
+.rvx-c .rvx-goods { border-bottom: 0; }
+.rvx-c .rvx-row { grid-template-columns: max-content minmax(0, 1fr) auto; align-items: center; padding: 6px 0; min-height: 48px; }
+.rvx-c .rvx-row .lb { grid-column: 1; grid-row: 1; }
+.rvx-c .rvx-row .lb::after { content: " \00b7"; }
+.rvx-c .rvx-row .vl { grid-column: 2; grid-row: 1; }
+.rvx-c .rvx-row .rvx-edit { grid-column: 3; grid-row: 1; margin: 0; }
+.rvx-c .rvx-row .v1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
