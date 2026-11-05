@@ -1362,7 +1362,7 @@
      the address on one line (tap shows it whole). Same data and the same submit() / POST; only labels already on the page. ---------- */
   /* CEO TG 1502: C2 is the check screen (default). The other candidates stay reachable for comparison: ?v=a|b|c|b2, ?v=old = the
      screen before 05.11 */
-  var RVV = ((/[?&]v=([abc]2?|old)(?:&|$)/i.exec(location.search) || [])[1] || 'c2').toLowerCase(), rvxAfter = null; if (RVV === 'old') RVV = null;
+  var RVV = ((/[?&]v=([abc]2?|d[12]|old)(?:&|$)/i.exec(location.search) || [])[1] || 'c2').toLowerCase(), rvxAfter = null; if (RVV === 'old') RVV = null;
   function renderReviewV(box, foot, tt, s) {
     /* CEO TG 1492: b2 / c2 = B and C developed: ONE goods block (header «Товары» + «Изменить», the lines under it, no count row);
        the Telegram hint as a quiet line with the Telegram mark right under the button; consent one quiet line (12 px);
@@ -1396,6 +1396,7 @@
     if (fv && !freeDlv) goods.appendChild(el('li', { class: 'dlv' }, [el('span', { class: 'k', text: delivName(d) }), el('span', { class: 'v', text: fv })]));
     var total = el('div', { class: 'rvx-total' }, [el('span', { class: 'cap', text: t(tt.delivery ? 'total_dlv' : 'total') }), el('b', { class: 'num', text: E.fmtPair(tt.total, tt.usd) })]);
     /* the four blocks as rows; each row label · value + one small «Изменить» */
+    if (v === 'd1' || v === 'd2') return reviewD(box, foot, tt, s, total, goods, edit, freeDlv, fv);
     var rows = el('div', { class: 'rvx-rows' });
     if (v === 'c2') clip = function (text, id) { var at = { class: 'v2 full', text: text }; if (id) at.id = id; return el('span', at); };
     var row = function (label, to, value, more) {
@@ -1421,6 +1422,38 @@
       else foot.appendChild(el('p', { class: 'tgnote rvx-tg', id: 'tgNote', text: t('tg_note') }));
     }
     /* the sum is shown once (the hero); the button only sends (S-CO2-06) */
+    return el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') })]);
+  }
+  /* CEO TG 1515: d1 / d2 = C2 calmer. Получение / Оплата / Контакты are ONE quiet block: a line icon + the value only (wraps, never
+     cut); each line is itself the tap target that opens its step (payment and contacts stay reachable), plus ONE «Изменить» for the
+     block (opens «Как получить»). No hint under the button: the button says what happens next. DRAFT labels (RU only, not approved):
+     d1 «Подтвердить в Telegram» + the Telegram mark, d2 «Отправить и подтвердить в Telegram»; UA / EN keep their approved button + hint */
+  var D_BTN = { d1: 'Подтвердить в Telegram', d2: 'Отправить и подтвердить в Telegram' };
+  function reviewD(box, foot, tt, s, total, goods, edit, freeDlv, fv) {
+    var f = state.form, d = C.deliveryById[f.delivery], v = RVV;
+    $('#sheet').classList.add('rvx-d', 'rvx-c', 'rvx-c2');   /* C2 look (centred total, goods panel), then the D changes */
+    goods = el('section', { class: 'rvx-gblock' }, [el('div', { class: 'rvx-ghead' }, [el('span', { class: 'lb', text: t('wz_items') }), edit('cart', t('wz_items'))]), goods]);
+    var go = function (to) { return function () { state.wzReturn = true; wzGo(to); }; };
+    var line = function (ico, label, to, main, sub) {
+      var kids = [icon(ico, 'rvx-li'), el('span', { class: 'rvx-lt' }, [el('span', { class: 'm', text: main })].concat(sub ? [el('span', { class: 's', text: sub })] : []))];
+      return to ? el('button', { class: 'rvx-line', type: 'button', 'aria-label': t('wz_edit') + ': ' + label + ' - ' + main + (sub ? ', ' + sub : ''), onclick: go(to) }, kids) : el('div', { class: 'rvx-line' }, kids);
+    };
+    var info = el('section', { class: 'rvx-info', 'aria-label': t('wz_get') + ', ' + t('f_pay') + ', ' + t('wz_contacts') });
+    var place = dpPlaces().length && f.place ? f.place : t('dlv_' + d.id + '_sub');
+    var kind = E.windowKind(f.delivery);
+    info.appendChild(el('div', { class: 'rvx-ihead' }, [edit('how', t('wz_get'))]));
+    info.appendChild(line(kind === 'courier' ? 'i-truck' : f.delivery === 'cargo' ? 'i-box' : 'i-pin', t('wz_get'), 'how', delivName(d) + (freeDlv ? ' · ' + fv : ''), kind === 'courier' ? (dpPlaces().length ? E.placeAddress(f.place, f.address) : f.address.replace(/\s+/g, ' ').trim()) : place));
+    if (s.indexOf('when') >= 0) info.appendChild(line('i-clock', t('done_when'), 'when', dpWhen(kind) && f.dm ? E.planText(E.planWindowId(f.dm), f.dm.date, lang, dpDayWord) : windowText(f)));
+    else if (s.indexOf('where') >= 0) info.appendChild(line('i-pin', t('f_city'), 'where', f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : '')));
+    info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment)));
+    info.appendChild(line('i-user', t('wz_contacts'), 'contact', (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim(), f.comment.trim() || null));
+    box.appendChild(total); box.appendChild(goods); box.appendChild(info);
+    var tgHand = !inTg && !(CH && CH.marker());
+    if (tgHand && lang === 'ru') {
+      var kids = v === 'd1' ? [icon('c-tg', 'rvx-bti'), el('span', { text: D_BTN.d1 })] : [el('span', { text: D_BTN.d2 })];
+      return el('button', { class: 'btn fill rvx-send ' + v, type: 'button', id: 'sendBtn', onclick: submit }, kids);
+    }
+    if (tgHand) rvxAfter = el('p', { class: 'tgnote rvx-tg2', id: 'tgNote' }, [icon('c-tg', 'rvx-tgi'), el('span', { text: t('tg_note') })]);
     return el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') })]);
   }
   function consentLine() {

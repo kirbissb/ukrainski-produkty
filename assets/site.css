@@ -1009,3 +1009,30 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 .sheet.rvx2 .foot .consent:is(:lang(uk), :lang(en)) { font-size: min(10.5px, calc((100cqi + 16px) / 38)); }
 .sheet.rvx2 .foot .consent a { color: var(--ink-3); text-decoration: underline; text-underline-offset: 2px; }
 .sheet.rvx2 .foot .consent a { padding: 17px 0; margin: -17px 0; }   /* the footnote link keeps a 44 px hit box */
+
+/* ---------- CEO TG 1515: d1 / d2 - one quiet info block, the button names what happens next (DRAFT labels) ---------- */
+.rvx-info { position: relative; padding: 4px 0 2px; }
+.rvx-ihead { position: absolute; top: 0; right: 0; }
+.rvx-line { display: flex; align-items: flex-start; gap: 12px; width: 100%; min-height: 44px; padding: 10px 84px 10px 0; margin: 0; border: 0; background: none;
+  text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
+.rvx-line + .rvx-line { padding-right: 0; }
+div.rvx-line { cursor: default; }
+.rvx-li { width: 18px; height: 18px; flex: 0 0 18px; margin-top: 2px; stroke: var(--ink-3); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.rvx-lt { min-width: 0; display: grid; gap: 2px; }
+.rvx-lt .m { font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; }
+.rvx-lt .s { font-size: 13px; line-height: 1.4; color: var(--ink-3); overflow-wrap: anywhere; }
+.rvx-line:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 2px; border-radius: 6px; }
+@media (hover: hover) { button.rvx-line:hover .m { color: #fff; } }
+.sheet.rvx-d .rvx-send { justify-content: center; gap: 8px; text-align: center; line-height: 1.2; }
+.rvx-bti { width: 18px; height: 18px; flex: 0 0 18px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.rvx-ihead .rvx-edit { margin: 0; }
+.rvx-d .rvx-info { margin-top: 4px; }
+.sheet.rvx-d .rvx-send { white-space: nowrap; padding: 0 14px; }
+.sheet.rvx-d .rvx-send.d2 { white-space: normal; }
+/* d1 at 360 px: «Подтвердить в Telegram» stays one line - «Назад» keeps its arrow (48 px target, label for screen readers) and the
+   button text goes to 15 px; at 390 nothing changes */
+.sheet.rvx-d .rvx-send { min-width: 0; flex: 1 1 auto; }
+@container (max-width: 310px) {
+  .sheet.rvx-d:has(.rvx-send.d1) .wz-back span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .sheet.rvx-d .rvx-send.d1 { font-size: 15px; padding: 0 10px; gap: 6px; }
+}
