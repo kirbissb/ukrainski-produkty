@@ -1036,3 +1036,4 @@ div.rvx-line { cursor: default; }
   .sheet.rvx-d:has(.rvx-send.d1) .wz-back span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .sheet.rvx-d .rvx-send.d1 { font-size: 15px; padding: 0 10px; gap: 6px; }
 }
+.rvx-lt .s { white-space: pre-line; }   /* a comment under the recipient keeps its own line */

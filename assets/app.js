@@ -1451,9 +1451,14 @@
     if (s.indexOf('when') >= 0) info.appendChild(line('i-clock', t('done_when'), 'when', dpWhen(kind) && f.dm ? E.planText(E.planWindowId(f.dm), f.dm.date, lang, dpDayWord) : windowText(f)));
     else if (s.indexOf('where') >= 0) info.appendChild(line('i-pin', t('f_city'), 'where', f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : '')));
     /* CEO TG 1530: RU reads as a labelled short line «Оплата: перевод на карту» / «Оплата: наличными»; UA / EN keep their texts */
-    var payText = lang === 'ru' && PAY_SHORT_RU[f.payment] ? 'Оплата: ' + PAY_SHORT_RU[f.payment] : t('pay_' + f.payment);
-    info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, payText));
-    info.appendChild(line('i-user', t('wz_contacts'), 'contact', (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim(), f.comment.trim() || null));
+    /* CEO TG 1534: every line = a bright label, the value under it in grey (same shape as «Самовывоз» / address). RU only:
+       «Оплата» / «перевод на карту» | «наличными», «Контактные данные» / name · phone (CEO TG 1536, label may still change); UA / EN keep their one-line texts */
+    var ruShape = lang === 'ru' && PAY_SHORT_RU[f.payment];
+    if (ruShape) info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('f_pay'), PAY_SHORT_RU[f.payment]));
+    else info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment)));
+    var who = (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim();
+    if (lang === 'ru') info.appendChild(line('i-user', t('wz_contacts'), 'contact', 'Контактные данные', who + (f.comment.trim() ? '\n' + f.comment.trim() : '')));
+    else info.appendChild(line('i-user', t('wz_contacts'), 'contact', who, f.comment.trim() || null));
     box.appendChild(total); box.appendChild(goods); box.appendChild(info);
     var tgHand = !inTg && !(CH && CH.marker());
     if (tgHand && lang === 'ru') {
