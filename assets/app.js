@@ -1399,9 +1399,13 @@
     body.appendChild(el('p', { class: 'hint', text: t('n_for', { n: nm(it) }) }));
     body.appendChild(field(t('f_name'), el('input', { type: 'text', id: 'nName', autocomplete: 'name', placeholder: t('f_name_ph'), value: nf.name, oninput: function (e) { nf.name = e.target.value; } })));
     body.appendChild(field(t('f_phone'), el('input', { type: 'tel', id: 'nPhone', autocomplete: 'tel', inputmode: 'tel', placeholder: '+90 5xx xxx xx xx', value: nf.phone, oninput: function (e) { nf.phone = e.target.value; } })));
-    foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', text: t('n_send'), onclick: function () {
+    foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', id: 'nSend', text: t('n_send'), onclick: function () {
       if (!nf.name.trim() || nf.phone.replace(/\D/g, '').length < 9) { $('#nErr').textContent = t('err_contact'); return; }
-      state.view = 'notify_ok'; renderSheet();
+      /* CEO 06.11: the request goes to the shop (POST /site-notify); «Записали» only once it is accepted or queued for a resend */
+      sendSiteForm('notify', E.notifyPayload(it.id, nf, lang, E.orderNonce()), $('#nSend'), function (r) {
+        if (r.ok || r.kind === 'network') { state.view = 'notify_ok'; renderSheet(); return; }
+        var e = $('#nErr'); if (e) e.textContent = t('err_contact');
+      });
     } }));
     foot.appendChild(el('p', { class: 'err', id: 'nErr' }));
   }
@@ -1564,9 +1568,42 @@
     }
     /* W-DATA-06 06.11: the request is no longer written to the browser (was the owner-demo key ukr-demo-special) */
     var payload = E.specialPayload(sf, lang);
-    state.lastSpecial = payload;
-    state.sf = { what: '', qty: '', name: sf.name, contact: sf.contact, comment: '' };
-    state.view = 'special_ok'; renderSheet(); $('#sheetBody').scrollTop = 0;
+    /* CEO 06.11: the request goes to the shop (POST /site-special); the done view only once it is accepted or queued for a resend */
+    var body = { what: payload.what.slice(0, 300), qty: payload.qty.slice(0, 100), name: payload.name.slice(0, 80), contact: payload.contact, comment: payload.comment.slice(0, 1000), lang: payload.lang, nonce: E.orderNonce() }; /* the worker's field limits */
+    sendSiteForm('special', body, $('#spSend'), function (r) {
+      if (!r.ok && r.kind !== 'network') {
+        var bw = r.error === 'bad_what'; err.textContent = t(bw ? 'sp_err_what' : 'sp_err_contact_bad');
+        var n = bw ? $('#spWhat') : $('#spContact'); if (n) { n.setAttribute('aria-invalid', 'true'); n.focus(); }
+        return;
+      }
+      state.lastSpecial = payload;
+      state.sf = { what: '', qty: '', name: sf.name, contact: sf.contact, comment: '' };
+      state.view = 'special_ok'; renderSheet(); $('#sheetBody').scrollTop = 0;
+    });
+  }
+  /* CEO 06.11 (live bug: both forms said «Записали» and nothing reached the shop): the notify / special request is POSTed to the worker.
+     Accepted -> done(r). The worker refused the fields (400) -> done(r) shows the form's own error. No answer / 5xx / 429 -> the request stays
+     in THIS page's memory (W-DATA-06: nothing personal is written to the browser) and is sent again when the connection is back and on a
+     timer (30 s, 2 min, 10 min); done(r) shows the usual view. The same nonce is resent; the worker treats a repeat as the same request */
+  var formQueue = [], formTimer = null, FORM_RETRY_MS = [30000, 120000, 600000];
+  function flushForms() {
+    formTimer = null; var q = formQueue; formQueue = [];
+    q.forEach(function (x) {
+      E.sendForm(x.kind, x.payload).then(function (r) {
+        if (r.ok || r.kind !== 'network') return;
+        x.tries++; if (x.tries <= FORM_RETRY_MS.length) { formQueue.push(x); if (!formTimer) formTimer = setTimeout(flushForms, FORM_RETRY_MS[x.tries - 1]); }
+      });
+    });
+  }
+  window.addEventListener('online', function () { if (formQueue.length) { clearTimeout(formTimer); flushForms(); } });
+  function sendSiteForm(kind, payload, btn, done) {
+    if (state.formSending) return;
+    state.formSending = true; if (btn) { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
+    E.sendForm(kind, payload).then(function (r) {
+      state.formSending = false; if (btn) { btn.disabled = false; btn.removeAttribute('aria-busy'); }
+      if (!r.ok && r.kind === 'network') { formQueue.push({ kind: kind, payload: payload, tries: 1 }); if (!formTimer) formTimer = setTimeout(flushForms, FORM_RETRY_MS[0]); }
+      done(r);
+    });
   }
 
   /* ---------- overlays ---------- */

@@ -976,6 +976,25 @@
     }, function () { return { ok: false, kind: 'network', status: 0, error: 'network' }; });
   }
 
+  /* CEO 06.11 (live bug: both forms said «Записали» and nothing reached the shop): «Сообщить о поставке» -> POST /site-notify,
+     «Привезти под заказ» -> POST /site-special (bot-engine src/site-forms.ts; same worker, same CORS / rate limit as /site-order).
+     -> Promise<{ok:true, data}> | {ok:false, kind:'network'|'rejected', status, error}; never throws. 'rejected' = the worker refused the
+     fields (400: bad_contact, bad_what, ...); 'network' = no answer, a 5xx, a 429 or a 403 (nothing reached the shop, worth one more try) */
+  var FORM_URL = { notify: ORDER_URL.replace(/\/site-order$/, '/site-notify'), special: ORDER_URL.replace(/\/site-order$/, '/site-special') };
+  function notifyPayload(itemId, f, lang, nonce) {
+    return { item: String(itemId || ''), name: clean(f && f.name).slice(0, 80), phone: clean(f && f.phone), lang: lang === 'uk' || lang === 'en' ? lang : 'ru', nonce: nonce || '' };
+  }
+  function sendForm(kind, payload, fetchFn, url) {
+    var f = fetchFn || (typeof fetch !== 'undefined' ? fetch : null);
+    if (!f || !FORM_URL[kind]) return Promise.resolve({ ok: false, kind: 'network', status: 0, error: 'no_fetch' });
+    return f(url || FORM_URL[kind], { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.ok && j && j.ok && j.id) return { ok: true, data: j };
+        return { ok: false, kind: r.status === 400 ? 'rejected' : 'network', status: r.status, error: (j && j.error) || 'http_' + r.status };
+      });
+    }, function () { return { ok: false, kind: 'network', status: 0, error: 'network' }; });
+  }
+
   /* what the B card says in its glass bar and pill, from real data only (no ratings, no delivery minutes) */
   function cardInfo(it, now) {
     var st = itemState(it, now);
@@ -1001,7 +1020,7 @@
     saveNotify: saveNotify, loadNotify: loadNotify,
     cardsVariant: cardsVariant, cardsIsB: cardsIsB, quickNavVisible: quickNavVisible, stepQty: stepQty, cardInfo: cardInfo, groupByCategory: groupByCategory, pluralIdx: pluralIdx,
     contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
-    ORDER_URL: ORDER_URL, orderContact: orderContact, addressOk: addressOk, ADDRESS_MIN: ADDRESS_MIN, ADDRESS_MAX: ADDRESS_MAX, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder,
+    ORDER_URL: ORDER_URL, orderContact: orderContact, addressOk: addressOk, ADDRESS_MIN: ADDRESS_MIN, ADDRESS_MAX: ADDRESS_MAX, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder, FORM_URL: FORM_URL, notifyPayload: notifyPayload, sendForm: sendForm,
     WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickupDays: pickupDays, daysText: daysText, pickWindow: pickWindow, windowValid: windowValid,
     deliveryPlan: deliveryPlan, planDays: planDays, planTimes: planTimes, planStarts: planStarts, planEnds: planEnds, planAsapDate: planAsapDate, planWindowId: planWindowId, planParseId: planParseId,
     planValid: planValid, planHoursText: planHoursText, planText: planText, planFee: planFee, planFeeRange: planFeeRange, planMinMiss: planMinMiss, placeAddress: placeAddress, dpText: dpText
