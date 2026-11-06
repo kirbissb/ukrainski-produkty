@@ -1,0 +1,4 @@
+/* Accent strategy «Photo-sampled» (CEO TG 1836): the one accent is the caramel of her own photos (grilled sardelki skin, smoked salo
+   crust; sampled from img/sardelky-hryl.jpg). Fill #c47a2c with dark ink (5.3:1), ink #e2a05f on the slate (8.1:1). Not linked */
+:root { --acc: #e2a05f; --acc-2: #ebb47c; --acc-fill: #c47a2c; --acc-fill-2: #d08a3e; --on-acc: #161615; }
+.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(196, 122, 44, 0.28); }

@@ -1,0 +1,4 @@
+/* accent option «Copper brown» (CEO 06.11 TG 1823, board 2). Source: #10 Rustic Ridge orange-brown label type; smoked balyk skin.
+   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
+:root { --acc: #dba277; --acc-2: #e4b694; --acc-fill: #94562a; --acc-fill-2: #7c4823; --on-acc: #f6eee0; }
+.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(148, 86, 42, 0.28); }

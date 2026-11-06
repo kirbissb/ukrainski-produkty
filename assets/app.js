@@ -17,7 +17,7 @@
     ru: {
       brand: 'Украинские продукты', brand_sub: 'Алания', brand_full: 'Украинские продукты · Алания', foot_tag: 'доставка по всей Турции',
       hero_h1: 'Украинские продукты в Алании',
-      hero_p: '<b>{F:source}</b>, {f:supply}. {F:pickup}, {f:courier}, {f:cargo}.',
+      hero_p: '<b class="hf-lead">{F:source}</b><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-cal"></use></svg><span>{F:supply}</span></span><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-pin"></use></svg><span>{F:pickup}</span></span><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-truck"></use></svg><span>{F:courier}</span></span><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-box"></use></svg><span>{F:cargo}</span></span>',
       hero_alt: 'Сало, колбасы, икра, осетрина и кабаносы из ассортимента на тёмном фоне',
       cta_catalog: 'В каталог', cta_special: 'Привезти под заказ',
       srch_open: 'Поиск', srch_ph: 'Поиск по товарам', srch_found: 'Найдено: {n}', srch_none: 'По запросу «{q}» ничего не нашлось.',
@@ -40,15 +40,15 @@
       dlv_title: 'Как мы доставляем',
       dlv1: '{F:pickup}', dlv1t: '{F:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.',
       dlv2: '{F:courier}', dlv2t: '{F:courier_fees}. {F:courier_note}.',
-      dlv3: '{F:cargo}', dlv3t: '{F:cargo_cities} - {f:cargo_via}, {f:cargo_fee}. {F:cargo_note}.',
+      dlv3: '{F:cargo}', dlv3t: 'Любой город Турции, карго {f:cargo_via}. {F:cargo_fee}. {F:cargo_note}.',
       faq_title: 'Вопросы', faq_q: [
         'Сколько стоит и где весь прайс?', 'Откуда вы привозите продукты?', 'Есть ли в наличии?', 'Когда новая поставка?', 'Доставка в мой город - в Белек, Махмутлар, Анталию?', 'Где забрать в Алании?'],
       faq_a: [
         'Цена стоит на каждой карточке в каталоге выше - это и есть весь прайс. Он всегда актуален: цены меняет владелец в чате, и они сразу меняются на сайте.',
-        'С Центрального рынка Харькова - легендарного Благбаза (Благовещенского базара), куда харьковчане поколениями ходят за салом, мясом и колбасами. {F:supply}.',
-        'Наличие видно на каждой карточке под ценой: «В наличии», «Осталось ~1,5 кг» или «Закончилось». Если закончилось - нажмите «Сообщить о поставке», и мы напишем, когда привезём, или «Заказать к поставке», и товар попадёт в заказ как «под заказ».',
+        'С Благбаза - Центрального рынка Харькова. Туда харьковчане поколениями ходят за салом и колбасами. {F:supply}.',
+        'Наличие видно на каждой карточке под ценой: «В наличии», «Осталось ~1,5 кг» или «Закончилось». Закончилось? «Сообщить о поставке» - напишем, когда привезём. «Заказать к поставке» - товар попадёт в заказ «под заказ».',
         '{F:supply}. Как только день следующей поставки известен, он появляется на карточках закончившихся товаров. Сейчас: {nb}.',
-        '{F:courier}: {f:courier_fees}. {F:cargo_cities} - {f:cargo} ({f:cargo_via}), {f:cargo_fee}. В корзине выберите «{F:cargo}».',
+        '{F:courier}: {f:courier_fees}. Любой город Турции, карго {f:cargo_via}. {F:cargo_fee}. В корзине выберите «{F:cargo}».',
         '{F:pickup}: {f:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
       nb_none: 'день пока не назначен', nb_day: 'ближайшая: {d}',
       foot_phone: 'Телефон', foot_wa: 'WhatsApp', legal_dlv_link: 'Доставка и оплата', legal_data_link: 'Персональные данные', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Вопросы',
@@ -64,14 +64,14 @@
       wz_step: 'Шаг {n} из {m}', wz_next: 'Дальше', wz_back: 'Назад', wz_how: 'Как получить заказ?', wz_where: 'Куда отправить?', wz_addr: 'Куда привезти?', addr_ph: 'Район, улица, дом, квартира', err_addr: 'Напишите адрес: район, улица и дом', wz_addr_h: 'Адрес', wz_pay: 'Как удобно оплатить?', wz_contact: 'Как с вами связаться?', wz_review: 'Проверьте заказ', wz_edit: 'Изменить', wz_items: 'Товары', wz_get: 'Получение', wz_card_note: 'Реквизиты и сумму в гривнах пришлём в Telegram', wz_contacts: 'Контакты', wz_tg_note: 'Вы в Telegram как {n}. Заказ придёт в этот чат с ботом.', done_in_tg: 'Заказ уже в вашем чате с ботом. Там же подтверждение и статус.', done_tg_back: 'Вернуться в чат', done_in_instagram: 'Заказ отправлен в ваш чат в Instagram. Там же подтверждение и статус.', done_in_whatsapp: 'Заказ отправлен в ваш чат в WhatsApp. Там же подтверждение и статус.', err_tg_auth: 'Telegram не подтвердил вход. Закройте магазин и откройте его снова из чата с ботом.', wz_no_comment: 'без комментария',
       dlv_pickup: '{F:pickup}', dlv_pickup_sub: '{F:pickup_addr}', dlv_pickup_note: '{F:pickup_hours}.', dlv_alanya: '{F:courier}', dlv_alanya_sub: '{F:courier_fees}', dlv_alanya_note: '{F:courier_note}.', dlv_cargo: '{F:cargo}', dlv_cargo_sub: '{F:cargo_via}, {f:cargo_fee}', dlv_cargo_note: '{F:cargo_note}.',
       pay_card: '{F:pay}', pay_cash: '{F:pay_cash}',
-      done_title: 'Заказ принят', done_no: 'Заказ', done_date: 'желаемая дата', tg_btn: 'Написать в Telegram', back: 'Вернуться в каталог',
+      done_title: 'Заказ принят', ups_h: 'К этому часто берут', ups_add: 'Добавить', done_no: 'Заказ', done_date: 'желаемая дата', tg_btn: 'Написать в Telegram', back: 'Вернуться в каталог',
       n_title: 'Сообщить о поставке', n_for: 'Когда привезём «{n}», напишем вам.', n_send: 'Сообщить мне', n_ok: 'Записали', n_ok_t: 'Напишем в Telegram или WhatsApp, как только «{n}» приедет.', n_close: 'Закрыть',
       consent_pre: 'Отправляя заказ, вы соглашаетесь с ', consent_link: 'обработкой данных для доставки', consent_post: '.',
       legal_dlv: { h: 'Доставка и оплата', items: [
         ['Как принимаем заказ', 'Заказ на сайте - это заявка. В течение часа мы подтверждаем его в Telegram или WhatsApp и называем точный вес и сумму: весовые продукты взвешиваем, поэтому итог может немного отличаться от суммы в корзине. {F:min}. Позиции «под заказ» привозим с ближайшей поставкой.'],
         ['{F:pickup}', '{F:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
         ['{F:courier}', '{F:courier_fees}. {F:courier_note}.'],
-        ['{F:cargo}', '{F:cargo_cities} - {f:cargo_via}, {f:cargo_fee}. {F:cargo_note}.'],
+        ['{F:cargo}', 'Любой город Турции, карго {f:cargo_via}. {F:cargo_fee}. {F:cargo_note}.'],
         ['Оплата', '{F:pay_all}. Номер карты для перевода присылаем вместе с точной суммой после подтверждения. Цены - в турецких лирах (₺). Товары с ценой в долларах ($) указаны и считаются в долларах, отдельной суммой; реквизиты для оплаты присылаем вместе с подтверждением.'],
         ['При получении', 'Проверьте заказ при получении. Если что-то не так, напишите нам в Telegram t.me/ukrtovari.']] },
       legal_data: { h: 'Персональные данные', items: [
@@ -88,7 +88,7 @@
     uk: {
       brand: 'Українські продукти', brand_sub: 'Аланія', brand_full: 'Українські продукти · Аланія', foot_tag: 'доставка по всій Туреччині',
       hero_h1: 'Українські продукти в Аланії',
-      hero_p: '<b>{F:source}</b>, {f:supply}. {F:pickup}, {f:courier}, {f:cargo}.',
+      hero_p: '<b class="hf-lead">{F:source}</b><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-cal"></use></svg><span>{F:supply}</span></span><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-pin"></use></svg><span>{F:pickup}</span></span><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-truck"></use></svg><span>{F:courier}</span></span><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-box"></use></svg><span>{F:cargo}</span></span>',
       hero_alt: 'Сало, ковбаси, ікра, осетрина та кабаноси з асортименту на темному тлі',
       cta_catalog: 'До каталогу', cta_special: 'Привезти під замовлення',
       srch_open: 'Пошук', srch_ph: 'Пошук товарів', srch_found: 'Знайдено: {n}', srch_none: 'За запитом «{q}» нічого не знайшлося.',
@@ -111,15 +111,15 @@
       dlv_title: 'Як ми доставляємо',
       dlv1: '{F:pickup}', dlv1t: '{F:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.',
       dlv2: '{F:courier}', dlv2t: '{F:courier_fees}. {F:courier_note}.',
-      dlv3: '{F:cargo}', dlv3t: '{F:cargo_cities} - {f:cargo_via}, {f:cargo_fee}. {F:cargo_note}.',
+      dlv3: '{F:cargo}', dlv3t: 'Будь-яке місто Туреччини, карго {f:cargo_via}. {F:cargo_fee}. {F:cargo_note}.',
       faq_title: 'Питання', faq_q: [
         'Скільки коштує і де весь прайс?', 'Звідки ви привозите продукти?', 'Чи є в наявності?', 'Коли нова поставка?', 'Доставка в моє місто - у Белек, Махмутлар, Анталію?', 'Де забрати в Аланії?'],
       faq_a: [
         'Ціна стоїть на кожній картці в каталозі вище - це і є весь прайс. Він завжди актуальний: ціни змінює власник у чаті, і вони одразу змінюються на сайті.',
-        'З Центрального ринку Харкова - легендарного Благбазу (Благовіщенського базару), куди харків\'яни поколіннями ходять по сало, м\'ясо й ковбаси. {F:supply}.',
-        'Наявність видно на кожній картці під ціною: «В наявності», «Залишилось ~1,5 кг» або «Закінчилося». Якщо закінчилося - натисніть «Повідомити про поставку», і ми напишемо, коли привеземо, або «Замовити до поставки», і товар потрапить у замовлення як «під замовлення».',
+        'З Благбазу - Центрального ринку Харкова. Туди харків\'яни поколіннями ходять по сало й ковбаси. {F:supply}.',
+        'Наявність видно на кожній картці під ціною: «В наявності», «Залишилось ~1,5 кг» або «Закінчилося». Закінчилося? «Повідомити про поставку» - напишемо, коли привеземо. «Замовити до поставки» - товар потрапить у замовлення «під замовлення».',
         '{F:supply}. Щойно день наступної поставки відомий, він з\'являється на картках товарів, що закінчилися. Зараз: {nb}.',
-        '{F:courier}: {f:courier_fees}. {F:cargo_cities} - {f:cargo} ({f:cargo_via}), {f:cargo_fee}. У кошику оберіть «{F:cargo}».',
+        '{F:courier}: {f:courier_fees}. Будь-яке місто Туреччини, карго {f:cargo_via}. {F:cargo_fee}. У кошику оберіть «{F:cargo}».',
         '{F:pickup}: {f:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
       nb_none: 'день поки не призначено', nb_day: 'найближча: {d}',
       foot_phone: 'Номер телефону', foot_wa: 'WhatsApp', legal_dlv_link: 'Доставка та оплата', legal_data_link: 'Персональні дані', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Питання',
@@ -135,14 +135,14 @@
       wz_step: 'Крок {n} з {m}', wz_next: 'Далі', wz_back: 'Назад', wz_how: 'Як отримати замовлення?', wz_where: 'Куди надіслати?', wz_addr: 'Куди привезти?', addr_ph: 'Район, вулиця, будинок, квартира', err_addr: 'Напишіть адресу: район, вулицю і будинок', wz_addr_h: 'Адреса', wz_pay: 'Як зручно оплатити?', wz_contact: 'Як з вами зв\'язатися?', wz_review: 'Перевірте замовлення', wz_edit: 'Змінити', wz_items: 'Товари', wz_get: 'Отримання', wz_card_note: 'Реквізити та суму в гривнях надішлемо в Telegram', wz_contacts: 'Контакти', wz_tg_note: 'Ви в Telegram як {n}. Замовлення прийде в цей чат із ботом.', done_in_tg: 'Замовлення вже у вашому чаті з ботом. Там же підтвердження і статус.', done_tg_back: 'Повернутися в чат', done_in_instagram: 'Замовлення надіслано у ваш чат в Instagram. Там же підтвердження і статус.', done_in_whatsapp: 'Замовлення надіслано у ваш чат у WhatsApp. Там же підтвердження і статус.', err_tg_auth: 'Telegram не підтвердив вхід. Закрийте магазин і відкрийте його знову з чату з ботом.', wz_no_comment: 'без коментаря',
       dlv_pickup: '{F:pickup}', dlv_pickup_sub: '{F:pickup_addr}', dlv_pickup_note: '{F:pickup_hours}.', dlv_alanya: '{F:courier}', dlv_alanya_sub: '{F:courier_fees}', dlv_alanya_note: '{F:courier_note}.', dlv_cargo: '{F:cargo}', dlv_cargo_sub: '{F:cargo_via}, {f:cargo_fee}', dlv_cargo_note: '{F:cargo_note}.',
       pay_card: '{F:pay}', pay_cash: '{F:pay_cash}',
-      done_title: 'Замовлення прийнято', done_no: 'Замовлення', done_date: 'бажана дата', tg_btn: 'Написати в Telegram', back: 'Повернутися в каталог',
+      done_title: 'Замовлення прийнято', ups_h: 'До цього часто беруть', ups_add: 'Додати', done_no: 'Замовлення', done_date: 'бажана дата', tg_btn: 'Написати в Telegram', back: 'Повернутися в каталог',
       n_title: 'Повідомити про поставку', n_for: 'Коли привеземо «{n}», напишемо вам.', n_send: 'Повідомте мене', n_ok: 'Записали', n_ok_t: 'Напишемо в Telegram або WhatsApp, щойно «{n}» приїде.', n_close: 'Закрити',
       consent_pre: 'Надсилаючи замовлення, ви погоджуєтеся з ', consent_link: 'обробкою даних для доставки', consent_post: '.',
       legal_dlv: { h: 'Доставка та оплата', items: [
         ['Як приймаємо замовлення', 'Замовлення на сайті - це заявка. Протягом години ми підтверджуємо його в Telegram або WhatsApp і називаємо точну вагу та суму: вагові продукти зважуємо, тому підсумок може трохи відрізнятися від суми в кошику. {F:min}. Позиції «під замовлення» привозимо з найближчою поставкою.'],
         ['{F:pickup}', '{F:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
         ['{F:courier}', '{F:courier_fees}. {F:courier_note}.'],
-        ['{F:cargo}', '{F:cargo_cities} - {f:cargo_via}, {f:cargo_fee}. {F:cargo_note}.'],
+        ['{F:cargo}', 'Будь-яке місто Туреччини, карго {f:cargo_via}. {F:cargo_fee}. {F:cargo_note}.'],
         ['Оплата', '{F:pay_all}. Номер картки для переказу надсилаємо разом з точною сумою після підтвердження. Ціни - у турецьких лірах (₺). Товари з ціною в доларах ($) вказані й рахуються в доларах, окремою сумою; реквізити для оплати надсилаємо разом із підтвердженням.'],
         ['При отриманні', 'Перевірте замовлення при отриманні. Якщо щось не так, напишіть нам у Telegram t.me/ukrtovari.']] },
       legal_data: { h: 'Персональні дані', items: [
@@ -159,7 +159,7 @@
     en: {
       brand: 'Ukrainian products', brand_sub: 'Alanya', brand_full: 'Ukrainian products · Alanya', foot_tag: 'delivery across Turkey',
       hero_h1: 'Ukrainian food in Alanya',
-      hero_p: '<b>{F:source}</b>, {f:supply}. {F:pickup}, {f:courier}, {f:cargo}.',
+      hero_p: '<b class="hf-lead">{F:source}</b><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-cal"></use></svg><span>{F:supply}</span></span><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-pin"></use></svg><span>{F:pickup}</span></span><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-truck"></use></svg><span>{F:courier}</span></span><span class="hf"><svg class="ico" aria-hidden="true"><use href="#i-box"></use></svg><span>{F:cargo}</span></span>',
       hero_alt: 'Salo, sausages, caviar, sturgeon and kabanosy from the range on a dark background',
       cta_catalog: 'Browse the catalog', cta_special: 'Special order',
       srch_open: 'Search', srch_ph: 'Search products', srch_found: 'Found: {n}', srch_none: 'Nothing found for “{q}”.',
@@ -182,15 +182,15 @@
       dlv_title: 'How we deliver',
       dlv1: '{F:pickup}', dlv1t: '{F:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.',
       dlv2: '{F:courier}', dlv2t: '{F:courier_fees}. {F:courier_note}.',
-      dlv3: '{F:cargo}', dlv3t: '{F:cargo_cities} - {f:cargo_via}, {f:cargo_fee}. {F:cargo_note}.',
+      dlv3: '{F:cargo}', dlv3t: 'Any city in Turkey, {F:cargo_via}. {F:cargo_fee}. {F:cargo_note}.',
       faq_title: 'Questions', faq_q: [
         'What are your prices, and where is the full price list?', 'Where do your products come from?', 'Is it in stock?', 'When is the next batch?', 'Do you deliver to my city (Belek, Mahmutlar, Antalya)?', 'Where can I pick up in Alanya?'],
       faq_a: [
         'The price is on every card in the catalog above - that is the full price list. It is always up to date: prices change in the shop\'s chat and the site updates instantly. Items priced in dollars are shown and totalled in dollars, as a separate sum.',
-        'From Kharkiv\'s Central Market - the legendary Blagbaz (Blagoveshchensky Bazaar), where Kharkiv families have bought salo, meat and sausages for generations. {F:supply}.',
-        'Each card shows availability under the price: "In stock", "Only ~1.5 kg left" or "Sold out". If an item is sold out, tap "Notify me when back in stock" and we\'ll message you when it arrives, or tap "Pre-order" to add it to your order as a pre-order.',
+        'From Blagbaz, Kharkiv\'s Central Market. Kharkiv families have bought salo and sausages there for generations. {F:supply}.',
+        'Each card shows availability under the price: "In stock", "Only ~1.5 kg left" or "Sold out". Sold out? "Notify me when back in stock" - we\'ll message you when it arrives. "Pre-order" - it goes into your order as a pre-order.',
         '{F:supply}. As soon as the date of the next batch is set, it appears on the sold-out cards. Right now: {nb}.',
-        '{F:courier}: {f:courier_fees}. {F:cargo_cities} - {f:cargo} ({f:cargo_via}), {f:cargo_fee}. Choose "{F:cargo}" in the cart.',
+        '{F:courier}: {f:courier_fees}. Any city in Turkey, {F:cargo_via}. {F:cargo_fee}. Choose "{F:cargo}" in the cart.',
         '{F:pickup}: {f:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
       nb_none: 'no day set yet', nb_day: 'next: {d}',
       foot_phone: 'Phone', foot_wa: 'WhatsApp', legal_dlv_link: 'Delivery and payment', legal_data_link: 'Personal data', nav_catalog: 'Catalog', nav_delivery: 'Delivery', nav_faq: 'Questions',
@@ -206,14 +206,14 @@
       wz_step: 'Step {n} of {m}', wz_next: 'Next', wz_back: 'Back', wz_how: 'How would you like to get it?', wz_where: 'Where should we ship it?', wz_addr: 'Where should we deliver?', addr_ph: 'Area, street, building, flat', err_addr: 'Add your address: area, street and building', wz_addr_h: 'Address', wz_pay: 'How would you like to pay?', wz_contact: 'How can we reach you?', wz_review: 'Check your order', wz_edit: 'Edit', wz_items: 'Items', wz_get: 'Delivery', wz_card_note: 'We\'ll send the card details and the amount in UAH on Telegram', wz_contacts: 'Contact details', wz_tg_note: 'You are in Telegram as {n}. The order will come to this chat with the bot.', done_in_tg: 'Your order is already in your chat with the bot. Confirmation and status are there too.', done_tg_back: 'Back to the chat', done_in_instagram: 'Your order is in your Instagram chat with us. Confirmation and status are there too.', done_in_whatsapp: 'Your order is in your WhatsApp chat with us. Confirmation and status are there too.', err_tg_auth: 'Telegram did not confirm your login. Close the shop and open it again from the chat with the bot.', wz_no_comment: 'no comment',
       dlv_pickup: '{F:pickup}', dlv_pickup_sub: '{F:pickup_addr}', dlv_pickup_note: '{F:pickup_hours}.', dlv_alanya: '{F:courier}', dlv_alanya_sub: '{F:courier_fees}', dlv_alanya_note: '{F:courier_note}.', dlv_cargo: '{F:cargo}', dlv_cargo_sub: '{F:cargo_via}, {f:cargo_fee}', dlv_cargo_note: '{F:cargo_note}.',
       pay_card: '{F:pay}', pay_cash: '{F:pay_cash}',
-      done_title: 'Order received', done_no: 'Order', done_date: 'preferred date', tg_btn: 'Message us on Telegram', back: 'Back to catalog',
+      done_title: 'Order received', ups_h: 'Often added to this', ups_add: 'Add', done_no: 'Order', done_date: 'preferred date', tg_btn: 'Message us on Telegram', back: 'Back to catalog',
       n_title: 'Notify me when back in stock', n_for: 'We\'ll let you know when "{n}" is back in stock.', n_send: 'Notify me', n_ok: 'You\'re on the list', n_ok_t: 'We\'ll message you on Telegram or WhatsApp as soon as "{n}" is back.', n_close: 'Close',
       consent_pre: 'By confirming your order, you agree to the ', consent_link: 'processing of your data for delivery', consent_post: '.',
       legal_dlv: { h: 'Delivery and payment', items: [
         ['How we take an order', 'An order placed on the site is a request. Within an hour we confirm it on Telegram or WhatsApp with the exact weight and total: weighed goods are weighed, so the total can differ slightly from the cart. {F:min}. Pre-order items arrive with the next batch.'],
         ['{F:pickup}', '{F:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
         ['{F:courier}', '{F:courier_fees}. {F:courier_note}.'],
-        ['{F:cargo}', '{F:cargo_cities} - {f:cargo_via}, {f:cargo_fee}. {F:cargo_note}.'],
+        ['{F:cargo}', 'Any city in Turkey, {F:cargo_via}. {F:cargo_fee}. {F:cargo_note}.'],
         ['Payment', '{F:pay_all}. We send the card number for the transfer together with the exact total after confirmation. Prices are in Turkish lira (₺). Goods priced in dollars ($) are priced and totalled in dollars, as a separate sum; we send the payment details with the confirmation.'],
         ['On receipt', 'Check your order when you receive it. If something is wrong, write to us on Telegram t.me/ukrtovari.']] },
       legal_data: { h: 'Personal data', items: [
@@ -359,11 +359,20 @@
   function fm(n) { return E.fmtMoney(n); }
 
   /* ---------- static text ---------- */
+  /* redesign 06.11 (CEO 22.09 rule, check_design «copy period»): a text block on the page ends without a period. One place: the static
+     texts, the delivery lines and the FAQ answers pass through it as they are drawn; inner sentence periods stay */
+  function noDot(x) { return typeof x === 'string' ? x.replace(/([^.\s])\.(\s*(?:<\/[a-z0-9]+>\s*)*)$/i, '$1$2') : x; }
+  /* W-LOOK-01 (max 3 lines per paragraph at 390): long answers are drawn one sentence per line - the same words, each sentence its own
+     short line without the final period (CEO 22.09 rule); used for the about line, the delivery notes and the FAQ answers */
+    function sentLines(box, text) {
+    String(text).split(/(?<=[.!])\s+(?=[«"A-ZА-ЯЁІЇЄҐ0-9])/).forEach(function (x) { if (!x.trim()) return; if (box.childNodes.length) box.appendChild(document.createTextNode(' ')); box.appendChild(el('span', { class: 'sl', text: noDot(x.trim()) })); });
+    return box;
+  }
   function applyStatic() {
     document.documentElement.lang = lang === 'uk' ? 'uk' : lang;
     document.title = lang === 'en' ? 'Ukrainian products Alanya' : lang === 'uk' ? 'Українські продукти Аланія' : 'Украинские продукты Алания';
-    document.querySelectorAll('[data-i18n]').forEach(function (n) { n.textContent = t(n.getAttribute('data-i18n')); });
-    document.querySelectorAll('[data-i18n-html]').forEach(function (n) { n.innerHTML = t(n.getAttribute('data-i18n-html')); });
+    document.querySelectorAll('[data-i18n]').forEach(function (n) { if (n.hasAttribute('data-sl')) { n.textContent = ''; sentLines(n, t(n.getAttribute('data-i18n'))); } else n.textContent = noDot(t(n.getAttribute('data-i18n'))); });
+    document.querySelectorAll('[data-i18n-html]').forEach(function (n) { n.innerHTML = noDot(t(n.getAttribute('data-i18n-html'))); });
     document.querySelectorAll('[data-i18n-aria]').forEach(function (n) { n.setAttribute('aria-label', t(n.getAttribute('data-i18n-aria'))); });
     $('#heroImg').alt = t('hero_alt');
     $('#storyImg').alt = '';
@@ -379,7 +388,7 @@
   function renderDelivery() {
     var box = $('#dlvSteps'); box.innerHTML = '';
     [['i-bag', 'dlv1', 'dlv1t'], ['i-pin', 'dlv2', 'dlv2t'], ['i-truck', 'dlv3', 'dlv3t']].forEach(function (r) {
-      box.appendChild(el('li', {}, [icon(r[0]), el('span', {}, [el('b', { text: t(r[1]) }), document.createTextNode(t(r[2]))])]));
+      box.appendChild(el('li', {}, [icon(r[0]), el('span', {}, [el('b', { text: t(r[1]) }), sentLines(el('span', { class: 'sls' }), t(r[2]))])]));
     });
   }
   function renderFaq() {
@@ -387,19 +396,56 @@
     var v = { nb: nd ? t('nb_day', { d: dayLabel(nd) }) : t('nb_none') };
     var box = $('#faqBox'); box.innerHTML = '';
     I18N[lang].faq_q.forEach(function (q, i) {
-      box.appendChild(el('details', {}, [el('summary', { text: q }), el('p', { text: t('faq_a')[i].replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }) })]));
+      box.appendChild(el('details', {}, [el('summary', { text: q }), sentLines(el('p', {}), t('faq_a')[i].replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }))]));
     });
   }
+  /* redesign 06.11: a review is shown word for word; emoji are not drawn (20-WEB-CANON W-LOOK-02, check_design icon-glyph) and a name
+     ends without a period (the canon's no-final-period rule): «Artem H.» -> «Artem H». The data keeps the original */
+  var EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{25A0}-\u{25FF}\u{FE0F}\u{200D}]/gu;
+  var RV_EMOJI = /[?&]rvemoji=1(?:&|$)/.test(location.search);   /* preview toggle for the CEO: ?rvemoji=1 draws the review emoji (default off) */
+  function rvText(x) { if (RV_EMOJI) return x; return x ? x.replace(EMOJI, '').replace(/[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n').trim() : x; }
+  function rvName(x) { return x ? x.replace(/\.$/, '') : x; }
+  /* CEO TG 1836: the hero line is a scannable block with the SAME words - a lead line (where the food is from) + four fact lines with a
+     line icon each (supply, pickup, courier, cargo), no paragraph. Words come from the facts exactly as before. */
+  /* W-LAW-07 (CEO TG 1823, 06.11): each review = ONE highlighted takeaway (<= 8 words, verbatim from that review, typos and spelling kept),
+     big in the display serif; under it the name and a short source line (the channel it came in); the whole message (screenshot or
+     text) behind «Читать полностью» in the overlay. Phrases are taken from the screenshots, checked against the verbatim transcripts in
+     img/reviews/REVIEWS.md. They stay in the customer's own language in every site language (a translation would no longer be her words).
+     Keyed by the screenshot file (or «text:<name>» for a text review), so a catalog rebuild keeps them. */
+  var REVIEW_HL = {
+    'review-01-salo-ukr.jpg': { hl: 'Сало дуже смачне, свіже, ароматне, в міру солоне', src: 'Telegram', ava: '' },
+    'review-02-salo-idealne.jpg': { hl: 'Сало идеальное, Вы действительно умеете его выбирать', src: 'Telegram', ava: '' },
+    'review-03-sardelky-kovbasa.jpg': { hl: 'такого смачного м’яса в Україні не всюди їв', src: 'Telegram', ava: '' },
+    'review-04-doktorska-salo-vyshnia.jpg': { hl: 'Колбаса нежная, сочная, с натуральным мясным вкусом', src: 'Instagram', ava: '' },
+    'review-05-ikra-ryba-miaso.jpg': { hl: 'Всё всегда невероятно свежее, вкусное', src: 'WhatsApp', ava: '' },
+    'review-06-ikra-chorna-chervona.jpg': { hl: 'Малосольная и чувствуется настоящий вкус', src: 'Instagram', ava: '' },
+    'review-07-ikra-chervona-foto.jpg': { hl: 'Без жидкости, икринки лопаются как надо', src: 'Telegram', ava: '' },
+    'review-08-osetryna-ikra.jpg': { hl: 'Осетрина горячего копчения бомба', src: 'WhatsApp', ava: '' },
+    'review-09-tort-balyk.jpg': { hl: 'такой вкусный балык нигде не ела', src: 'Instagram', ava: '' },
+    'review-10-ikra-dostavka-speka.jpg': { hl: 'не было шансов в жару испортиться', src: 'Telegram', ava: '' },
+    'review-11-posylka-idealno.jpg': { hl: 'Всё в идеальном состоянии, всё вкусно как всегда', src: 'WhatsApp', ava: '' },
+    'review-12-rebra-hryl.jpg': { hl: 'очень рекомендую ребра - сочные, ароматные', src: 'Telegram', ava: '' },
+    'text:Santa': { hl: 'невероятно свежего, аппетитного украинского сала', src: 'Telegram', ava: '' }
+  };
+  /* avatars (CEO TG 1831, for later): «ava» = the customer's own profile picture, only with their permission; empty = NO circle at all
+     (no initials, no stand-in face). ?rvavatest=1 puts a SAMPLE picture (a blurred neutral silhouette, served by the board script, not a
+     real person) on every card - for the design board only, never in the data */
+  var RV_AVA_TEST = /[?&]rvavatest=1(?:&|$)/.test(location.search) ? 'board-sample-avatar.png' : '';   /* the design board serves this file itself; it is not in the repo */
+  function rvHl(r) { return REVIEW_HL[r.img ? r.img.split('/').pop() : 'text:' + (r.name || '')] || null; }
   function renderReviews() {
     var box = $('#reviewBox'); box.innerHTML = '';
-    /* round 4 (10.10): each review = a designed card. Tag comes from the build (file name / REVIEWS.md), nothing invented:
-       no stars, names, dates or counts. The pane crops the screenshot from the top; "read in full" opens the lightbox. */
     C.reviews.forEach(function (r, i) {
-      var card;
-      var pane = r.img
-        ? el('button', { type: 'button', class: 'rv-pane', 'aria-label': t('rev_full') + (r.name ? ': ' + r.name : ''), onclick: function () { openRev(i, this); } }, [rimg(r.img, REVIEW_SIZES, { alt: '', loading: 'lazy', onload: function () { rvClip(this.parentNode); } })])
-        : el('button', { type: 'button', class: 'rv-pane txt', onclick: function () { openRev(i, this); } }, [el('p', { text: r.text })]);
-      card = el('figure', { class: 'rv-card' + (r.img ? '' : ' is-text') }, [pane, r.name ? el('figcaption', { class: 'rv-name', text: r.name }) : null]);
+      var h = rvHl(r), who = rvName(r.name);
+      var more = el('button', { type: 'button', class: 'rv-more', 'aria-label': t('rev_more') + (who ? ': ' + who : ''), onclick: function () { openRev(i, this); } }, [el('span', { text: t('rev_more') })]);
+      var card = el('figure', { class: 'rv-card hl' }, [
+        el('blockquote', { class: 'rv-hl' }, [el('p', { text: '«' + (h ? h.hl : rvText(r.text || '').split('\n')[0]) + '»' })]),
+        (function () {
+          var ava = (h && h.ava) || RV_AVA_TEST;
+          var txt = el('span', { class: 'rv-whot' }, [who ? el('b', { class: 'rv-name', text: who }) : null, h && h.src ? el('span', { class: 'rv-src', text: h.src }) : null]);
+          return el('figcaption', { class: 'rv-who' + (ava ? ' has-ava' : '') }, [ava ? el('img', { class: 'rv-ava', src: ava, alt: '', width: '40', height: '40', loading: 'lazy', decoding: 'async' }) : null, txt]);
+        })(),
+        more
+      ]);
       box.appendChild(card);
     });
     rvEdges();
@@ -428,8 +474,8 @@
   function openRev(i, from) {
     var r = C.reviews[i], body = $('#rvLbBody'), o = $('#ovlRev'); body.innerHTML = '';
     if (r.img) body.appendChild(el('img', { src: r.img, alt: t('rev_full') + (r.name ? ': ' + r.name : '') }));
-    if (r.text) body.appendChild(el('p', { text: r.text }));
-    if (r.name) body.appendChild(el('p', { class: 'rv-name', text: r.name }));
+    if (r.text) body.appendChild(el('p', { text: rvText(r.text) }));
+    if (r.name) body.appendChild(el('p', { class: 'rv-name', text: rvName(r.name) }));
     o.setAttribute('aria-label', t('rev_full'));
     rvReturn = from || null;
     o.classList.add('on'); o.setAttribute('aria-hidden', 'false'); document.body.classList.add('locked');
@@ -840,6 +886,8 @@
     var t0 = E.totals(cart, f.delivery, C);
     $('#cartCount').textContent = t0.count ? String(t0.count) : '';
     roll($('#cartSum'), t0.count ? E.fmtPair(t0.subtotal, t0.usd) : '', 'hdr');
+    /* redesign 06.11 (axe label-content-name-mismatch): the button's name carries the count and sum it shows */
+    $('#cartBtn').setAttribute('aria-label', t('cart') + (t0.count ? ' ' + t0.count + ', ' + E.fmtPair(t0.subtotal, t0.usd) : ''));
     $('#barLeft').textContent = t('cart_title') + ' · ' + t0.count + ' ' + plural(t0.count);
     roll($('#barRight'), E.fmtPair(t0.subtotal, t0.usd), 'bar');
     var sheetOpen = $('#sheet').classList.contains('on');
@@ -864,7 +912,14 @@
     }
     $('#sheet').classList.add('wz-on'); renderStep(body, foot, tt);
   }
-  function field(label, input, value) { if (value != null) input.value = value; return el('div', { class: 'f' }, [el('label', { for: input.id, text: label }), input]); }
+  /* W-HAND-10 (redesign 06.11): floating label - the label sits INSIDE the field and shrinks up on focus or once filled (CSS .f.fl,
+     :placeholder-shown); the label follows the input in the DOM so CSS can read the field state. The example text (placeholder) shows
+     only while the field is focused */
+  function field(label, input, value) {
+    if (value != null) input.value = value;
+    if (!input.getAttribute('placeholder')) input.setAttribute('placeholder', ' ');
+    return el('div', { class: 'f fl' }, [input, el('label', { for: input.id, text: label })]);
+  }
   /* CEO 19.10 evening: the checkout phone - the SAME rule as the worker (bot-engine src/site-order.ts sitePhone): digits, spaces, + ( ) - . ;
      9-15 digits, not one digit repeated. -> the phone with spaces collapsed, or '' */
   function phoneOk(s) {
@@ -977,6 +1032,28 @@
       price != null ? el('span', { class: 'opt-pr' + (price ? '' : ' free'), text: dlvPriceText(price, from) }) : null
     ]);
   }
+  /* CEO 06.11 (TG 1778-1782, research: the cart is the stage that sells add-ons; never inside checkout): ONE quiet row of up to 3 goods that go WITH
+     the cart (other categories, priced, in stock, not in the cart; by the piece first, cheaper first), one tap «+» adds the usual amount */
+  var UPS_BY = { salo: ['ikra_ryba', 'syr_molochne', 'sosysky'], kovbasy: ['ikra_ryba', 'syr_molochne', 'salo'], sosysky: ['syr_molochne', 'kovbasy', 'ikra_ryba'], balyk: ['ikra_ryba', 'syr_molochne', 'salo'], kabanosy: ['ikra_ryba', 'salo', 'syr_molochne'], ikra_ryba: ['syr_molochne', 'salo', 'kovbasy'], syr_molochne: ['solodke', 'ikra_ryba', 'kovbasy'], miaso: ['syr_molochne', 'sosysky', 'ikra_ryba'], solodke: ['syr_molochne', 'ikra_ryba'], inshe: ['ikra_ryba', 'syr_molochne'] };
+  function upsellPicks() {
+    var inCart = {}, cats = {}; cart.forEach(function (l) { inCart[l.id] = 1; var it = C.byId[l.id]; if (it) cats[it.cat] = 1; });
+    var want = []; Object.keys(cats).forEach(function (c) { (UPS_BY[c] || []).forEach(function (x) { if (!cats[x] && want.indexOf(x) < 0) want.push(x); }); });
+    var ok = function (it) { return !inCart[it.id] && it.price != null && /^(in_stock|new_batch|few_left)$/.test(it.state || 'in_stock') && it.photo; };
+    var pool = C.items.filter(function (it) { return ok(it) && want.indexOf(it.cat) >= 0; });
+    pool.sort(function (a, b) { var r = want.indexOf(a.cat) - want.indexOf(b.cat); if (r) return r; var pa = a.unit === 'pc' ? 0 : 1, pb = b.unit === 'pc' ? 0 : 1; return pa - pb || a.price - b.price; });
+    var out = [], used = {}; pool.forEach(function (it) { if (out.length < 3 && !used[it.cat]) { out.push(it); used[it.cat] = 1; } });
+    pool.forEach(function (it) { if (out.length < 3 && out.indexOf(it) < 0) out.push(it); });
+    return out;
+  }
+  function upsellRow() {
+    var picks = upsellPicks(); if (!picks.length) return null;
+    return el('div', { class: 'ups' }, [el('p', { class: 'ups-h', text: t('ups_h') }), el('div', { class: 'ups-row' }, picks.map(function (it) {
+      var q = it.unit === 'pc' ? 1 : it.steps_g[0];
+      return el('div', { class: 'ups-it' }, [rimg(it.photo, '120px', { alt: nm(it), loading: 'lazy', class: 'ups-img' }), el('span', { class: 'ups-n', text: nm(it) }),
+        el('span', { class: 'ups-p' }, [el('b', { text: E.fmtMoney(it.unit === 'pc' ? it.price : Math.round(it.price * q / (it.unit === '100g' ? 100 : 1000)), it.currency) }), it.unit === 'pc' ? null : el('span', { text: E.fmtWeight(it, q, lang) })]),
+        el('button', { class: 'ups-add', type: 'button', 'aria-label': t('ups_add') + ': ' + nm(it), text: '+', onclick: function () { cart = E.cartAdd(cart, it.id, q); E.saveCart(cart); renderCartUI(); } })]);
+    }))]);
+  }
   function lineRows(box, tt) {
     tt.lines.forEach(function (l) {
       var it = C.byId[l.id];
@@ -1005,6 +1082,7 @@
         ]));
       });
       box.appendChild(el('div', { class: 'tots' }, [el('div', { class: 'grand' }, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })])]));
+      var ups = upsellRow(); if (ups) box.appendChild(ups);
       if (state.priceNote && state.priceNote.length) box.insertBefore(el('p', { class: 'minnote live-upd', role: 'status', text: priceNoteText(state.priceNote) }), box.firstChild);
       if (tt.unpriced.length) box.appendChild(el('p', { class: 'minnote tbd', text: t('unpriced_note', { n: tt.lines.filter(function (l) { return l.sum == null; }).map(function (l) { return nm(C.byId[l.id]); }).join(', ') }) }));
       if (tt.belowMin) { box.appendChild(el('p', { class: 'minnote', text: t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) })); primary.textContent = t('min_btn', { m: fm(tt.minOrder) }); primary.disabled = true; }

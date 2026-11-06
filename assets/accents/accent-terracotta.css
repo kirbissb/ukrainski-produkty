@@ -1,0 +1,4 @@
+/* accent option «Terracotta» (CEO 06.11 TG 1823, board 2). Source: #10 Rustic Ridge warm clay / cast-iron pan tones.
+   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
+:root { --acc: #e39a78; --acc-2: #eab095; --acc-fill: #a8502f; --acc-fill-2: #8f4428; --on-acc: #f6eee0; }
+.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(168, 80, 47, 0.28); }
