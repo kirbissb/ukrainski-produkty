@@ -1430,25 +1430,97 @@ h1, h2, .sec h2, .sheet .head h2, .done h2, .doc-body h2 { text-wrap: balance; }
 .sl + .sl { margin-top: 6px; }
 .steps .sls { display: block; }
 
-/* cart add-ons «К этому часто берут» (CEO 06.11 TG 1782, live TG 1864): one quiet row under the subtotal on the CART step only (never inside
-   checkout); slate tiles, radius 14; the photo is a fixed 64 px band cropped with object-fit (never stretched); name 2 lines; price small;
-   one caramel «+» (44 x 44 tap target, dark glyph) adds the usual portion */
+/* cart add-ons «К этому часто берут» (CEO TG 1782 / 1864 / 1876-1878): one quiet row under the cart subtotal (cart step only, never in checkout).
+   The photo is fully visible (fixed 64 px band, object-fit cover, nothing on it); the add control sits under it. Five looks behind one class
+   on <html> (ua-1 .. ua-5); the default below = ua-1, a small caramel circle at the end of the price line. Visible mark ~30 px, tap area
+   44 x 44 (the button box); after a tap the tile reads «Добавлено» with a tick and stays in place */
 .ups { margin: 18px 0 4px; }
 .ups-h { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
 .ups-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.ups-it { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 6px 6px 8px; min-width: 0;
+.ups-it { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 6px 6px 4px; min-width: 0;
   background: var(--card-2); border: 1px solid var(--line); border-radius: var(--r-lg); }
-.ups-it .ups-img, .ups-it picture { display: block; width: 100%; height: 64px; max-width: none; object-fit: cover; object-position: 50% 50%;
-  border-radius: 9px; background: var(--card); }
+.ups-it .ups-img, .ups-it picture { display: block; width: 100%; height: 64px; max-width: none; object-fit: cover; object-position: 50% 50%; border-radius: 9px; background: var(--card); }
 .ups-n { padding: 0 2px; font-size: 13px; line-height: 1.25; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.5em; }
-.ups-p { display: flex; flex-wrap: wrap; gap: 0 6px; padding: 0 2px; font-size: 12px; line-height: 1.35; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ups-foot { display: flex; align-items: center; justify-content: space-between; gap: 2px; margin-top: auto; }
+.ups-p { display: flex; flex-wrap: wrap; gap: 0 6px; padding-left: 2px; min-width: 0; font-size: 12px; line-height: 1.35; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .ups-p b { font-weight: 500; color: var(--ink); white-space: nowrap; }
-.ups-p span { white-space: nowrap; }
-/* the «+» sits on the photo's top-right corner: a full 44 x 44 tap target, caramel with a dark glyph, a slate ring to lift it off the photo */
-.ups-add { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: var(--r);
-  background: var(--acc-fill); color: var(--on-acc); box-shadow: 0 0 0 2px var(--card-2); font: 500 24px/1 var(--font); cursor: pointer;
-  transition: transform 0.3s var(--spring), background-color 0.15s; }
-.ups-add:hover { background: var(--acc-fill-2); }
+.ups-p .ups-w { white-space: nowrap; }
+.ups-add { flex: 0 0 auto; position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 44px; min-height: 44px;
+  margin: -4px -4px -4px 0; padding: 0; border: 0; background: none; color: var(--ink); font: 500 13px/1.2 var(--font); cursor: pointer; transition: transform 0.3s var(--spring); }
 .ups-add:active { transform: scale(0.95); transition-duration: 0.08s; }
-.ups-add:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) { .ups-add { transition: none; } }
+.ups-add:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; border-radius: var(--r); }
+.ups-mk { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--acc-fill); color: var(--on-acc); transition: background-color 0.15s; }
+.ups-add:hover .ups-mk { background: var(--acc-fill-2); }
+.ups-ic { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ups-lbl, .ups-q { display: none; }
+.ups-it.is-added { border-color: rgba(226, 160, 95, 0.55); }
+.ups-it.is-added .ups-mk { background: transparent; color: var(--acc); box-shadow: inset 0 0 0 1.5px var(--acc); }
+.ups-it.is-added .ups-add { cursor: default; }
+@media (prefers-reduced-motion: reduce) { .ups-add, .ups-mk { transition: none; } }
+
+/* ua-2: a full-width quiet «+ Добавить» row under the price (visible 32 px, tap 44) */
+.ua-2 .ups-foot { flex-direction: column; align-items: stretch; gap: 2px; }
+.ua-2 .ups-add { width: 100%; margin: 0; }
+.ua-2 .ups-add::before { content: ""; position: absolute; left: 0; right: 0; top: 6px; bottom: 6px; border-radius: var(--r); box-shadow: inset 0 0 0 1px rgba(240, 232, 216, 0.28); }
+.ua-2 .ups-mk { width: 18px; height: 18px; background: none; color: var(--acc); }
+.ua-2 .ups-lbl { display: inline; }
+.ua-2 .ups-it.is-added .ups-mk { box-shadow: none; }
+.ua-2 .ups-it.is-added .ups-add::before { box-shadow: inset 0 0 0 1px rgba(226, 160, 95, 0.6); }
+/* ua-3: a small caramel chip «+ 250 г» that names the portion it adds (the portion leaves the price line) */
+.ua-3 .ups-foot { flex-direction: column; align-items: flex-start; gap: 0; }
+.ua-3 .ups-p .ups-w { display: none; }
+.ua-3 .ups-add { margin: 0 0 -4px -4px; padding: 0 4px; }
+.ua-3 .ups-mk { display: none; }
+.ua-3 .ups-q { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border-radius: var(--r); background: var(--acc-fill); color: var(--on-acc); font-weight: 600; font-size: 13px; white-space: nowrap; }
+.ua-3 .ups-it.is-added .ups-q { background: transparent; color: var(--acc); box-shadow: inset 0 0 0 1.5px var(--acc); }
+/* ua-4: the whole tile is the button (stretched over the tile); a small corner mark, a tick in that corner after the add */
+.ua-4 .ups-add { position: static; margin: -4px -4px -4px 0; }
+.ua-4 .ups-add::after { content: ""; position: absolute; inset: 0; border-radius: var(--r-lg); }
+.ua-4 .ups-mk { width: 28px; height: 28px; }
+.ua-4 .ups-it:has(.ups-add:active) { transform: scale(0.98); }
+/* ua-5 (own, ref #7 King River text links): no fill - «Добавить» as a caramel text link at the end of the price line, a tick + «Добавлено» after */
+.ua-5 .ups-foot { flex-direction: column; align-items: flex-start; gap: 0; }
+.ua-5 .ups-add { justify-content: flex-start; margin: 0 0 -4px; padding: 0 2px; color: var(--acc); }
+.ua-5 .ups-mk { width: 16px; height: 16px; background: none; color: var(--acc); }
+.ua-5 .ups-lbl { display: inline; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.ua-5 .ups-it.is-added .ups-mk { box-shadow: none; }
+.ua-5 .ups-it.is-added .ups-lbl { text-decoration: none; }
+
+/* PRODUCT CARD PRICE (CEO TG 1876-1878: the price on the photo is hard to read) - five looks behind one class on <html>, cp-a .. cp-e;
+   no class = the current card (name and price over the photo with a text shadow) */
+/* cp-a: name, price and state move BELOW the photo into the card body (photo clean, text on slate) */
+.cp-a .card.cb { aspect-ratio: auto; display: flex; flex-direction: column; background: var(--card); }
+.cp-a .card.cb .cb-photo { position: relative; inset: auto; height: auto; aspect-ratio: 4 / 3; order: 0; }
+.cp-a .card.cb .cb-top { position: static; order: 1; padding: 14px 16px 6px; text-shadow: none; }
+.cp-a .card.cb .cb-bar { position: static; order: 2; margin: 4px 10px 10px; }
+.cp-a .card.cb h3.cb-name { max-width: none; }
+.cp-a .card.cb .cb-incart { top: 10px; }
+/* cp-b: name, price and state on a small SOLID slate plate over the photo */
+.cp-b .card.cb .cb-top { right: auto; left: 12px; top: 12px; max-width: calc(100% - 24px); padding: 10px 14px 10px; border-radius: var(--r-md); background: #1b1b1a; text-shadow: none; }
+.cp-b .card.cb h3.cb-name { max-width: none; }
+/* cp-c: a soft dark scrim at the top of the photo behind name and price - the ONE gradient of the card (W-LOOK-03) */
+.cp-c .card.cb::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 48%; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(10, 10, 9, 0.84) 0%, rgba(10, 10, 9, 0.6) 45%, rgba(10, 10, 9, 0) 100%); }
+/* cp-d: the price in a caramel TAG over the photo, dark text; the name on a small slate strip above it */
+.cp-d .card.cb .cb-price b { display: inline-block; padding: 4px 12px 2px; border-radius: var(--r); background: var(--acc-fill); color: var(--on-acc); text-shadow: none; }
+.cp-d .card.cb .cb-price span { display: inline-block; padding: 3px 8px; border-radius: 8px; background: #1b1b1a; color: var(--ink-2); text-shadow: none; }
+.cp-d .card.cb h3.cb-name, .cp-d .card.cb .cb-state { display: inline-flex; padding: 3px 8px; border-radius: 8px; background: #1b1b1a; text-shadow: none; }
+/* cp-e (own, ref #10 Rustic Ridge spec sheet): a SPLIT card - photo left, name + big price + state + controls right, all on slate */
+.cp-e .cb-cards { grid-template-columns: 1fr; }
+.cp-e .card.cb { aspect-ratio: auto; display: grid; grid-template-columns: 44% minmax(0, 1fr); grid-template-rows: 1fr auto; min-height: 220px; background: var(--card); }
+.cp-e .card.cb .cb-photo { position: relative; inset: auto; grid-column: 1; grid-row: 1 / 3; height: 100%; }
+.cp-e .card.cb .cb-top { position: static; grid-column: 2; grid-row: 1; padding: 14px 12px 4px 14px; text-shadow: none; }
+.cp-e .card.cb .cb-bar { position: static; grid-column: 2; grid-row: 2; margin: 0 8px 8px; flex-wrap: wrap; background: none; border: 0; padding: 4px 4px; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.cp-e .card.cb h3.cb-name { max-width: none; }
+.cp-e .card.cb .cb-price b { font-size: 40px; }
+.cp-e .card.cb .cb-incart { left: 10px; right: auto; }
+@media (min-width: 640px) { .cp-e .cb-cards { grid-template-columns: repeat(2, 1fr); } }
+/* option fixes after the first board look */
+.cp-e .card.cb .cb-price.tbd b { font-size: 18px; }
+.ua-2 .ups-add { gap: 4px; font-size: 12.5px; }
+.ua-3 .ups-it.is-added .ups-add { gap: 4px; }
+.ua-3 .ups-it.is-added .ups-mk { display: grid; width: 18px; height: 18px; background: none; box-shadow: none; color: var(--acc); }
+.ua-3 .ups-it.is-added .ups-q { box-shadow: none; padding: 0; }
+.ua-4 .ups-mk { width: 24px; height: 24px; }
+.ua-4 .ups-it.is-added .ups-mk { position: absolute; top: -8px; right: -8px; width: 26px; height: 26px; background: var(--acc-fill); color: var(--on-acc); box-shadow: 0 0 0 3px var(--card); }
+.ua-4 .ups-it.is-added { border-color: var(--acc); }
