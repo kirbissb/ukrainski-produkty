@@ -235,6 +235,7 @@ input, textarea, select { font: inherit; color: var(--ink); }
 .sheet .xbtn { border-color: transparent; color: var(--ink-2); margin: -6px -8px 0 0; }
 .sheet .xbtn:hover { color: var(--ink); border-color: var(--line); }
 .sheet .scroll { overflow-y: auto; padding: 8px 20px 20px; flex: 1; }
+.sheet .foot:empty { display: none; }
 .sheet .foot { padding: 12px 20px calc(14px + env(safe-area-inset-bottom)); background: var(--card); border-top: 1px solid var(--line); }
 .sheet .foot .tot { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
 .sheet .foot .tot b { font-size: 20px; color: var(--gold); }
@@ -359,6 +360,12 @@ input, textarea, select { font: inherit; color: var(--ink); }
 .done { padding: 10px 0 0; }
 .done h2 { font-family: var(--display); color: var(--gold); font-size: 30px; line-height: 1.1; margin: 10px 0 6px; }
 .done .no { font-size: 15px; color: var(--ink-2); margin: 0 0 16px; }
+.done.short { text-align: center; padding: 18px 0 8px; }
+.done.short .okdraw { margin: 0 auto 14px; }
+.done.short .no { font-size: 24px; color: var(--ink); margin: 0 0 10px; }
+.done.short .no b { color: var(--gold); }
+.done.short .promise { font-size: 17px; margin: 0 0 22px; }
+.done.short .cta { display: grid; }
 .done .lines { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 8px 0; margin-bottom: 12px; display: grid; gap: 6px; font-size: 15px; }
 .done .lines div { display: flex; justify-content: space-between; gap: 12px; }
 .done .lines .t { font-weight: 700; color: var(--ink); }
