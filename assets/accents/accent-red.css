@@ -1,0 +1,4 @@
+/* accent option «Sausage red» (CEO 06.11 TG 1812; since TG 1849 the default is caramel and this file brings the red back). Source: #1 Croghan sausage red; #7 King River red shirt.
+   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
+:root { --acc: #ec8a78; --acc-2: #f3a294; --acc-fill: #b23a2e; --acc-fill-2: #9e2f27; --on-acc: #f6eee0; }
+.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(178, 58, 46, 0.28); }

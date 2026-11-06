@@ -1,0 +1,4 @@
+/* accent option «Dill green» (CEO 06.11 TG 1812: more accent options on the same slate + cream base). Source: #8 Hozon pickle green accent; dill in her assortment.
+   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
+:root { --acc: #a8cf86; --acc-2: #bddb9f; --acc-fill: #46733d; --acc-fill-2: #3b6234; --on-acc: #f6eee0; }
+.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(70, 115, 61, 0.28); }

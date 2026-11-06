@@ -1,0 +1,4 @@
+/* accent option «Paprika» (CEO 06.11 TG 1823, board 2). Source: #10 Rustic Ridge paprika bowl and smoked-sausage colour.
+   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
+:root { --acc: #f0926a; --acc-2: #f4a986; --acc-fill: #b3471f; --acc-fill-2: #9a3c1a; --on-acc: #f6eee0; }
+.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(179, 71, 31, 0.28); }
