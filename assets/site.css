@@ -1463,7 +1463,7 @@ h1, h2, .sec h2, .sheet .head h2, .done h2, .doc-body h2 { text-wrap: balance; }
 .card.cb.is-promo .cb-price b { display: inline-block; padding: 4px 12px 2px; border-radius: var(--r); background: var(--acc-fill); color: var(--on-acc); text-shadow: none; }
 .card.cb.is-promo .cb-price span { display: inline-block; padding: 3px 8px; border-radius: 8px; background: #1b1b1a; color: var(--ink-2); text-shadow: none; }
 /* tile swap after the tick: the new suggestion fades in (off with reduced motion) */
-@media (prefers-reduced-motion: no-preference) { .ups-it.is-new { animation: ups-in 0.35s ease-out both; } @keyframes ups-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
+@media (prefers-reduced-motion: no-preference) { .ups-it.is-new { animation: ups-in 0.32s cubic-bezier(.2,.8,.2,1) both; } @keyframes ups-in { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } } /* CEO 07.11 TG 1967: the next of her recommendations slides into the freed place */ }
 .ups-it.is-added .ups-mk { background: var(--acc-fill); color: var(--on-acc); box-shadow: none; }
 .ups-n { -webkit-hyphens: auto; hyphens: auto; overflow-wrap: anywhere; }
 /* CEO 06.11 TG 1894: the sheet footer covered the add-on row on a phone: a lower row (photo 52 px, the 44 px tap area kept but drawn inside the row) */

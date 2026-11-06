@@ -216,7 +216,8 @@
   }
   /* CEO 06.11 (TG 1778-1782; research: the cart is the stage that sells add-ons, never inside checkout): the row of up to 3 goods that go WITH
      the cart. Step 2 (owner's own add-ons, catalog.addons): a good's own list (else its category's list) REPLACES the category rules for that
-     good and comes first, in her order; her «не предлагать» goods are skipped from the rules. Step 1 (rules = {cat: [cats]}): goods of other
+     good and comes first, in her order (up to 10, CEO 07.11 TG 1967: the row shows 3; a good the customer adds leaves the picks, so the next
+     of her list takes its place - app.js keeps the other tiles in their slots); her «не предлагать» goods are skipped from the rules. Step 1 (rules = {cat: [cats]}): goods of other
      categories, priced, in stock, by the piece first, cheaper first, lira only, with a photo. Never what is already in the cart. Pure. */
   var UPS_STATES = /^(in_stock|new_batch|few_left)$/;
   function upsellPicks(catalog, cart, rules, max) {
