@@ -1037,17 +1037,8 @@
   /* CEO 06.11 (TG 1778-1782, research: the cart is the stage that sells add-ons; never inside checkout): ONE quiet row of up to 3 goods that go WITH
      the cart (other categories, priced, in stock, not in the cart; by the piece first, cheaper first), one tap «+» adds the usual amount */
   var UPS_BY = { salo: ['ikra_ryba', 'syr_molochne', 'sosysky'], kovbasy: ['ikra_ryba', 'syr_molochne', 'salo'], sosysky: ['syr_molochne', 'kovbasy', 'ikra_ryba'], balyk: ['ikra_ryba', 'syr_molochne', 'salo'], kabanosy: ['ikra_ryba', 'salo', 'syr_molochne'], ikra_ryba: ['syr_molochne', 'salo', 'kovbasy'], syr_molochne: ['solodke', 'ikra_ryba', 'kovbasy'], miaso: ['syr_molochne', 'sosysky', 'ikra_ryba'], solodke: ['syr_molochne', 'ikra_ryba'], inshe: ['ikra_ryba', 'syr_molochne'] };
-  function upsellPicks() {
-    var inCart = {}, cats = {}; cart.forEach(function (l) { inCart[l.id] = 1; var it = C.byId[l.id]; if (it) cats[it.cat] = 1; });
-    var want = []; Object.keys(cats).forEach(function (c) { (UPS_BY[c] || []).forEach(function (x) { if (!cats[x] && want.indexOf(x) < 0) want.push(x); }); });
-    /* 06.11 release check: a USD-priced item (caviar 120 $) sorted as «cheap» next to lira prices; add-ons are lira goods only */
-    var ok = function (it) { return !inCart[it.id] && it.price != null && it.currency !== 'USD' && /^(in_stock|new_batch|few_left)$/.test(it.state || 'in_stock') && it.photo; };
-    var pool = C.items.filter(function (it) { return ok(it) && want.indexOf(it.cat) >= 0; });
-    pool.sort(function (a, b) { var r = want.indexOf(a.cat) - want.indexOf(b.cat); if (r) return r; var pa = a.unit === 'pc' ? 0 : 1, pb = b.unit === 'pc' ? 0 : 1; return pa - pb || a.price - b.price; });
-    var out = [], used = {}; pool.forEach(function (it) { if (out.length < 3 && !used[it.cat]) { out.push(it); used[it.cat] = 1; } });
-    pool.forEach(function (it) { if (out.length < 3 && out.indexOf(it) < 0) out.push(it); });
-    return out;
-  }
+  /* step 2 (CEO 06.11): the owner's own add-ons from the live catalog come first and replace these rules for their good (engine.js upsellPicks) */
+  function upsellPicks() { return E.upsellPicks(C, cart, UPS_BY, 3); }
   /* CEO TG 1885 (option 1 picked): a plain caramel «+» circle under the photo, no text. Tap -> the item goes into the cart list above
      (with its normal −/+ stepper, the total updates) and the circle turns into a tick for ~1.2 s, the tile staying in place; then the tile
      is replaced by the next suggestion (goods already in the cart are never suggested). More of the same = the stepper in the cart line.
@@ -1080,7 +1071,7 @@
           var live = $('#cbLive'); if (live) live.textContent = t('ups_added') + ': ' + nm(it);
           UPS_T = setTimeout(function () { UPS_PENDING = null; if ($('#sheet').classList.contains('on') && state.view === 'cart') upsRedraw(); }, 1200);
         } }, [el('span', { class: 'ups-mk' }, [icon(added ? 'i-check' : 'i-plus', 'ups-ic')])]);
-      return el('div', { class: 'ups-it' + (added ? ' is-added' : '') + (UPS_NEW[it.id] ? ' is-new' : '') }, [rimg(it.photo, '120px', { alt: nm(it), loading: 'lazy', class: 'ups-img' }), el('span', { class: 'ups-n', text: nm(it) }),
+      return el('div', { class: 'ups-it' + (added ? ' is-added' : '') + (UPS_NEW[it.id] ? ' is-new' : '') }, [it.photo ? rimg(it.photo, '120px', { alt: nm(it), loading: 'lazy', class: 'ups-img' }) : el('span', { class: 'ups-img ups-noimg', 'aria-hidden': 'true' }), el('span', { class: 'ups-n', text: nm(it) }),
         el('div', { class: 'ups-foot' }, [el('span', { class: 'ups-p' }, [el('b', { text: price }), it.unit === 'pc' ? null : el('span', { class: 'ups-w', text: portion })]), btn])]);
     }))]);
   }

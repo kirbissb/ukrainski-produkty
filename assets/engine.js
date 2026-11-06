@@ -204,7 +204,40 @@
     var cf = live.facts && live.facts.courier_fee, al = c.deliveryById && c.deliveryById.alanya;
     if (cf && al && (cf.currency == null || cf.currency === 'TRY')) { al.price = liveNum(cf.sum); if (cf.from && al.price > 0) al.price_from = true; else delete al.price_from; }
     c.live = { updated_at: live.updated_at || null, added: added.length };
-    return indexCatalog(c);
+    indexCatalog(c);
+    /* CEO 06.11 cart add-ons step 2: the owner's own add-ons {pairs, hide} by good id or «cat:<id>» (bot-engine src/addons.ts); only goods of
+       this catalog, the goods she added in the Cabinet included (so after the index) */
+    var ad = live.addons && typeof live.addons === 'object' ? live.addons : null;
+    if (ad) {
+      var keep = function (m) { var o = {}; Object.keys(m && typeof m === 'object' ? m : {}).forEach(function (k) { var v = Array.isArray(m[k]) ? m[k].filter(function (x) { return typeof x === 'string' && c.byId[x]; }) : []; if (v.length) o[k] = v; }); return o; };
+      c.addons = { pairs: keep(ad.pairs), hide: keep(ad.hide) };
+    }
+    return c;
+  }
+  /* CEO 06.11 (TG 1778-1782; research: the cart is the stage that sells add-ons, never inside checkout): the row of up to 3 goods that go WITH
+     the cart. Step 2 (owner's own add-ons, catalog.addons): a good's own list (else its category's list) REPLACES the category rules for that
+     good and comes first, in her order; her «не предлагать» goods are skipped from the rules. Step 1 (rules = {cat: [cats]}): goods of other
+     categories, priced, in stock, by the piece first, cheaper first, lira only, with a photo. Never what is already in the cart. Pure. */
+  var UPS_STATES = /^(in_stock|new_batch|few_left)$/;
+  function upsellPicks(catalog, cart, rules, max) {
+    var c = catalog || CATALOG, n = max || 3, inCart = {}, cats = {}, autoCats = {}, hide = {}, own = [], A = c.addons || { pairs: {}, hide: {} };
+    var sells = function (it) { return it && !inCart[it.id] && it.price != null && UPS_STATES.test(it.state || 'in_stock'); };
+    (cart || []).forEach(function (l) { inCart[l.id] = 1; });
+    (cart || []).forEach(function (l) {
+      var it = c.byId[l.id]; if (!it) return; cats[it.cat] = 1;
+      var list = (A.pairs || {})[it.id] || (A.pairs || {})['cat:' + it.cat];
+      ((A.hide || {})[it.id] || []).concat((A.hide || {})['cat:' + it.cat] || []).forEach(function (x) { hide[x] = 1; });
+      if (list && list.length) list.forEach(function (x) { var g = c.byId[x]; if (sells(g) && own.indexOf(g) < 0) own.push(g); });
+      else autoCats[it.cat] = 1;
+    });
+    var want = []; Object.keys(autoCats).forEach(function (k) { ((rules || {})[k] || []).forEach(function (x) { if (!cats[x] && want.indexOf(x) < 0) want.push(x); }); });
+    /* 06.11 release check: a USD-priced item (caviar 120 $) sorted as «cheap» next to lira prices; the rules pick lira goods only */
+    var pool = c.items.filter(function (it) { return sells(it) && !hide[it.id] && own.indexOf(it) < 0 && it.currency !== 'USD' && it.photo && want.indexOf(it.cat) >= 0; });
+    pool.sort(function (a, b) { var r = want.indexOf(a.cat) - want.indexOf(b.cat); if (r) return r; var pa = a.unit === 'pc' ? 0 : 1, pb = b.unit === 'pc' ? 0 : 1; return pa - pb || a.price - b.price; });
+    var out = own.slice(0, n), used = {}; out.forEach(function (it) { used[it.cat] = 1; });
+    pool.forEach(function (it) { if (out.length < n && !used[it.cat]) { out.push(it); used[it.cat] = 1; } });
+    pool.forEach(function (it) { if (out.length < n && out.indexOf(it) < 0) out.push(it); });
+    return out;
   }
   /* -> Promise<live | null>; null on timeout (3 s), network error, non-200 or a malformed body. Never throws. */
   function fetchLiveCatalog(fetchFn, url, timeoutMs) {
@@ -1005,7 +1038,7 @@
   return {
     KEYS: KEYS, THIN: THIN, STATE_ORDER: STATE_ORDER, DAYS: DAYS, NEW_BATCH_HOURS: NEW_BATCH_HOURS,
     setStore: function (s) { store = s; },
-    CATALOG_URL: CATALOG_URL, mergeLiveCatalog: mergeLiveCatalog, fetchLiveCatalog: fetchLiveCatalog,
+    CATALOG_URL: CATALOG_URL, mergeLiveCatalog: mergeLiveCatalog, upsellPicks: upsellPicks, fetchLiveCatalog: fetchLiveCatalog,
     LIVE_POLL_MIN_MS: LIVE_POLL_MIN_MS, LIVE_POLL_MAX_MS: LIVE_POLL_MAX_MS, livePollDelay: livePollDelay, liveSig: liveSig, cartPriceChanges: cartPriceChanges, liveFacts: liveFacts, livePrice: livePrice, priceTbd: priceTbd, hasPrice: hasPrice,
     fmtMoney: fmtMoney, fmtWeight: fmtWeight, fmtKg: fmtKg, priceLabel: priceLabel, unitLabel: unitLabel, fmtPair: fmtPair,
     parseCatalog: parseCatalog, applyOverrides: applyOverrides, setStock: setStock, setPrice: setPrice, setState: setState, setNextBatch: setNextBatch,
