@@ -364,7 +364,8 @@ input, textarea, select { font: inherit; color: var(--ink); }
 .done.short .okdraw { margin: 0 auto 14px; }
 .done.short .no { font-size: 24px; color: var(--ink); margin: 0 0 10px; }
 .done.short .no b { color: var(--gold); }
-.done.short .promise { font-size: 17px; margin: 0 0 22px; }
+.done.short .promise { font-size: 17px; margin: 0 0 28px; }
+.done.short .after { margin: 12px 0 0; font-size: 14px; color: var(--ink-2); }
 .done.short .cta { display: grid; }
 .done .lines { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 8px 0; margin-bottom: 12px; display: grid; gap: 6px; font-size: 15px; }
 .done .lines div { display: flex; justify-content: space-between; gap: 12px; }
