@@ -1038,7 +1038,8 @@
   function upsellPicks() {
     var inCart = {}, cats = {}; cart.forEach(function (l) { inCart[l.id] = 1; var it = C.byId[l.id]; if (it) cats[it.cat] = 1; });
     var want = []; Object.keys(cats).forEach(function (c) { (UPS_BY[c] || []).forEach(function (x) { if (!cats[x] && want.indexOf(x) < 0) want.push(x); }); });
-    var ok = function (it) { return !inCart[it.id] && it.price != null && /^(in_stock|new_batch|few_left)$/.test(it.state || 'in_stock') && it.photo; };
+    /* 06.11 release check: a USD-priced item (caviar 120 $) sorted as «cheap» next to lira prices; add-ons are lira goods only */
+    var ok = function (it) { return !inCart[it.id] && it.price != null && it.currency !== 'USD' && /^(in_stock|new_batch|few_left)$/.test(it.state || 'in_stock') && it.photo; };
     var pool = C.items.filter(function (it) { return ok(it) && want.indexOf(it.cat) >= 0; });
     pool.sort(function (a, b) { var r = want.indexOf(a.cat) - want.indexOf(b.cat); if (r) return r; var pa = a.unit === 'pc' ? 0 : 1, pb = b.unit === 'pc' ? 0 : 1; return pa - pb || a.price - b.price; });
     var out = [], used = {}; pool.forEach(function (it) { if (out.length < 3 && !used[it.cat]) { out.push(it); used[it.cat] = 1; } });
