@@ -740,6 +740,7 @@
   function cardB(it) {
     var ci = E.cardInfo(it), st = ci.state, qty = selQty(it);
     var card = el('article', { class: 'card cb st-' + st, 'data-id': it.id });
+    if (it.promo) card.classList.add('is-promo');   /* CEO TG 1885: the caramel price tag is kept for a REAL promo only; no item has it today */
     card.appendChild(it.photo ? rimg(it.photo, cardSizesB, { class: 'cb-photo', alt: nm(it), loading: 'lazy' }) : phNew(null, 'cb-photo'));
     if (!it.photo) card.classList.add('no-photo');
     /* top-left: name, price + unit, one quiet state line */
@@ -1047,25 +1048,39 @@
     pool.forEach(function (it) { if (out.length < 3 && out.indexOf(it) < 0) out.push(it); });
     return out;
   }
-  /* CEO TG 1876-1878: the photo stays fully visible; the add control sits OUTSIDE it (5 looks, html class ua-1..ua-5, default ua-1);
-     visible mark ~30 px, tap area >= 44 px; after a tap the tile stays where it was and says it was added (tick + «Добавлено»). The row is
-     frozen (UPS_SNAP) while something from it is in the cart, so the added tile does not jump away; it resets when the cart closes. */
-  var UPS_SNAP = null, UPS_ADDED = {};
-  function upsReset() { UPS_SNAP = null; UPS_ADDED = {}; }
+  /* CEO TG 1885 (option 1 picked): a plain caramel «+» circle under the photo, no text. Tap -> the item goes into the cart list above
+     (with its normal −/+ stepper, the total updates) and the circle turns into a tick for ~1.2 s, the tile staying in place; then the tile
+     is replaced by the next suggestion (goods already in the cart are never suggested). More of the same = the stepper in the cart line.
+     Reduced motion: the same swap, no fade. */
+  var UPS_SNAP = null, UPS_PENDING = null, UPS_NEW = {}, UPS_T = 0;
+  function upsReset() { UPS_SNAP = null; UPS_PENDING = null; UPS_NEW = {}; clearTimeout(UPS_T); }
+  function upsRedraw() { var sb = $('#sheetBody'), y = sb ? sb.scrollTop : 0; renderCartUI(); if (sb) sb.scrollTop = y; }
   function upsellRow() {
-    var inCart = {}; cart.forEach(function (l) { inCart[l.id] = 1; });
-    var keep = UPS_SNAP && UPS_SNAP.some(function (id) { return UPS_ADDED[id] && inCart[id]; });
-    var picks = keep ? UPS_SNAP.map(function (id) { return C.byId[id]; }).filter(Boolean) : upsellPicks();
-    if (!keep) { UPS_SNAP = picks.map(function (it) { return it.id; }); UPS_ADDED = {}; }
+    var picks;
+    if (UPS_PENDING && UPS_SNAP) picks = UPS_SNAP.map(function (id) { return C.byId[id]; }).filter(Boolean);
+    else {
+      var fresh = upsellPicks(), prev = UPS_SNAP || [], ids = fresh.map(function (it) { return it.id; });
+      UPS_NEW = {};
+      if (prev.length) {   /* keep every tile in its slot; a slot whose item went into the cart takes the next suggestion */
+        var slots = prev.map(function (id) { return ids.indexOf(id) >= 0 ? id : null; }), spare = ids.filter(function (id) { return slots.indexOf(id) < 0; });
+        slots = slots.map(function (id) { if (id) return id; var n = spare.shift(); if (n) UPS_NEW[n] = 1; return n || null; }).filter(Boolean);
+        spare.forEach(function (id) { if (slots.length < 3) slots.push(id); });
+        ids = slots;
+      }
+      picks = ids.map(function (id) { return C.byId[id]; }).filter(Boolean); UPS_SNAP = ids;
+    }
     if (!picks.length) return null;
     return el('div', { class: 'ups' }, [el('p', { class: 'ups-h', text: t('ups_h') }), el('div', { class: 'ups-row' }, picks.map(function (it) {
-      var q = it.unit === 'pc' ? 1 : it.steps_g[0], added = !!(UPS_ADDED[it.id] && inCart[it.id]), portion = E.fmtWeight(it, q, lang);
+      var q = it.unit === 'pc' ? 1 : it.steps_g[0], added = UPS_PENDING === it.id, portion = E.fmtWeight(it, q, lang);
       var price = E.fmtMoney(it.unit === 'pc' ? it.price : Math.round(it.price * q / (it.unit === '100g' ? 100 : 1000)), it.currency);
-      var plus = icon(added ? 'i-check' : 'i-plus', 'ups-ic');
       var btn = el('button', { class: 'ups-add', type: 'button', 'aria-label': (added ? t('ups_added') : t('ups_add') + ' ' + portion) + ': ' + nm(it), 'aria-pressed': String(added),
-        onclick: function () { if (added) return; UPS_ADDED[it.id] = 1; cart = E.cartAdd(cart, it.id, q); E.saveCart(cart); renderCartUI(); } },
-        [el('span', { class: 'ups-mk' }, [plus]), el('span', { class: 'ups-lbl', text: added ? t('ups_added') : t('ups_add') }), el('span', { class: 'ups-q', text: added ? t('ups_added') : '+ ' + portion })]);
-      return el('div', { class: 'ups-it' + (added ? ' is-added' : '') }, [rimg(it.photo, '120px', { alt: nm(it), loading: 'lazy', class: 'ups-img' }), el('span', { class: 'ups-n', text: nm(it) }),
+        onclick: function () {
+          if (UPS_PENDING) return;
+          UPS_PENDING = it.id; cart = E.cartAdd(cart, it.id, q); E.saveCart(cart); upsRedraw();
+          var live = $('#cbLive'); if (live) live.textContent = t('ups_added') + ': ' + nm(it);
+          UPS_T = setTimeout(function () { UPS_PENDING = null; if ($('#sheet').classList.contains('on') && state.view === 'cart') upsRedraw(); }, 1200);
+        } }, [el('span', { class: 'ups-mk' }, [icon(added ? 'i-check' : 'i-plus', 'ups-ic')])]);
+      return el('div', { class: 'ups-it' + (added ? ' is-added' : '') + (UPS_NEW[it.id] ? ' is-new' : '') }, [rimg(it.photo, '120px', { alt: nm(it), loading: 'lazy', class: 'ups-img' }), el('span', { class: 'ups-n', text: nm(it) }),
         el('div', { class: 'ups-foot' }, [el('span', { class: 'ups-p' }, [el('b', { text: price }), it.unit === 'pc' ? null : el('span', { class: 'ups-w', text: portion })]), btn])]);
     }))]);
   }
