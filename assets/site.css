@@ -1465,3 +1465,9 @@ h1, h2, .sec h2, .sheet .head h2, .done h2, .doc-body h2 { text-wrap: balance; }
 @media (prefers-reduced-motion: no-preference) { .ups-it.is-new { animation: ups-in 0.35s ease-out both; } @keyframes ups-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
 .ups-it.is-added .ups-mk { background: var(--acc-fill); color: var(--on-acc); box-shadow: none; }
 .ups-n { -webkit-hyphens: auto; hyphens: auto; overflow-wrap: anywhere; }
+/* CEO 06.11 TG 1894: the sheet footer covered the add-on row on a phone: a lower row (photo 52 px, the 44 px tap area kept but drawn inside the row) */
+.ups { margin: 10px 0 2px; }
+.ups-h { margin: 0 0 8px; }
+.ups-it { gap: 4px; }
+.ups-it .ups-img, .ups-it picture { height: 52px; }
+.ups-add { margin: -7px -4px -7px 0; }

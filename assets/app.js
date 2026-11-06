@@ -402,7 +402,7 @@
   /* redesign 06.11: a review is shown word for word; emoji are not drawn (20-WEB-CANON W-LOOK-02, check_design icon-glyph) and a name
      ends without a period (the canon's no-final-period rule): «Artem H.» -> «Artem H». The data keeps the original */
   var EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{25A0}-\u{25FF}\u{FE0F}\u{200D}]/gu;
-  var RV_EMOJI = /[?&]rvemoji=1(?:&|$)/.test(location.search);   /* preview toggle for the CEO: ?rvemoji=1 draws the review emoji (default off) */
+  var RV_EMOJI = !/[?&]rvemoji=0(?:&|$)/.test(location.search);   /* CEO 06.11 TG 1909: review emoji ON, as in the original message (?rvemoji=0 previews without) */
   function rvText(x) { if (RV_EMOJI) return x; return x ? x.replace(EMOJI, '').replace(/[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n').trim() : x; }
   function rvName(x) { return x ? x.replace(/\.$/, '') : x; }
   /* CEO TG 1836: the hero line is a scannable block with the SAME words - a lead line (where the food is from) + four fact lines with a
