@@ -1430,25 +1430,38 @@ h1, h2, .sec h2, .sheet .head h2, .done h2, .doc-body h2 { text-wrap: balance; }
 .sl + .sl { margin-top: 6px; }
 .steps .sls { display: block; }
 
-/* cart add-ons «К этому часто берут» (CEO 06.11 TG 1782, live TG 1864): one quiet row under the subtotal on the CART step only (never inside
-   checkout); slate tiles, radius 14; the photo is a fixed 64 px band cropped with object-fit (never stretched); name 2 lines; price small;
-   one caramel «+» (44 x 44 tap target, dark glyph) adds the usual portion */
+/* cart add-ons «К этому часто берут» (CEO TG 1782 / 1864 / 1876-1878): one quiet row under the cart subtotal (cart step only, never in checkout).
+   The photo is fully visible (fixed 64 px band, object-fit cover, nothing on it); the add control sits under it. CEO TG 1885 picked the plain caramel circle at
+   the end of the price line (the other four looks are dropped). Visible mark ~30 px, tap area
+   44 x 44 (the button box); after a tap the «+» turns into a tick for ~1.2 s, then the tile is replaced by the next suggestion */
 .ups { margin: 18px 0 4px; }
 .ups-h { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
 .ups-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.ups-it { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 6px 6px 8px; min-width: 0;
+.ups-it { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 6px 6px 4px; min-width: 0;
   background: var(--card-2); border: 1px solid var(--line); border-radius: var(--r-lg); }
-.ups-it .ups-img, .ups-it picture { display: block; width: 100%; height: 64px; max-width: none; object-fit: cover; object-position: 50% 50%;
-  border-radius: 9px; background: var(--card); }
+.ups-it .ups-img, .ups-it picture { display: block; width: 100%; height: 64px; max-width: none; object-fit: cover; object-position: 50% 50%; border-radius: 9px; background: var(--card); }
 .ups-n { padding: 0 2px; font-size: 13px; line-height: 1.25; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.5em; }
-.ups-p { display: flex; flex-wrap: wrap; gap: 0 6px; padding: 0 2px; font-size: 12px; line-height: 1.35; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ups-foot { display: flex; align-items: center; justify-content: space-between; gap: 2px; margin-top: auto; }
+.ups-p { display: flex; flex-wrap: wrap; gap: 0 6px; padding-left: 2px; min-width: 0; font-size: 12px; line-height: 1.35; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .ups-p b { font-weight: 500; color: var(--ink); white-space: nowrap; }
-.ups-p span { white-space: nowrap; }
-/* the «+» sits on the photo's top-right corner: a full 44 x 44 tap target, caramel with a dark glyph, a slate ring to lift it off the photo */
-.ups-add { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: var(--r);
-  background: var(--acc-fill); color: var(--on-acc); box-shadow: 0 0 0 2px var(--card-2); font: 500 24px/1 var(--font); cursor: pointer;
-  transition: transform 0.3s var(--spring), background-color 0.15s; }
-.ups-add:hover { background: var(--acc-fill-2); }
+.ups-p .ups-w { white-space: nowrap; }
+.ups-add { flex: 0 0 auto; position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 44px; min-height: 44px;
+  margin: -4px -4px -4px 0; padding: 0; border: 0; background: none; color: var(--ink); font: 500 13px/1.2 var(--font); cursor: pointer; transition: transform 0.3s var(--spring); }
 .ups-add:active { transform: scale(0.95); transition-duration: 0.08s; }
-.ups-add:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) { .ups-add { transition: none; } }
+.ups-add:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; border-radius: var(--r); }
+.ups-mk { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--acc-fill); color: var(--on-acc); transition: background-color 0.15s; }
+.ups-add:hover .ups-mk { background: var(--acc-fill-2); }
+.ups-ic { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ups-it.is-added { border-color: rgba(226, 160, 95, 0.55); }
+.ups-it.is-added .ups-mk { background: transparent; color: var(--acc); box-shadow: inset 0 0 0 1.5px var(--acc); }
+.ups-it.is-added .ups-add { cursor: default; }
+@media (prefers-reduced-motion: reduce) { .ups-add, .ups-mk { transition: none; } }
+
+/* PRODUCT CARD PRICE (CEO TG 1885): the price stays on the photo (the original). The caramel tag is kept for a REAL promo only -
+   a card gets it when its item carries «promo: true» (no item does today), so it never reads as a sale on ordinary goods */
+.card.cb.is-promo .cb-price b { display: inline-block; padding: 4px 12px 2px; border-radius: var(--r); background: var(--acc-fill); color: var(--on-acc); text-shadow: none; }
+.card.cb.is-promo .cb-price span { display: inline-block; padding: 3px 8px; border-radius: 8px; background: #1b1b1a; color: var(--ink-2); text-shadow: none; }
+/* tile swap after the tick: the new suggestion fades in (off with reduced motion) */
+@media (prefers-reduced-motion: no-preference) { .ups-it.is-new { animation: ups-in 0.35s ease-out both; } @keyframes ups-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
+.ups-it.is-added .ups-mk { background: var(--acc-fill); color: var(--on-acc); box-shadow: none; }
+.ups-n { -webkit-hyphens: auto; hyphens: auto; overflow-wrap: anywhere; }

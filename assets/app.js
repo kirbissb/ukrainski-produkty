@@ -64,7 +64,7 @@
       wz_step: 'Шаг {n} из {m}', wz_next: 'Дальше', wz_back: 'Назад', wz_how: 'Как получить заказ?', wz_where: 'Куда отправить?', wz_addr: 'Куда привезти?', addr_ph: 'Район, улица, дом, квартира', err_addr: 'Напишите адрес: район, улица и дом', wz_addr_h: 'Адрес', wz_pay: 'Как удобно оплатить?', wz_contact: 'Как с вами связаться?', wz_review: 'Проверьте заказ', wz_edit: 'Изменить', wz_items: 'Товары', wz_get: 'Получение', wz_card_note: 'Реквизиты и сумму в гривнах пришлём в Telegram', wz_contacts: 'Контакты', wz_tg_note: 'Вы в Telegram как {n}. Заказ придёт в этот чат с ботом.', done_in_tg: 'Заказ уже в вашем чате с ботом. Там же подтверждение и статус.', done_tg_back: 'Вернуться в чат', done_in_instagram: 'Заказ отправлен в ваш чат в Instagram. Там же подтверждение и статус.', done_in_whatsapp: 'Заказ отправлен в ваш чат в WhatsApp. Там же подтверждение и статус.', err_tg_auth: 'Telegram не подтвердил вход. Закройте магазин и откройте его снова из чата с ботом.', wz_no_comment: 'без комментария',
       dlv_pickup: '{F:pickup}', dlv_pickup_sub: '{F:pickup_addr}', dlv_pickup_note: '{F:pickup_hours}.', dlv_alanya: '{F:courier}', dlv_alanya_sub: '{F:courier_fees}', dlv_alanya_note: '{F:courier_note}.', dlv_cargo: '{F:cargo}', dlv_cargo_sub: '{F:cargo_via}, {f:cargo_fee}', dlv_cargo_note: '{F:cargo_note}.',
       pay_card: '{F:pay}', pay_cash: '{F:pay_cash}',
-      done_title: 'Заказ принят', ups_h: 'К этому часто берут', ups_add: 'Добавить', done_no: 'Заказ', done_date: 'желаемая дата', tg_btn: 'Написать в Telegram', back: 'Вернуться в каталог',
+      done_title: 'Заказ принят', ups_h: 'К этому часто берут', ups_add: 'Добавить', ups_added: 'Добавлено', done_no: 'Заказ', done_date: 'желаемая дата', tg_btn: 'Написать в Telegram', back: 'Вернуться в каталог',
       n_title: 'Сообщить о поставке', n_for: 'Когда привезём «{n}», напишем вам.', n_send: 'Сообщить мне', n_ok: 'Записали', n_ok_t: 'Напишем в Telegram или WhatsApp, как только «{n}» приедет.', n_close: 'Закрыть',
       consent_pre: 'Отправляя заказ, вы соглашаетесь с ', consent_link: 'обработкой данных для доставки', consent_post: '.',
       legal_dlv: { h: 'Доставка и оплата', items: [
@@ -135,7 +135,7 @@
       wz_step: 'Крок {n} з {m}', wz_next: 'Далі', wz_back: 'Назад', wz_how: 'Як отримати замовлення?', wz_where: 'Куди надіслати?', wz_addr: 'Куди привезти?', addr_ph: 'Район, вулиця, будинок, квартира', err_addr: 'Напишіть адресу: район, вулицю і будинок', wz_addr_h: 'Адреса', wz_pay: 'Як зручно оплатити?', wz_contact: 'Як з вами зв\'язатися?', wz_review: 'Перевірте замовлення', wz_edit: 'Змінити', wz_items: 'Товари', wz_get: 'Отримання', wz_card_note: 'Реквізити та суму в гривнях надішлемо в Telegram', wz_contacts: 'Контакти', wz_tg_note: 'Ви в Telegram як {n}. Замовлення прийде в цей чат із ботом.', done_in_tg: 'Замовлення вже у вашому чаті з ботом. Там же підтвердження і статус.', done_tg_back: 'Повернутися в чат', done_in_instagram: 'Замовлення надіслано у ваш чат в Instagram. Там же підтвердження і статус.', done_in_whatsapp: 'Замовлення надіслано у ваш чат у WhatsApp. Там же підтвердження і статус.', err_tg_auth: 'Telegram не підтвердив вхід. Закрийте магазин і відкрийте його знову з чату з ботом.', wz_no_comment: 'без коментаря',
       dlv_pickup: '{F:pickup}', dlv_pickup_sub: '{F:pickup_addr}', dlv_pickup_note: '{F:pickup_hours}.', dlv_alanya: '{F:courier}', dlv_alanya_sub: '{F:courier_fees}', dlv_alanya_note: '{F:courier_note}.', dlv_cargo: '{F:cargo}', dlv_cargo_sub: '{F:cargo_via}, {f:cargo_fee}', dlv_cargo_note: '{F:cargo_note}.',
       pay_card: '{F:pay}', pay_cash: '{F:pay_cash}',
-      done_title: 'Замовлення прийнято', ups_h: 'До цього часто беруть', ups_add: 'Додати', done_no: 'Замовлення', done_date: 'бажана дата', tg_btn: 'Написати в Telegram', back: 'Повернутися в каталог',
+      done_title: 'Замовлення прийнято', ups_h: 'До цього часто беруть', ups_add: 'Додати', ups_added: 'Додано', done_no: 'Замовлення', done_date: 'бажана дата', tg_btn: 'Написати в Telegram', back: 'Повернутися в каталог',
       n_title: 'Повідомити про поставку', n_for: 'Коли привеземо «{n}», напишемо вам.', n_send: 'Повідомте мене', n_ok: 'Записали', n_ok_t: 'Напишемо в Telegram або WhatsApp, щойно «{n}» приїде.', n_close: 'Закрити',
       consent_pre: 'Надсилаючи замовлення, ви погоджуєтеся з ', consent_link: 'обробкою даних для доставки', consent_post: '.',
       legal_dlv: { h: 'Доставка та оплата', items: [
@@ -206,7 +206,7 @@
       wz_step: 'Step {n} of {m}', wz_next: 'Next', wz_back: 'Back', wz_how: 'How would you like to get it?', wz_where: 'Where should we ship it?', wz_addr: 'Where should we deliver?', addr_ph: 'Area, street, building, flat', err_addr: 'Add your address: area, street and building', wz_addr_h: 'Address', wz_pay: 'How would you like to pay?', wz_contact: 'How can we reach you?', wz_review: 'Check your order', wz_edit: 'Edit', wz_items: 'Items', wz_get: 'Delivery', wz_card_note: 'We\'ll send the card details and the amount in UAH on Telegram', wz_contacts: 'Contact details', wz_tg_note: 'You are in Telegram as {n}. The order will come to this chat with the bot.', done_in_tg: 'Your order is already in your chat with the bot. Confirmation and status are there too.', done_tg_back: 'Back to the chat', done_in_instagram: 'Your order is in your Instagram chat with us. Confirmation and status are there too.', done_in_whatsapp: 'Your order is in your WhatsApp chat with us. Confirmation and status are there too.', err_tg_auth: 'Telegram did not confirm your login. Close the shop and open it again from the chat with the bot.', wz_no_comment: 'no comment',
       dlv_pickup: '{F:pickup}', dlv_pickup_sub: '{F:pickup_addr}', dlv_pickup_note: '{F:pickup_hours}.', dlv_alanya: '{F:courier}', dlv_alanya_sub: '{F:courier_fees}', dlv_alanya_note: '{F:courier_note}.', dlv_cargo: '{F:cargo}', dlv_cargo_sub: '{F:cargo_via}, {f:cargo_fee}', dlv_cargo_note: '{F:cargo_note}.',
       pay_card: '{F:pay}', pay_cash: '{F:pay_cash}',
-      done_title: 'Order received', ups_h: 'Often added to this', ups_add: 'Add', done_no: 'Order', done_date: 'preferred date', tg_btn: 'Message us on Telegram', back: 'Back to catalog',
+      done_title: 'Order received', ups_h: 'Often added to this', ups_add: 'Add', ups_added: 'Added', done_no: 'Order', done_date: 'preferred date', tg_btn: 'Message us on Telegram', back: 'Back to catalog',
       n_title: 'Notify me when back in stock', n_for: 'We\'ll let you know when "{n}" is back in stock.', n_send: 'Notify me', n_ok: 'You\'re on the list', n_ok_t: 'We\'ll message you on Telegram or WhatsApp as soon as "{n}" is back.', n_close: 'Close',
       consent_pre: 'By confirming your order, you agree to the ', consent_link: 'processing of your data for delivery', consent_post: '.',
       legal_dlv: { h: 'Delivery and payment', items: [
@@ -740,6 +740,7 @@
   function cardB(it) {
     var ci = E.cardInfo(it), st = ci.state, qty = selQty(it);
     var card = el('article', { class: 'card cb st-' + st, 'data-id': it.id });
+    if (it.promo) card.classList.add('is-promo');   /* CEO TG 1885: the caramel price tag is kept for a REAL promo only; no item has it today */
     card.appendChild(it.photo ? rimg(it.photo, cardSizesB, { class: 'cb-photo', alt: nm(it), loading: 'lazy' }) : phNew(null, 'cb-photo'));
     if (!it.photo) card.classList.add('no-photo');
     /* top-left: name, price + unit, one quiet state line */
@@ -856,6 +857,7 @@
   window.addEventListener('resize', function () { setTimeout(keepFocusVisible, 60); });
   $('#sheet').addEventListener('focusin', function () { setTimeout(keepFocusVisible, 320); });
   function closeSheet() {
+    upsReset();
     $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); $('#sheet').setAttribute('aria-hidden', 'true'); ['top', 'bottom', 'height', 'maxHeight'].forEach(function (k) { $('#sheet').style[k] = ''; });
     document.body.classList.remove('locked');
     if (state.view === 'done' || state.view === 'notify' || state.view === 'notify_ok' || state.view === 'special' || state.view === 'special_ok') state.view = 'cart';
@@ -1046,13 +1048,40 @@
     pool.forEach(function (it) { if (out.length < 3 && out.indexOf(it) < 0) out.push(it); });
     return out;
   }
+  /* CEO TG 1885 (option 1 picked): a plain caramel «+» circle under the photo, no text. Tap -> the item goes into the cart list above
+     (with its normal −/+ stepper, the total updates) and the circle turns into a tick for ~1.2 s, the tile staying in place; then the tile
+     is replaced by the next suggestion (goods already in the cart are never suggested). More of the same = the stepper in the cart line.
+     Reduced motion: the same swap, no fade. */
+  var UPS_SNAP = null, UPS_PENDING = null, UPS_NEW = {}, UPS_T = 0;
+  function upsReset() { UPS_SNAP = null; UPS_PENDING = null; UPS_NEW = {}; clearTimeout(UPS_T); }
+  function upsRedraw() { var sb = $('#sheetBody'), y = sb ? sb.scrollTop : 0; renderCartUI(); if (sb) sb.scrollTop = y; }
   function upsellRow() {
-    var picks = upsellPicks(); if (!picks.length) return null;
+    var picks;
+    if (UPS_PENDING && UPS_SNAP) picks = UPS_SNAP.map(function (id) { return C.byId[id]; }).filter(Boolean);
+    else {
+      var fresh = upsellPicks(), prev = UPS_SNAP || [], ids = fresh.map(function (it) { return it.id; });
+      UPS_NEW = {};
+      if (prev.length) {   /* keep every tile in its slot; a slot whose item went into the cart takes the next suggestion */
+        var slots = prev.map(function (id) { return ids.indexOf(id) >= 0 ? id : null; }), spare = ids.filter(function (id) { return slots.indexOf(id) < 0; });
+        slots = slots.map(function (id) { if (id) return id; var n = spare.shift(); if (n) UPS_NEW[n] = 1; return n || null; }).filter(Boolean);
+        spare.forEach(function (id) { if (slots.length < 3) slots.push(id); });
+        ids = slots;
+      }
+      picks = ids.map(function (id) { return C.byId[id]; }).filter(Boolean); UPS_SNAP = ids;
+    }
+    if (!picks.length) return null;
     return el('div', { class: 'ups' }, [el('p', { class: 'ups-h', text: t('ups_h') }), el('div', { class: 'ups-row' }, picks.map(function (it) {
-      var q = it.unit === 'pc' ? 1 : it.steps_g[0];
-      return el('div', { class: 'ups-it' }, [rimg(it.photo, '120px', { alt: nm(it), loading: 'lazy', class: 'ups-img' }), el('span', { class: 'ups-n', text: nm(it) }),
-        el('span', { class: 'ups-p' }, [el('b', { text: E.fmtMoney(it.unit === 'pc' ? it.price : Math.round(it.price * q / (it.unit === '100g' ? 100 : 1000)), it.currency) }), it.unit === 'pc' ? null : el('span', { text: E.fmtWeight(it, q, lang) })]),
-        el('button', { class: 'ups-add', type: 'button', 'aria-label': t('ups_add') + ': ' + nm(it), text: '+', onclick: function () { cart = E.cartAdd(cart, it.id, q); E.saveCart(cart); renderCartUI(); } })]);
+      var q = it.unit === 'pc' ? 1 : it.steps_g[0], added = UPS_PENDING === it.id, portion = E.fmtWeight(it, q, lang);
+      var price = E.fmtMoney(it.unit === 'pc' ? it.price : Math.round(it.price * q / (it.unit === '100g' ? 100 : 1000)), it.currency);
+      var btn = el('button', { class: 'ups-add', type: 'button', 'aria-label': (added ? t('ups_added') : t('ups_add') + ' ' + portion) + ': ' + nm(it), 'aria-pressed': String(added),
+        onclick: function () {
+          if (UPS_PENDING) return;
+          UPS_PENDING = it.id; cart = E.cartAdd(cart, it.id, q); E.saveCart(cart); upsRedraw();
+          var live = $('#cbLive'); if (live) live.textContent = t('ups_added') + ': ' + nm(it);
+          UPS_T = setTimeout(function () { UPS_PENDING = null; if ($('#sheet').classList.contains('on') && state.view === 'cart') upsRedraw(); }, 1200);
+        } }, [el('span', { class: 'ups-mk' }, [icon(added ? 'i-check' : 'i-plus', 'ups-ic')])]);
+      return el('div', { class: 'ups-it' + (added ? ' is-added' : '') + (UPS_NEW[it.id] ? ' is-new' : '') }, [rimg(it.photo, '120px', { alt: nm(it), loading: 'lazy', class: 'ups-img' }), el('span', { class: 'ups-n', text: nm(it) }),
+        el('div', { class: 'ups-foot' }, [el('span', { class: 'ups-p' }, [el('b', { text: price }), it.unit === 'pc' ? null : el('span', { class: 'ups-w', text: portion })]), btn])]);
     }))]);
   }
   function lineRows(box, tt) {
