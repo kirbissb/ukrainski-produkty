@@ -1,4 +1,0 @@
-/* accent option «Sunflower ochre» (CEO 06.11 TG 1812: more accent options on the same slate + cream base). Source: #10 Rustic Ridge mustard size tags (matte, not metallic); UA sunflower.
-   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
-:root { --acc: #e6b04e; --acc-2: #efc26f; --acc-fill: #d39a2c; --acc-fill-2: #c08a22; --on-acc: #161615; }
-.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(211, 154, 44, 0.28); }

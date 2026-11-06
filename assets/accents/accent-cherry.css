@@ -1,4 +1,0 @@
-/* accent option «Deep cherry» (CEO 06.11 TG 1812: more accent options on the same slate + cream base). Source: her «Сало копчёное на вишне»; #1 Croghan red bologna wrap, darker.
-   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
-:root { --acc: #ee94a6; --acc-2: #f4adbb; --acc-fill: #9b2a40; --acc-fill-2: #85223a; --on-acc: #f6eee0; }
-.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(155, 42, 64, 0.28); }

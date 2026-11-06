@@ -1,4 +1,0 @@
-/* accent option «Deep teal» (CEO 06.11 TG 1823, board 2). Source: #8 Hozon cool calm accent; Black Sea (new direction, blue-leaning so it does not read as the green stock dot).
-   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
-:root { --acc: #7fc3c9; --acc-2: #a0d3d7; --acc-fill: #1e6a73; --acc-fill-2: #185860; --on-acc: #f6eee0; }
-.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(30, 106, 115, 0.28); }

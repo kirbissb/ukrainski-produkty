@@ -1,4 +1,0 @@
-/* accent option «Embroidery blue» (CEO 06.11 TG 1812: more accent options on the same slate + cream base). Source: her vyshyvanka / Zorya brand ornament (blue thread); UA flag blue.
-   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
-:root { --acc: #95b7ec; --acc-2: #b0c9f1; --acc-fill: #2f5f9f; --acc-fill-2: #284f86; --on-acc: #f6eee0; }
-.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(47, 95, 159, 0.28); }

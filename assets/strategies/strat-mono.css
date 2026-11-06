@@ -1,7 +1,0 @@
-/* Accent strategy «Monochrome» (CEO TG 1836; refs #7 King River, BA Foods): no colour accent at all. Primary buttons are a cream fill
-   with dark ink (14.9:1); the food photos carry all the colour. Links cream underlined. Token override, loaded after site.css, not linked */
-:root { --acc: #f0e8d8; --acc-2: #ffffff; --acc-fill: #f0e8d8; --acc-fill-2: #d9d0bf; --on-acc: #161615; }
-.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(240, 232, 216, 0.22); }
-.sec h2::after { background: var(--ink); }
-.lang button[aria-pressed="true"], .chip[aria-pressed="true"] { box-shadow: inset 0 -2px 0 var(--ink); }
-.opt[aria-checked="true"] { box-shadow: inset 3px 0 0 var(--ink); }

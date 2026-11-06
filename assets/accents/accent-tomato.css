@@ -1,4 +1,0 @@
-/* accent option «Tomato red» (CEO 06.11 TG 1823, board 2). Source: #7 King River red shirt, brighter.
-   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
-:root { --acc: #f28a78; --acc-2: #f6a293; --acc-fill: #c23b2c; --acc-fill-2: #a83225; --on-acc: #f6eee0; }
-.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(194, 59, 44, 0.28); }

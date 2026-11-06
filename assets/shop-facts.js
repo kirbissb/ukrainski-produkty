@@ -87,7 +87,7 @@ window.SHOP_FACTS = {
    "courier_note": "this is the minimum price, we'll confirm the exact one for your area",
    "courier_fees": "from 300 ₺",
    "cargo": "cargo across Turkey",
-   "cargo_via": "Yurtiçi Kargo",
+   "cargo_via": "Yurtiçi",
    "cargo_note": "we will send you the tracking number",
    "cargo_fee": "price and timing to be confirmed",
    "cargo_cities": "Belek, Antalya, Side, Manavgat, Kemer, Gazipaşa, Istanbul, Ankara and any other city in Turkey",
@@ -99,5 +99,5 @@ window.SHOP_FACTS = {
    "min": "no minimum order"
   }
  },
- "meta_description": "Продукты с Центрального рынка Харькова (Благбаз), выезд из Украины три раза в неделю: сало, колбасы, икра, рыба. Самовывоз в Каргыджаке, курьер по Алании, карго по Турции"
+ "meta_description": "Продукты с Центрального рынка Харькова (Благбаз), выезд из Украины три раза в неделю: сало, колбасы, икра, рыба. Самовывоз в Каргыджаке, курьер по Алании, карго по Турции."
 };

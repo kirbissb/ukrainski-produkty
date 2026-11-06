@@ -1,4 +1,0 @@
-/* accent option «Smoked plum» (CEO 06.11 TG 1823, board 2). Source: #7 King River dusk tones; prune-smoked meat (new direction).
-   Token override only, loaded AFTER site.css. Not linked from index.html: the default stays sausage red until the CEO picks. */
-:root { --acc: #cf9cc3; --acc-2: #dbb2d2; --acc-fill: #6d3a60; --acc-fill-2: #5a3050; --on-acc: #f6eee0; }
-.wz-path li.cur .dot { box-shadow: 0 0 0 3px rgba(109, 58, 96, 0.28); }
