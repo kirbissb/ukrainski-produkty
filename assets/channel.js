@@ -52,7 +52,15 @@
     else { var sc = document.createElement('script'); sc.src = 'https://telegram.org/js/telegram-web-app.js'; sc.async = true; sc.onload = setup; document.head.appendChild(sc); }
   }
   var backFn = null, backOn = false, backBound = false;
+  /* CEO TG 2144 (07.11): while the cart / a panel / the checkout is open, Telegram's swipe-down (which collapses or closes the Mini App)
+     is off, so scrolling the cart up never throws the buyer out; back on as soon as the layer closes. Telegram 7.7+, else nothing */
+  var swipeOff = null;
+  function swipeApply() {
+    var w = webApp(); if (!w || swipeOff === null || typeof w.disableVerticalSwipes !== 'function' || (w.isVersionAtLeast && !w.isVersionAtLeast('7.7'))) return;
+    try { if (swipeOff) w.disableVerticalSwipes(); else w.enableVerticalSwipes(); } catch (e) { /* older client */ }
+  }
   function backApply() {
+    swipeApply();
     var w = webApp(), b = w && w.BackButton; if (!b || (w.isVersionAtLeast && !w.isVersionAtLeast('6.1'))) return;
     try { if (backFn && !backBound) { b.onClick(function () { if (backFn) backFn(); }); backBound = true; } if (backOn) b.show(); else b.hide(); } catch (e) { /* older client */ }
   }
@@ -60,7 +68,13 @@
   window.SHOP_CHANNEL = {
     /* 07.11 Telegram audit: Telegram's own Back (header «‹», Android back key) steps back inside the shop while a layer is open
        (assets/app.js tgBack); hidden = Telegram's default (Back closes the Mini App) */
-    backButton: function (show, fn) { if (fn) backFn = fn; backOn = !!show; if (inTg) backApply(); },
+    backButton: function (show, fn) { if (fn) backFn = fn; var ch = swipeOff === null || backOn !== !!show; backOn = !!show; swipeOff = backOn; if (inTg && ch) backApply(); },   /* only on a change: a redraw inside the cart sends nothing */
+    /* CEO TG 2144: Telegram haptics - 'light' (add to cart, add-on), 'selection' (stepper), 'success' (order sent). Telegram 6.1+; outside
+       Telegram (or an older client) nothing happens */
+    haptic: function (kind) {
+      var w = webApp(), h = w && w.HapticFeedback; if (!inTg || !h || (w.isVersionAtLeast && !w.isVersionAtLeast('6.1'))) return;
+      try { if (kind === 'selection') h.selectionChanged(); else if (kind === 'success') h.notificationOccurred('success'); else h.impactOccurred(kind || 'light'); } catch (e) { /* older client */ }
+    },
     inTelegram: function () { return !!initData(); },
     initData: initData,
     tgUser: tgUser,

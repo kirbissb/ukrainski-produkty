@@ -6,6 +6,7 @@
   var E = window.Engine;
   /* CEO 19.10: Telegram Mini App / Instagram / WhatsApp (assets/channel.js); null = a plain visit */
   var CH = window.SHOP_CHANNEL || null, inTg = !!(CH && CH.inTelegram());
+  function haptic(k) { if (CH && CH.haptic) CH.haptic(k); }   /* CEO TG 2144: no-op outside Telegram */
   /* CEO 19.10: delivery, payment, pickup, minimum and supply come ONLY from assets/shop-facts.js, generated from the bot's
      bot-engine/data/shop.json (scripts/gen-site-facts.ts): the site and the bot cannot disagree. Texts carry {F:key} / {f:key}. */
   /* CEO 24.10: F = the generated facts with the owner's live values over them (E.liveFacts, refreshed with every live catalog) */
@@ -583,7 +584,7 @@
         }
         var label = st === 'sold_out' ? t('pre_next') : st === 'preorder' ? t('add_pre') : t('add');
         var add = el('button', { class: 'btn add' + (st === 'sold_out' ? ' pre-next' : ''), type: 'button', text: label, onclick: function () {
-          cart = st === 'sold_out' ? E.cartAddPre(cart, it.id, selQty(it)) : E.cartAdd(cart, it.id, selQty(it)); E.saveCart(cart); renderCartUI();
+          cart = st === 'sold_out' ? E.cartAddPre(cart, it.id, selQty(it)) : E.cartAdd(cart, it.id, selQty(it)); E.saveCart(cart); haptic('light'); renderCartUI();
           add.textContent = t('added'); add.classList.add('done');
           setTimeout(function () { add.textContent = label; add.classList.remove('done'); }, 1100);
         } });
@@ -654,6 +655,7 @@
     var kb = !!(bar && bar.contains(document.activeElement)), q = cartQty(it.id);
     if (dir === 'add') cart = ci.state === 'sold_out' ? E.cartAddPre(cart, it.id, selQty(it)) : E.cartAdd(cart, it.id, selQty(it));
     else cart = E.cartSet(cart, it.id, E.stepQty(it, q, dir));
+    haptic(dir === 'add' ? 'light' : 'selection');
     E.saveCart(cart); renderCartUI();   /* cart bar sum/count + this card's bar (syncCartBadges) */
     var nq = cartQty(it.id);
     cbLive(nq ? t('cb_live_in', { q: E.fmtWeight(it, nq, lang) }) : t('cb_live_out'));
@@ -1120,7 +1122,7 @@
   function upsAdd(it, q, tile) {
     upsSettle();
     var row = tile.parentNode, box = row && row.parentNode && row.parentNode.parentNode, sb = $('#sheetBody');
-    cart = E.cartAdd(cart, it.id, q); E.saveCart(cart);
+    cart = E.cartAdd(cart, it.id, q); E.saveCart(cart); haptic('light');
     if (!box || !box.classList.contains('wz-cart') || !box.isConnected) { renderCartUI(); return; }
     var move = upsMotion(), hadFocus = tile.contains(document.activeElement), r0 = tile.getBoundingClientRect();
     var tiles = [].slice.call(row.children), slot = tiles.indexOf(tile), first = {};
@@ -1198,9 +1200,9 @@
       el('div', { class: 'nm', text: nm(it) + (l.pre ? ' · ' + t('pre_tag') : '') }),
       el('div', { class: 'sum', text: l.sum == null ? E.priceTbd(lang) : E.fmtMoney(l.sum, l.cur) }),
       el('div', { class: 'step' }, [
-        el('button', { type: 'button', 'aria-label': t('less'), text: '−', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, -1)); E.saveCart(cart); renderCartUI(); } }),
+        el('button', { type: 'button', 'aria-label': t('less'), text: '−', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, -1)); E.saveCart(cart); haptic('selection'); renderCartUI(); } }),
         el('output', { text: E.fmtWeight(it, l.qty, lang) }),
-        el('button', { type: 'button', 'aria-label': t('more'), text: '+', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, 1)); E.saveCart(cart); renderCartUI(); } })
+        el('button', { type: 'button', 'aria-label': t('more'), text: '+', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, 1)); E.saveCart(cart); haptic('selection'); renderCartUI(); } })
       ]),
       el('button', { class: 'rm', type: 'button', text: t('remove'), onclick: function () { cart = E.cartSet(cart, l.id, 0); E.saveCart(cart); renderCartUI(); } })
     ]);
@@ -1578,7 +1580,7 @@
       /* W-DATA-06 06.11: no browser copy of the order any more (the bot has it; bot.html is not opened from this page) */
       E.saveCustomer({ name: inTg ? (E.loadCustomer() || {}).name || '' : order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment, address: payload.address || (E.loadCustomer() || {}).address || '' });
       state.lastOrder = order; state.orderNonce = null; state.orderKey = null; cart = []; E.saveCart(cart); renderCartUI(); /* CEO 11.10: the header badge kept «2» after the order */ f.windowId = null; f.windowDate = null;
-      state.step = 'cart'; state.wzReturn = false; state.view = 'done'; renderSheet(); $('#sheetBody').scrollTop = 0;
+      state.step = 'cart'; state.wzReturn = false; state.view = 'done'; haptic('success'); renderSheet(); $('#sheetBody').scrollTop = 0;
       /* CEO live test 11.10: after EVERY order the bot chat opens (t.me/uafoodsbot?start=o<nonce>), the customer taps Start and
          the bot confirms the order there. Phone: a direct navigation (never popup-blocked, iOS Safari included). Desktop: a new tab
          (allowed while the click's activation lasts); if the browser blocks it, the big button on the done screen does the same. */
