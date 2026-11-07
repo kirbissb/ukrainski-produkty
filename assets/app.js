@@ -1436,6 +1436,11 @@
       state.sending = false; if (btn) { btn.disabled = false; btn.removeAttribute('aria-busy'); }
       if (!r.ok) { var e2 = $('#formErr'); if (e2) e2.textContent = t(r.error === 'tg_auth' ? 'err_tg_auth' : r.kind === 'network' ? 'err_send' : 'err_reject'); return; }
       var d = r.data, cityRu = f.other ? f.city.trim() : 'Аланья', tgLink = E.tgStartLink(payload.nonce);
+      /* SECURITY 07.11 (bot sec-audit-1107 fix 1): a repeat of an order already made (same phone + same goods, a new nonce) answers only
+         order_id + duplicate: no lines, no sums, no link. The done screen shows the number from order_id and keeps THIS checkout's own link */
+      if (!d.lines) { var t9 = E.totals(cart, f.delivery, C); d = { order_id: d.order_id, duplicate: true, bound: null, no: d.no != null ? d.no : Number(String(d.order_id).replace(/\D/g, '')),
+        lines: payload.items.map(function (x) { return { item_id: x.id, quantity: x.qty, currency: (C.byId[x.id] || {}).currency || 'TRY', amount: null }; }),
+        subtotal_try: t9.subtotal, usd_total: t9.usd, fee_try: null, total_try: null }; }
       var lines = d.lines.map(function (l) { var it = C.byId[l.item_id]; return { id: l.item_id, name: it ? it.name_ru : l.item_id, qty: l.quantity, unit: it ? it.unit : '', cur: l.currency, sum: l.amount, weight: it ? E.fmtWeight(it, l.quantity, 'ru') : String(l.quantity), pre: !!l.preorder }; });
       var wl = payload.window_id ? (/^dm-/.test(payload.window_id) ? windowText({ windowId: payload.window_id, windowDate: payload.window_date }) : ((siteWins()[E.windowKind(f.delivery)] || []).filter(function (w) { return w.id === payload.window_id; })[0] || {}).label || '') : '';
       var bound = d.bound === 'telegram' || d.bound === 'instagram' || d.bound === 'whatsapp' ? d.bound : null;
