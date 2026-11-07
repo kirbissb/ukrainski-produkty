@@ -1055,6 +1055,9 @@ div.rvx-line { cursor: default; }
 /* ===== canon pass 06.11 (20-WEB-CANON W-MOT / W-LAW / W-A11Y; apply-pass/margo-site/FIXES.md) ===== */
 /* W-MOT-03: one settle spring for UI moves - damping 0.8, overshoot 1.5 % (<= 2 %), no bounce */
 :root { --spring: linear(0, 0.044, 0.148, 0.279, 0.415, 0.544, 0.657, 0.753, 0.83, 0.889, 0.934, 0.966, 0.988, 1.002, 1.01, 1.014, 1.015, 1.015, 1.013, 1.011, 1.009, 1.007, 1.005, 1.004, 1); }
+/* CEO TG 2152 (07.11: the new line came in too fast, the fly was abrupt): a softer settle spring for the add-on moves. A real damped spring
+   started from rest (damping 0.79, overshoot 1.8 % <= 2 %): it starts gently, travels, passes the target by 1.8 % and eases back */
+:root { --spring-soft: linear(0, 0.027, 0.095, 0.187, 0.291, 0.397, 0.5, 0.595, 0.679, 0.753, 0.815, 0.867, 0.908, 0.941, 0.966, 0.985, 0.998, 1.008, 1.013, 1.017, 1.018, 1.018, 1.017, 1.015, 1.014, 1.012, 1.01, 1.008, 1.006, 1.005, 1.004, 1.003, 1); }
 /* W-MOT-01 + 02: every control shows it is pressed the moment the finger lands (sink to 95 %), the release springs back */
 .chip, .wchip, .lang button, .counter button, .line .step button, .line .rm, .xbtn, .wz-back, .opt, .rv-edit, .rvx-edit, .rvx-line, .rvx-clip,
 .cal .nav button, .cal .days button, .cal .clr, .datebtn, .radio, .cb-tile, .cb-sel, .cb-count button, .cb-step button, .cb-notify, .cb-incart,
@@ -1475,7 +1478,9 @@ h1, h2, .sec h2, .sheet .head h2, .done h2, .doc-body h2 { text-wrap: balance; }
 /* CEO 07.11 TG 2110: the add-on tap moves instead of redrawing (app.js upsAdd). The row clips the tile that slides in from its right edge
    (and no transformed tile ever widens the scroll area: MEM obs 0251); the ghost is the tapped tile flying onto its new cart line */
 .ups-row { overflow: hidden; overflow: clip; overflow-clip-margin: 4px; }
-.ups-ghost { position: fixed; z-index: 60; margin: 0; pointer-events: none; transform-origin: 0 0; will-change: transform, opacity; box-shadow: 0 14px 28px -12px rgba(0, 0, 0, 0.7); }
+/* CEO TG 2152: the fly is two layers - the carrier moves sideways, the ghost inside it lifts, rises and shrinks: two curves = an arc */
+.ups-fly { position: fixed; z-index: 60; margin: 0; pointer-events: none; will-change: transform; }
+.ups-ghost { position: absolute; left: 0; top: 0; margin: 0; pointer-events: none; transform-origin: 0 0; will-change: transform, opacity; box-shadow: 0 14px 28px -12px rgba(0, 0, 0, 0.7); }
 /* 07.11 Telegram audit: with the page locked (cart, search, text pages) <html> AND <body> both had overflow set, so <body> became a scroll
    box of its own (body keeps overflow-x: hidden) and the sticky header jumped to the top of the document: behind the search a strip of the
    page showed where the header was, behind the cart the section titles doubled. The lock stays on <html> (iOS needs it there); <body> no

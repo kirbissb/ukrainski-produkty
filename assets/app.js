@@ -1072,17 +1072,23 @@
      the tick) and lands on the new cart line, which opens under it (height 0 -> its size, W-MOT-08); the tiles to its right close the gap
      and the next of her suggestions slides in from the right edge of the row (clipped by the row). Every tap works at once, also mid-move:
      running moves are finished on the spot (W-MOT-05, nothing waits; the old 1.2 s lock is gone). Reduced motion: the same patch, no
-     movement, no fade. */
-  var UPS_SNAP = null, UPS_JOBS = [], UPS_IMG = {}, UPS_EASE = '';
-  function upsEase() {
-    if (!UPS_EASE) {
+     movement, only a short crossfade of the new line and the new tile.
+     CEO TG 2152 (the new line came in too fast, the fly was a bit abrupt, the swap needed dynamics): every move now runs on the softer
+     spring --spring-soft (overshoot 1.8 %): the tile LIFTS (scale 1.04, up 10 px), then flies on an arc onto the line (680 ms); the line
+     opens in 460 ms and its content rises in under the landing ghost; the next tile slides in from the right, passes its place by 1.8 %
+     and eases back. */
+  var UPS_SNAP = null, UPS_JOBS = [], UPS_IMG = {}, UPS_EASE = {};
+  function upsEase(v) {
+    v = v || '--spring-soft';
+    if (!UPS_EASE[v]) {
       var sp = '', ok = false;
-      try { ok = !!(window.CSS && CSS.supports && CSS.supports('transition-timing-function', 'linear(0, 1)')); sp = getComputedStyle(document.documentElement).getPropertyValue('--spring').trim(); } catch (e) { ok = false; }
-      UPS_EASE = ok && sp ? sp : 'cubic-bezier(.2, .8, .2, 1)';   /* an older webview without linear(): the same fast-then-slow curve, no overshoot */
+      try { ok = !!(window.CSS && CSS.supports && CSS.supports('transition-timing-function', 'linear(0, 1)')); sp = getComputedStyle(document.documentElement).getPropertyValue(v).trim(); } catch (e) { ok = false; }
+      UPS_EASE[v] = ok && sp ? sp : 'cubic-bezier(.2, .8, .2, 1)';   /* an older webview without linear(): the same fast-then-slow curve, no overshoot */
     }
-    return UPS_EASE;
+    return UPS_EASE[v];
   }
-  function upsMotion() { return !!(document.body.animate) && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  /* 'move' = full motion, 'fade' = reduced motion (crossfade only), '' = no Web Animations */
+  function upsMotion() { if (!document.body.animate) return ''; return (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'fade' : 'move'; }
   /* every move of one tap is a job: its animations + one cleanup; a new tap (or closing the cart) finishes the running jobs at once */
   function upsSettle() { var jobs = UPS_JOBS; UPS_JOBS = []; jobs.forEach(function (j) { j.anims.forEach(function (a) { try { a.cancel(); } catch (e) { /* gone */ } }); j.done(); }); }
   function upsJob(anims, cleanup) {
@@ -1148,41 +1154,57 @@
     /* keyboard: focus stays in the row (the tile now in the same place), else on the new line's «+» */
     if (hadFocus) { var nb = row.children[Math.min(slot, row.children.length - 1)]; nb = nb ? nb.querySelector('.ups-add') : line && line.querySelector('.step button:last-child'); if (nb) nb.focus({ preventScroll: true }); }
     cbLive(t('ups_added') + ': ' + nm(it));
-    if (!move) { if (empty) ups.parentNode.removeChild(ups); else if (sb) { var ov = ups.getBoundingClientRect().bottom - sb.getBoundingClientRect().bottom + 12; if (ov > 1) sb.scrollTop += ov; } return; }
+    if (move !== 'move') {
+      if (empty) ups.parentNode.removeChild(ups); else if (sb) { var ov = ups.getBoundingClientRect().bottom - sb.getBoundingClientRect().bottom + 12; if (ov > 1) sb.scrollTop += ov; }
+      /* reduced motion: nothing moves; the new line and the new tile only fade in (220 ms) */
+      if (move === 'fade') {
+        var fa = [];
+        if (line && !old) fa.push(upsAnim(line, [{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'ease-out' }));
+        incoming.forEach(function (n) { fa.push(upsAnim(n, [{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'ease-out' })); });
+        upsJob(fa, null);
+      }
+      return;
+    }
     /* ---- motion (FLIP: the DOM is already final; each move starts from where the eye last saw it) ---- */
-    var E2 = upsEase(), anims = [], cleanup = [];
+    var E2 = upsEase('--spring-soft'), anims = [], cleanup = [];
     var lr = line ? line.getBoundingClientRect() : null, scrolled = 0, la = null;
     /* keep the row in sight when the new line pushes it under the footer: scrolled once the line is open (while it opens, the list is
        shorter and the browser would cut the scroll short) */
     var inSight = function () { if (!sb || empty || !ups.isConnected) return; var over = ups.getBoundingClientRect().bottom - sb.getBoundingClientRect().bottom + 12; if (over > 1) sb.scrollBy({ top: over, behavior: 'smooth' }); };
-    /* the new line opens from nothing; its content shows as the ghost lands on it */
+    /* the new line opens from nothing on the soft spring (460 ms); its content rises in (8 px, 440 ms) as the ghost lands on it */
     if (line && !old) {
       var cs = getComputedStyle(line), h = lr.height;
       line.style.overflow = 'hidden';
-      anims.push(la = upsAnim(line, [{ height: '0px', paddingTop: '0px', paddingBottom: '0px', opacity: 0 }, { height: h + 'px', paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom, opacity: 0, offset: 0.4 }, { height: h + 'px', paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom, opacity: 1 }], { duration: 380, easing: 'ease-out' }));
+      anims.push(la = upsAnim(line, [{ height: '0px', paddingTop: '0px', paddingBottom: '0px' }, { height: h + 'px', paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom }], { duration: 460, easing: E2 }));
+      anims.push(upsAnim(line, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 440, delay: 240, easing: E2, fill: 'backwards' }));
       cleanup.push(function () { line.style.overflow = ''; });
     }
-    /* the ghost: a copy of the tile flies from its place onto the new line, shrinking, and dissolves there */
+    /* the ghost: a copy of the tile is lifted (scale 1.04, up 10 px, 140 ms ease-out), then flies onto the new line on an arc, shrinking,
+       and dissolves into it. Two layers make the arc: the carrier moves sideways on a slow ease-in-out, the ghost rises on the spring */
     if (lr) {
-      var gh = tile.cloneNode(true), s = 0.42;
+      var gh = tile.cloneNode(true), s = 0.42, fly = el('div', { class: 'ups-fly', 'aria-hidden': 'true' });
       gh.classList.add('ups-ghost', 'is-added'); gh.removeAttribute('data-id'); gh.setAttribute('aria-hidden', 'true');
       var mk = gh.querySelector('.ups-mk'); if (mk) { mk.innerHTML = ''; mk.appendChild(icon('i-check', 'ups-ic')); }
       [].forEach.call(gh.querySelectorAll('button'), function (b) { b.tabIndex = -1; });
-      gh.style.left = r0.left + 'px'; gh.style.top = r0.top + 'px'; gh.style.width = r0.width + 'px'; gh.style.height = r0.height + 'px';
-      document.body.appendChild(gh);
-      var dx = lr.left - r0.left, dy = lr.top - scrolled + lr.height / 2 - r0.height * s / 2 - r0.top;
-      anims.push(upsAnim(gh, [{ transform: 'none', opacity: 1 }, { transform: 'translate(' + dx * 0.15 + 'px,' + (dy * 0.15 - 6) + 'px) scale(1.03)', opacity: 1, offset: 0.18 },
-        { opacity: 1, offset: 0.7 }, { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')', opacity: 0 }], { duration: 460, easing: E2 }));
-      cleanup.push(function () { if (gh.parentNode) gh.parentNode.removeChild(gh); });
+      fly.style.left = r0.left + 'px'; fly.style.top = r0.top + 'px'; fly.style.width = r0.width + 'px'; fly.style.height = r0.height + 'px';
+      gh.style.width = r0.width + 'px'; gh.style.height = r0.height + 'px';
+      fly.appendChild(gh); document.body.appendChild(fly);
+      var dx = lr.left - r0.left, dy = lr.top - scrolled + lr.height / 2 - r0.height * s / 2 - r0.top, lift = -0.02 * r0.width;
+      anims.push(upsAnim(fly, [{ transform: 'none' }, { transform: 'none', offset: 0.2, easing: 'cubic-bezier(.45, 0, .25, 1)' }, { transform: 'translateX(' + dx + 'px)' }], { duration: 680 }));
+      anims.push(upsAnim(gh, [{ transform: 'none', easing: 'cubic-bezier(.2, .7, .3, 1)' }, { transform: 'translate(' + lift + 'px, -10px) scale(1.04)', offset: 0.2, easing: E2 },
+        { transform: 'translate(0px,' + dy + 'px) scale(' + s + ')' }], { duration: 680 }));
+      anims.push(upsAnim(gh, [{ opacity: 1 }, { opacity: 1, offset: 0.62, easing: 'ease-in-out' }, { opacity: 0 }], { duration: 680, fill: 'forwards' }));   /* held at 0 until the cleanup removes it: no flash at the start */
+      cleanup.push(function () { if (fly.parentNode) fly.parentNode.removeChild(fly); });
     }
-    /* the tiles to the right slide left into the freed place; the new one comes in from beyond the right edge */
+    /* the tiles to the right slide left into the freed place (520 ms); the new one comes in from beyond the right edge, fading in, passes
+       its place by 1.8 % of the way and eases back (560 ms) */
     [].forEach.call(row.children, function (n) {
       var nx = n.getBoundingClientRect().left, fx = first[n.getAttribute('data-id')];
-      if (incoming.indexOf(n) >= 0) { anims.push(upsAnim(n, [{ transform: 'translateX(' + Math.max(80, row.getBoundingClientRect().right - nx + 12) + 'px)' }, { transform: 'none' }], { duration: 420, delay: 140, easing: E2, fill: 'backwards' })); return; }
-      if (fx != null && Math.abs(fx - nx) > 0.5) anims.push(upsAnim(n, [{ transform: 'translateX(' + (fx - nx) + 'px)' }, { transform: 'none' }], { duration: 360, delay: 90, easing: E2, fill: 'backwards' }));
+      if (incoming.indexOf(n) >= 0) { anims.push(upsAnim(n, [{ transform: 'translateX(' + Math.max(80, row.getBoundingClientRect().right - nx + 12) + 'px)', opacity: 0 }, { opacity: 1, offset: 0.45 }, { transform: 'none', opacity: 1 }], { duration: 560, delay: 160, easing: E2, fill: 'backwards' })); return; }
+      if (fx != null && Math.abs(fx - nx) > 0.5) anims.push(upsAnim(n, [{ transform: 'translateX(' + (fx - nx) + 'px)' }, { transform: 'none' }], { duration: 520, delay: 100, easing: E2, fill: 'backwards' }));
     });
     /* the last suggestion taken: the row folds away */
-    if (empty) { var uh = ups.getBoundingClientRect().height; ups.style.overflow = 'hidden'; anims.push(upsAnim(ups, [{ height: uh + 'px', opacity: 1 }, { height: '0px', opacity: 0, marginTop: '0px', marginBottom: '0px' }], { duration: 320, easing: 'ease-out' })); cleanup.push(function () { if (ups.parentNode) ups.parentNode.removeChild(ups); }); }
+    if (empty) { var uh = ups.getBoundingClientRect().height; ups.style.overflow = 'hidden'; anims.push(upsAnim(ups, [{ height: uh + 'px', opacity: 1 }, { height: '0px', opacity: 0, marginTop: '0px', marginBottom: '0px' }], { duration: 420, easing: 'ease-out' })); cleanup.push(function () { if (ups.parentNode) ups.parentNode.removeChild(ups); }); }
     upsJob(anims, function () { cleanup.forEach(function (f) { f(); }); });
     if (la) la.finished.then(inSight, function () { /* cancelled by the next tap: that tap keeps the row in sight */ }); else inSight();
   }
