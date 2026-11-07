@@ -702,7 +702,7 @@
   /* 10.10 CEO: design B is the default for every visitor; only "#cards-a" shows the old cards (for comparison) */
   function cardsIsB(hash) { return cardsVariant(hash) !== 'a'; }
   /* the floating "Разделы" button: only in B, not while the tiles are on screen, not over an open sheet / overlay / its own list */
-  function quickNavVisible(o) { return !!(o && o.b && !o.tilesOnScreen && !o.locked && !o.open); }
+  function quickNavVisible(o) { return !!(o && o.b && !o.tilesOnScreen && !o.ctaOnScreen && !o.locked && !o.open); }   /* ctaOnScreen 07.11: never over the hero buttons */
   /* in-cart stepper (CEO 10.10): weight items move along their own steps_g (300 -> 500 -> 1000 g), past the last step by
      500 g (1 kg and more) or by the last step (smaller ladders), up to 5 kg; pieces by 1 up to 20. Returns the next
      quantity; 0 = remove from the cart. A quantity off the ladder (e.g. 800 g) snaps to the nearest step in that direction. */

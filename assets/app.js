@@ -6,6 +6,7 @@
   var E = window.Engine;
   /* CEO 19.10: Telegram Mini App / Instagram / WhatsApp (assets/channel.js); null = a plain visit */
   var CH = window.SHOP_CHANNEL || null, inTg = !!(CH && CH.inTelegram());
+  function haptic(k) { if (CH && CH.haptic) CH.haptic(k); }   /* CEO TG 2144: no-op outside Telegram */
   /* CEO 19.10: delivery, payment, pickup, minimum and supply come ONLY from assets/shop-facts.js, generated from the bot's
      bot-engine/data/shop.json (scripts/gen-site-facts.ts): the site and the bot cannot disagree. Texts carry {F:key} / {f:key}. */
   /* CEO 24.10: F = the generated facts with the owner's live values over them (E.liveFacts, refreshed with every live catalog) */
@@ -583,7 +584,7 @@
         }
         var label = st === 'sold_out' ? t('pre_next') : st === 'preorder' ? t('add_pre') : t('add');
         var add = el('button', { class: 'btn add' + (st === 'sold_out' ? ' pre-next' : ''), type: 'button', text: label, onclick: function () {
-          cart = st === 'sold_out' ? E.cartAddPre(cart, it.id, selQty(it)) : E.cartAdd(cart, it.id, selQty(it)); E.saveCart(cart); renderCartUI();
+          cart = st === 'sold_out' ? E.cartAddPre(cart, it.id, selQty(it)) : E.cartAdd(cart, it.id, selQty(it)); E.saveCart(cart); haptic('light'); renderCartUI();
           add.textContent = t('added'); add.classList.add('done');
           setTimeout(function () { add.textContent = label; add.classList.remove('done'); }, 1100);
         } });
@@ -654,6 +655,7 @@
     var kb = !!(bar && bar.contains(document.activeElement)), q = cartQty(it.id);
     if (dir === 'add') cart = ci.state === 'sold_out' ? E.cartAddPre(cart, it.id, selQty(it)) : E.cartAdd(cart, it.id, selQty(it));
     else cart = E.cartSet(cart, it.id, E.stepQty(it, q, dir));
+    haptic(dir === 'add' ? 'light' : 'selection');
     E.saveCart(cart); renderCartUI();   /* cart bar sum/count + this card's bar (syncCartBadges) */
     var nq = cartQty(it.id);
     cbLive(nq ? t('cb_live_in', { q: E.fmtWeight(it, nq, lang) }) : t('cb_live_out'));
@@ -696,7 +698,10 @@
   var qnReturn = null;
   function qnState() {
     var tl = $('#cbTiles'), r = tl ? tl.getBoundingClientRect() : null;
-    return { b: cardsB, tilesOnScreen: !!(r && r.bottom > hdrH() && r.top < window.innerHeight), locked: document.body.classList.contains('locked'), open: !$('#qnSheet').hidden };
+    /* 07.11 audit: at 360 px (and in UA at 390) the hero buttons wrap and the floating «Разделы» covered «Привезти под заказ»;
+       the pill now waits until the hero buttons are off screen («В каталог» does its job there) */
+    var sp = $('#specialBtn'), cr = sp && sp.parentNode.getBoundingClientRect();
+    return { b: cardsB, ctaOnScreen: !!(cr && cr.height && cr.bottom > hdrH() && cr.top < window.innerHeight), tilesOnScreen: !!(r && r.bottom > hdrH() && r.top < window.innerHeight), locked: document.body.classList.contains('locked'), open: !$('#qnSheet').hidden };
   }
   function qnUpdate() { $('#qnBtn').hidden = !E.quickNavVisible(qnState()); }
   function qnOpen(from) {
@@ -820,7 +825,7 @@
 
   /* ---------- cart UI ---------- */
   function openSheet(view) {
-    state.view = view || 'cart';
+    state.view = view || 'cart'; state.wzLast = null;
     renderSheet();
     $('#sheet').classList.add('on'); $('#scrim').classList.add('on'); $('#bar').classList.remove('on');
     $('#sheet').setAttribute('aria-hidden', 'false'); document.body.classList.add('locked');
@@ -857,7 +862,7 @@
   window.addEventListener('resize', function () { setTimeout(keepFocusVisible, 60); });
   $('#sheet').addEventListener('focusin', function () { setTimeout(keepFocusVisible, 320); });
   function closeSheet() {
-    upsReset();
+    upsReset(); state.wzLast = null;
     $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); $('#sheet').setAttribute('aria-hidden', 'true'); ['top', 'bottom', 'height', 'maxHeight'].forEach(function (k) { $('#sheet').style[k] = ''; });
     document.body.classList.remove('locked');
     if (state.view === 'done' || state.view === 'notify' || state.view === 'notify_ok' || state.view === 'special' || state.view === 'special_ok') state.view = 'cart';
@@ -874,16 +879,26 @@
     var ch = text.split(''), pc = (prev || '').split('');
     ch.forEach(function (c, i) {
       if (!/\d/.test(c)) { vis.appendChild(el('span', { class: 'rc', 'data-c': c })); return; }
-      var p = pc[pc.length - (ch.length - i)], from = prev && p && /\d/.test(p) ? +p : prev ? 0 : +c, col = el('span');
+      var p = pc[pc.length - (ch.length - i)], from = prev && p && /\d/.test(p) ? +p : +c, col = el('span');
+      /* 07.11: a NEW leading digit (413 -> 1 363) does not roll up from 0 («0413», «0363» showed for a moment): it stands still and fades in
+         in its turn (right to left, like the others) */
+      if (prev && !(p && /\d/.test(p))) { col.style.opacity = '0'; if (rvBehavior() === 'smooth') col.style.transition = 'opacity 0.2s ease-out'; moves.push([col, null]); }
       col.style.transform = 'translateY(' + (-from * 1.2) + 'em)'; vis.appendChild(el('span', { class: 'rd' }, [col]));
       if (from !== +c) moves.push([col, +c]);
     });
     wrap.appendChild(vis); node.textContent = ''; node.appendChild(wrap);
     if (!moves.length) return;
     void wrap.offsetWidth;
-    moves.reverse().forEach(function (m, k) { m[0].style.transitionDelay = (k * 0.1) + 's'; m[0].style.transform = 'translateY(' + (-m[1] * 1.2) + 'em)'; });
+    moves.reverse().forEach(function (m, k) { m[0].style.transitionDelay = (k * 0.1) + 's'; if (m[1] === null) m[0].style.opacity = '1'; else m[0].style.transform = 'translateY(' + (-m[1] * 1.2) + 'em)'; });
   }
   function renderCartUI() {
+    var sheetOpen = renderCartChrome();
+    /* a redraw while the buyer types (live catalog arriving) would drop the focused field and its keyboard */
+    var a = document.activeElement, typing = a && /^(INPUT|TEXTAREA)$/.test(a.tagName) && $('#sheet').contains(a);
+    if (sheetOpen && state.view === 'cart' && !typing) renderSheet();
+  }
+  /* everything that shows the cart OUTSIDE the popup (header count and sum, the sticky bar, the card badges) -> is the popup open */
+  function renderCartChrome() {
     var f = state.form;
     var t0 = E.totals(cart, f.delivery, C);
     $('#cartCount').textContent = t0.count ? String(t0.count) : '';
@@ -895,24 +910,35 @@
     var sheetOpen = $('#sheet').classList.contains('on');
     $('#bar').classList.toggle('on', t0.count > 0 && !sheetOpen);
     syncCartBadges();
-    /* a redraw while the buyer types (live catalog arriving) would drop the focused field and its keyboard */
-    var a = document.activeElement, typing = a && /^(INPUT|TEXTAREA)$/.test(a.tagName) && $('#sheet').contains(a);
-    if (sheetOpen && state.view === 'cart' && !typing) renderSheet();
+    return sheetOpen;
   }
   function renderSheet() {
     var body = $('#sheetBody'), foot = $('#sheetFoot');
+    upsSettle(); UPS_IMG = {};
+    [].forEach.call(body.querySelectorAll('img.ups-img'), function (n) { var k = n.getAttribute('src') || n.getAttribute('data-src'); if (k) UPS_IMG[k] = n; });
+    if (state.view !== 'cart') state.wzLast = null;
+    /* 07.11 audit: a stepper / «Убрать» tap redraws the cart; the keyboard focus comes back to the same control of the same line
+       (it fell to the page before), and to the next line's when that line is gone */
+    var fa = document.activeElement, fl = fa && body.contains(fa) && fa.closest('.line'), fkey = null;
+    if (fl) { var fbs = [].slice.call(fl.querySelectorAll('button')); fkey = { id: fl.getAttribute('data-id'), i: fbs.indexOf(fa), next: fl.nextElementSibling && fl.nextElementSibling.getAttribute('data-id') }; }
     body.innerHTML = ''; foot.innerHTML = ''; wzMeta(null); $('#sheet').classList.remove('wz-on'); $('#sheet').classList.remove('rvx', 'rvx-a', 'rvx-b', 'rvx-c');
     if (state.view === 'done') { $('#sheetTitle').textContent = t('done_title'); renderDone(body, foot); return; }
     if (state.view === 'notify' || state.view === 'notify_ok') { renderNotify(body, foot); return; }
     if (state.view === 'special' || state.view === 'special_ok') { renderSpecial(body, foot); return; }
     var tt = dpAdjust(fromAdjust(E.totals(cart, state.form.delivery, C), C.deliveryById[state.form.delivery]));
     if (!tt.count) {
+      state.wzLast = null;
       $('#sheetTitle').textContent = t('cart_title');
       body.appendChild(el('p', { class: 'empty', text: t('cart_empty') }));
       foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', text: t('to_catalog'), onclick: function () { closeSheet(); location.hash = '#catalog'; } }));
       return;
     }
     $('#sheet').classList.add('wz-on'); renderStep(body, foot, tt);
+    if (fkey) {
+      var nl = body.querySelector('.line[data-id="' + fkey.id + '"]'), nb = nl && nl.querySelectorAll('button')[fkey.i];
+      if (!nb) { nl = (fkey.next && body.querySelector('.line[data-id="' + fkey.next + '"]')) || body.querySelector('.line'); nb = nl && nl.querySelector('.rm'); }
+      (nb || $('#sheetTitle')).focus({ preventScroll: true });
+    }
   }
   /* W-HAND-10 (redesign 06.11): floating label - the label sits INSIDE the field and shrinks up on focus or once filled (CSS .f.fl,
      :placeholder-shown); the label follows the input in the DOM so CSS can read the field state. The example text (placeholder) shows
@@ -1038,42 +1064,149 @@
      the cart (other categories, priced, in stock, not in the cart; by the piece first, cheaper first), one tap «+» adds the usual amount */
   var UPS_BY = { salo: ['ikra_ryba', 'syr_molochne', 'sosysky'], kovbasy: ['ikra_ryba', 'syr_molochne', 'salo'], sosysky: ['syr_molochne', 'kovbasy', 'ikra_ryba'], balyk: ['ikra_ryba', 'syr_molochne', 'salo'], kabanosy: ['ikra_ryba', 'salo', 'syr_molochne'], ikra_ryba: ['syr_molochne', 'salo', 'kovbasy'], syr_molochne: ['solodke', 'ikra_ryba', 'kovbasy'], miaso: ['syr_molochne', 'sosysky', 'ikra_ryba'], solodke: ['syr_molochne', 'ikra_ryba'], inshe: ['ikra_ryba', 'syr_molochne'] };
   /* step 2 (CEO 06.11): the owner's own add-ons from the live catalog come first and replace these rules for their good (engine.js upsellPicks) */
-  function upsellPicks() { return E.upsellPicks(C, cart, UPS_BY, 3); }
-  /* CEO TG 1885 (option 1 picked): a plain caramel «+» circle under the photo, no text. Tap -> the item goes into the cart list above
-     (with its normal −/+ stepper, the total updates) and the circle turns into a tick for ~1.2 s, the tile staying in place; then the tile
-     is replaced by the next suggestion (goods already in the cart are never suggested). More of the same = the stepper in the cart line.
-     Reduced motion: the same swap, no fade. */
-  var UPS_SNAP = null, UPS_PENDING = null, UPS_NEW = {}, UPS_T = 0;
-  function upsReset() { UPS_SNAP = null; UPS_PENDING = null; UPS_NEW = {}; clearTimeout(UPS_T); }
-  function upsRedraw() { var sb = $('#sheetBody'), y = sb ? sb.scrollTop : 0; renderCartUI(); if (sb) sb.scrollTop = y; }
-  function upsellRow() {
-    var picks;
-    if (UPS_PENDING && UPS_SNAP) picks = UPS_SNAP.map(function (id) { return C.byId[id]; }).filter(Boolean);
-    else {
-      var fresh = upsellPicks(), prev = UPS_SNAP || [], ids = fresh.map(function (it) { return it.id; });
-      UPS_NEW = {};
-      if (prev.length) {   /* keep every tile in its slot; a slot whose item went into the cart takes the next suggestion */
-        var slots = prev.map(function (id) { return ids.indexOf(id) >= 0 ? id : null; }), spare = ids.filter(function (id) { return slots.indexOf(id) < 0; });
-        slots = slots.map(function (id) { if (id) return id; var n = spare.shift(); if (n) UPS_NEW[n] = 1; return n || null; }).filter(Boolean);
-        spare.forEach(function (id) { if (slots.length < 3) slots.push(id); });
-        ids = slots;
-      }
-      picks = ids.map(function (id) { return C.byId[id]; }).filter(Boolean); UPS_SNAP = ids;
+  function upsellPicks() { return E.upsellPicks(C, cart, UPS_BY, 10); }   /* CEO TG 1967: up to 10 queue up, the row shows 3 and refills */
+  /* CEO TG 1885: a plain caramel «+» circle under the photo, no text; goods already in the cart are never suggested; more of the same =
+     the stepper in the cart line.
+     CEO 07.11 TG 2110 (the page BLINKED on «+»: the tap redrew the whole cart and its fade-in ran again, twice - at the tap and 1.2 s later
+     at the tile swap): the tap now PATCHES the cart in place, nothing is redrawn. FLIP: the tile lifts off as a ghost (photo, name, price,
+     the tick) and lands on the new cart line, which opens under it (height 0 -> its size, W-MOT-08); the tiles to its right close the gap
+     and the next of her suggestions slides in from the right edge of the row (clipped by the row). Every tap works at once, also mid-move:
+     running moves are finished on the spot (W-MOT-05, nothing waits; the old 1.2 s lock is gone). Reduced motion: the same patch, no
+     movement, only a short crossfade of the new line and the new tile.
+     CEO TG 2152 (the new line came in too fast, the fly was a bit abrupt, the swap needed dynamics): every move now runs on the softer
+     spring --spring-soft (overshoot 1.8 %): the tile LIFTS (scale 1.04, up 10 px), then flies on an arc onto the line (680 ms); the line
+     opens in 460 ms and its content rises in under the landing ghost; the next tile slides in from the right, passes its place by 1.8 %
+     and eases back. */
+  var UPS_SNAP = null, UPS_JOBS = [], UPS_IMG = {}, UPS_EASE = {};
+  function upsEase(v) {
+    v = v || '--spring-soft';
+    if (!UPS_EASE[v]) {
+      var sp = '', ok = false;
+      try { ok = !!(window.CSS && CSS.supports && CSS.supports('transition-timing-function', 'linear(0, 1)')); sp = getComputedStyle(document.documentElement).getPropertyValue(v).trim(); } catch (e) { ok = false; }
+      UPS_EASE[v] = ok && sp ? sp : 'cubic-bezier(.2, .8, .2, 1)';   /* an older webview without linear(): the same fast-then-slow curve, no overshoot */
     }
+    return UPS_EASE[v];
+  }
+  /* 'move' = full motion, 'fade' = reduced motion (crossfade only), '' = no Web Animations */
+  function upsMotion() { if (!document.body.animate) return ''; return (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'fade' : 'move'; }
+  /* every move of one tap is a job: its animations + one cleanup; a new tap (or closing the cart) finishes the running jobs at once */
+  function upsSettle() { var jobs = UPS_JOBS; UPS_JOBS = []; jobs.forEach(function (j) { j.anims.forEach(function (a) { try { a.cancel(); } catch (e) { /* gone */ } }); j.done(); }); }
+  function upsJob(anims, cleanup) {
+    var fin = false, job = { anims: anims.filter(Boolean), done: function () { if (fin) return; fin = true; UPS_JOBS = UPS_JOBS.filter(function (x) { return x !== job; }); if (cleanup) cleanup(); } };
+    UPS_JOBS.push(job);
+    if (!job.anims.length) { job.done(); return; }
+    Promise.all(job.anims.map(function (a) { return a.finished; })).then(job.done, job.done);
+  }
+  function upsAnim(node, frames, opts) { try { return node.animate(frames, opts); } catch (e) { return null; } }
+  function upsReset() { upsSettle(); UPS_SNAP = null; UPS_IMG = {}; }
+  /* the row after a change: the tiles still suggested keep their order, the free places take the next suggestions */
+  function upsellIds() {
+    var fresh = upsellPicks().map(function (it) { return it.id; });
+    var ids = (UPS_SNAP || []).filter(function (id) { return fresh.indexOf(id) >= 0; });
+    fresh.forEach(function (id) { if (ids.length < 3 && ids.indexOf(id) < 0) ids.push(id); });
+    return ids;
+  }
+  function upsTile(it) {
+    var q = it.unit === 'pc' ? 1 : it.steps_g[0], portion = E.fmtWeight(it, q, lang);
+    var price = E.fmtMoney(it.unit === 'pc' ? it.price : Math.round(it.price * q / (it.unit === '100g' ? 100 : 1000)), it.currency);
+    /* a redraw of the cart (stepper, live catalog) keeps the very same photo node: no reload, no empty frame */
+    var img = it.photo && UPS_IMG[it.photo];
+    if (img) delete UPS_IMG[it.photo]; else img = it.photo ? rimg(it.photo, '120px', { alt: nm(it), loading: 'lazy', class: 'ups-img' }) : el('span', { class: 'ups-img ups-noimg', 'aria-hidden': 'true' });
+    var tile;
+    var btn = el('button', { class: 'ups-add', type: 'button', 'aria-label': t('ups_add') + ' ' + portion + ': ' + nm(it), onclick: function () { upsAdd(it, q, tile); } }, [el('span', { class: 'ups-mk' }, [icon('i-plus', 'ups-ic')])]);
+    tile = el('div', { class: 'ups-it', 'data-id': it.id }, [img, el('span', { class: 'ups-n', text: nm(it) }),
+      el('div', { class: 'ups-foot' }, [el('span', { class: 'ups-p' }, [el('b', { text: price }), it.unit === 'pc' ? null : el('span', { class: 'ups-w', text: portion })]), btn])]);
+    return tile;
+  }
+  function upsellRow() {
+    var ids = upsellIds(); UPS_SNAP = ids;
+    var picks = ids.map(function (id) { return C.byId[id]; }).filter(Boolean);
     if (!picks.length) return null;
-    return el('div', { class: 'ups' }, [el('p', { class: 'ups-h', text: t('ups_h') }), el('div', { class: 'ups-row' }, picks.map(function (it) {
-      var q = it.unit === 'pc' ? 1 : it.steps_g[0], added = UPS_PENDING === it.id, portion = E.fmtWeight(it, q, lang);
-      var price = E.fmtMoney(it.unit === 'pc' ? it.price : Math.round(it.price * q / (it.unit === '100g' ? 100 : 1000)), it.currency);
-      var btn = el('button', { class: 'ups-add', type: 'button', 'aria-label': (added ? t('ups_added') : t('ups_add') + ' ' + portion) + ': ' + nm(it), 'aria-pressed': String(added),
-        onclick: function () {
-          if (UPS_PENDING) return;
-          UPS_PENDING = it.id; cart = E.cartAdd(cart, it.id, q); E.saveCart(cart); upsRedraw();
-          var live = $('#cbLive'); if (live) live.textContent = t('ups_added') + ': ' + nm(it);
-          UPS_T = setTimeout(function () { UPS_PENDING = null; if ($('#sheet').classList.contains('on') && state.view === 'cart') upsRedraw(); }, 1200);
-        } }, [el('span', { class: 'ups-mk' }, [icon(added ? 'i-check' : 'i-plus', 'ups-ic')])]);
-      return el('div', { class: 'ups-it' + (added ? ' is-added' : '') + (UPS_NEW[it.id] ? ' is-new' : '') }, [it.photo ? rimg(it.photo, '120px', { alt: nm(it), loading: 'lazy', class: 'ups-img' }) : el('span', { class: 'ups-img ups-noimg', 'aria-hidden': 'true' }), el('span', { class: 'ups-n', text: nm(it) }),
-        el('div', { class: 'ups-foot' }, [el('span', { class: 'ups-p' }, [el('b', { text: price }), it.unit === 'pc' ? null : el('span', { class: 'ups-w', text: portion })]), btn])]);
-    }))]);
+    return el('div', { class: 'ups' }, [el('p', { class: 'ups-h', text: t('ups_h') }), el('div', { class: 'ups-row' }, picks.map(upsTile))]);
+  }
+  /* the «+» on a tile: the cart is patched in place (see above) */
+  function upsAdd(it, q, tile) {
+    upsSettle();
+    var row = tile.parentNode, box = row && row.parentNode && row.parentNode.parentNode, sb = $('#sheetBody');
+    cart = E.cartAdd(cart, it.id, q); E.saveCart(cart); haptic('light');
+    if (!box || !box.classList.contains('wz-cart') || !box.isConnected) { renderCartUI(); return; }
+    var move = upsMotion(), hadFocus = tile.contains(document.activeElement), r0 = tile.getBoundingClientRect();
+    var tiles = [].slice.call(row.children), slot = tiles.indexOf(tile), first = {};
+    tiles.forEach(function (n) { first[n.getAttribute('data-id')] = n.getBoundingClientRect().left; });
+    renderCartChrome();
+    var tt = cartTotals(), l = tt.lines.filter(function (x) { return x.id === it.id; })[0];
+    /* 1. the cart line (a good already in the cart is never suggested; if it were, its line is refreshed in place) */
+    var old = box.querySelector('.line[data-id="' + it.id + '"]'), line = l ? cartLine(l) : null;
+    if (line) { if (old) box.replaceChild(line, old); else box.insertBefore(line, box.querySelector('.tots')); }
+    /* 2. the subtotal rolls, the notes and the main button follow the new total */
+    cartSums(box, tt);
+    /* 3. the row: the chosen tile leaves, the rest keep their nodes and order, the next suggestion joins at the end */
+    var ids = upsellIds(), keep = {}, incoming = [];
+    UPS_SNAP = ids;
+    tiles.forEach(function (n) { keep[n.getAttribute('data-id')] = n; });
+    row.removeChild(tile);
+    ids.forEach(function (id) {
+      var n = keep[id]; if (n && n !== tile) { row.appendChild(n); return; }
+      var g = C.byId[id]; if (!g) return; n = upsTile(g); row.appendChild(n); incoming.push(n);
+    });
+    tiles.forEach(function (n) { if (n !== tile && ids.indexOf(n.getAttribute('data-id')) < 0 && n.parentNode === row) row.removeChild(n); });
+    var ups = row.parentNode, empty = !row.children.length;
+    /* keyboard: focus stays in the row (the tile now in the same place), else on the new line's «+» */
+    if (hadFocus) { var nb = row.children[Math.min(slot, row.children.length - 1)]; nb = nb ? nb.querySelector('.ups-add') : line && line.querySelector('.step button:last-child'); if (nb) nb.focus({ preventScroll: true }); }
+    cbLive(t('ups_added') + ': ' + nm(it));
+    if (move !== 'move') {
+      if (empty) ups.parentNode.removeChild(ups); else if (sb) { var ov = ups.getBoundingClientRect().bottom - sb.getBoundingClientRect().bottom + 12; if (ov > 1) sb.scrollTop += ov; }
+      /* reduced motion: nothing moves; the new line and the new tile only fade in (220 ms) */
+      if (move === 'fade') {
+        var fa = [];
+        if (line && !old) fa.push(upsAnim(line, [{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'ease-out' }));
+        incoming.forEach(function (n) { fa.push(upsAnim(n, [{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'ease-out' })); });
+        upsJob(fa, null);
+      }
+      return;
+    }
+    /* ---- motion (FLIP: the DOM is already final; each move starts from where the eye last saw it) ---- */
+    var E2 = upsEase('--spring-soft'), anims = [], cleanup = [];
+    var lr = line ? line.getBoundingClientRect() : null, scrolled = 0, la = null;
+    /* keep the row in sight when the new line pushes it under the footer: scrolled once the line is open (while it opens, the list is
+       shorter and the browser would cut the scroll short) */
+    var inSight = function () { if (!sb || empty || !ups.isConnected) return; var over = ups.getBoundingClientRect().bottom - sb.getBoundingClientRect().bottom + 12; if (over > 1) sb.scrollBy({ top: over, behavior: 'smooth' }); };
+    /* the new line opens from nothing on the soft spring (460 ms); its content rises in (8 px, 440 ms) as the ghost lands on it */
+    if (line && !old) {
+      var cs = getComputedStyle(line), h = lr.height;
+      line.style.overflow = 'hidden';
+      anims.push(la = upsAnim(line, [{ height: '0px', paddingTop: '0px', paddingBottom: '0px' }, { height: h + 'px', paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom }], { duration: 460, easing: E2 }));
+      anims.push(upsAnim(line, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 440, delay: 240, easing: E2, fill: 'backwards' }));
+      cleanup.push(function () { line.style.overflow = ''; });
+    }
+    /* the ghost: a copy of the tile is lifted (scale 1.04, up 10 px, 140 ms ease-out), then flies onto the new line on an arc, shrinking,
+       and dissolves into it. Two layers make the arc: the carrier moves sideways on a slow ease-in-out, the ghost rises on the spring */
+    if (lr) {
+      var gh = tile.cloneNode(true), s = 0.42, fly = el('div', { class: 'ups-fly', 'aria-hidden': 'true' });
+      gh.classList.add('ups-ghost', 'is-added'); gh.removeAttribute('data-id'); gh.setAttribute('aria-hidden', 'true');
+      var mk = gh.querySelector('.ups-mk'); if (mk) { mk.innerHTML = ''; mk.appendChild(icon('i-check', 'ups-ic')); }
+      [].forEach.call(gh.querySelectorAll('button'), function (b) { b.tabIndex = -1; });
+      fly.style.left = r0.left + 'px'; fly.style.top = r0.top + 'px'; fly.style.width = r0.width + 'px'; fly.style.height = r0.height + 'px';
+      gh.style.width = r0.width + 'px'; gh.style.height = r0.height + 'px';
+      fly.appendChild(gh); document.body.appendChild(fly);
+      var dx = lr.left - r0.left, dy = lr.top - scrolled + lr.height / 2 - r0.height * s / 2 - r0.top, lift = -0.02 * r0.width;
+      anims.push(upsAnim(fly, [{ transform: 'none' }, { transform: 'none', offset: 0.2, easing: 'cubic-bezier(.45, 0, .25, 1)' }, { transform: 'translateX(' + dx + 'px)' }], { duration: 680 }));
+      anims.push(upsAnim(gh, [{ transform: 'none', easing: 'cubic-bezier(.2, .7, .3, 1)' }, { transform: 'translate(' + lift + 'px, -10px) scale(1.04)', offset: 0.2, easing: E2 },
+        { transform: 'translate(0px,' + dy + 'px) scale(' + s + ')' }], { duration: 680 }));
+      anims.push(upsAnim(gh, [{ opacity: 1 }, { opacity: 1, offset: 0.62, easing: 'ease-in-out' }, { opacity: 0 }], { duration: 680, fill: 'forwards' }));   /* held at 0 until the cleanup removes it: no flash at the start */
+      cleanup.push(function () { if (fly.parentNode) fly.parentNode.removeChild(fly); });
+    }
+    /* the tiles to the right slide left into the freed place (520 ms); the new one comes in from beyond the right edge, fading in, passes
+       its place by 1.8 % of the way and eases back (560 ms) */
+    [].forEach.call(row.children, function (n) {
+      var nx = n.getBoundingClientRect().left, fx = first[n.getAttribute('data-id')];
+      if (incoming.indexOf(n) >= 0) { anims.push(upsAnim(n, [{ transform: 'translateX(' + Math.max(80, row.getBoundingClientRect().right - nx + 12) + 'px)', opacity: 0 }, { opacity: 1, offset: 0.45 }, { transform: 'none', opacity: 1 }], { duration: 560, delay: 160, easing: E2, fill: 'backwards' })); return; }
+      if (fx != null && Math.abs(fx - nx) > 0.5) anims.push(upsAnim(n, [{ transform: 'translateX(' + (fx - nx) + 'px)' }, { transform: 'none' }], { duration: 520, delay: 100, easing: E2, fill: 'backwards' }));
+    });
+    /* the last suggestion taken: the row folds away */
+    if (empty) { var uh = ups.getBoundingClientRect().height; ups.style.overflow = 'hidden'; anims.push(upsAnim(ups, [{ height: uh + 'px', opacity: 1 }, { height: '0px', opacity: 0, marginTop: '0px', marginBottom: '0px' }], { duration: 420, easing: 'ease-out' })); cleanup.push(function () { if (ups.parentNode) ups.parentNode.removeChild(ups); }); }
+    upsJob(anims, function () { cleanup.forEach(function (f) { f(); }); });
+    if (la) la.finished.then(inSight, function () { /* cancelled by the next tap: that tap keeps the row in sight */ }); else inSight();
   }
   function lineRows(box, tt) {
     tt.lines.forEach(function (l) {
@@ -1081,32 +1214,55 @@
       box.appendChild(el('div', { class: 'rv-row' }, [el('span', { text: nm(it) + ', ' + E.fmtWeight(it, l.qty, lang) + (l.pre ? ' · ' + t('pre_tag') : '') }), el('span', { text: l.sum == null ? E.priceTbd(lang) : E.fmtMoney(l.sum, l.cur) })]));
     });
   }
+  /* the cart step's pieces, shared by the full draw and the in-place patch of an add-on tap (upsAdd) */
+  function cartTotals() { return dpAdjust(fromAdjust(E.totals(cart, state.form.delivery, C), C.deliveryById[state.form.delivery])); }
+  function cartLine(l) {
+    var it = C.byId[l.id];
+    return el('div', { class: 'line', 'data-id': l.id }, [
+      el('div', { class: 'nm', text: nm(it) + (l.pre ? ' · ' + t('pre_tag') : '') }),
+      el('div', { class: 'sum', text: l.sum == null ? E.priceTbd(lang) : E.fmtMoney(l.sum, l.cur) }),
+      el('div', { class: 'step' }, [
+        el('button', { type: 'button', 'aria-label': t('less'), text: '−', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, -1)); E.saveCart(cart); haptic('selection'); renderCartUI(); } }),
+        el('output', { text: E.fmtWeight(it, l.qty, lang) }),
+        el('button', { type: 'button', 'aria-label': t('more'), text: '+', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, 1)); E.saveCart(cart); haptic('selection'); renderCartUI(); } })
+      ]),
+      el('button', { class: 'rm', type: 'button', text: t('remove'), onclick: function () { cart = E.cartSet(cart, l.id, 0); E.saveCart(cart); renderCartUI(); } })
+    ]);
+  }
+  function cartNotes(box, tt) {
+    [].forEach.call(box.querySelectorAll('.minnote.cart-note'), function (n) { n.parentNode.removeChild(n); });
+    if (tt.unpriced.length) box.appendChild(el('p', { class: 'minnote tbd cart-note', text: t('unpriced_note', { n: tt.lines.filter(function (l) { return l.sum == null; }).map(function (l) { return nm(C.byId[l.id]); }).join(', ') }) }));
+    if (tt.belowMin) box.appendChild(el('p', { class: 'minnote cart-note', text: t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) }));
+  }
+  /* the main button carries the running total (refs Uber Eats, Glovo, Shop); under the minimum it says the minimum and is off */
+  function cartPrimary(b, tt) {
+    b.textContent = '';
+    if (tt.belowMin) { b.disabled = true; b.textContent = t('min_btn', { m: fm(tt.minOrder) }); return; }
+    b.disabled = false; b.appendChild(el('span', { text: t('wz_next') })); var bs = el('span', { class: 'sum' }); b.appendChild(bs); roll(bs, E.fmtPair(tt.subtotal, tt.usd), 'btn');
+  }
+  function cartSums(box, tt) {
+    var sub = box.querySelector('.cart-sub'); if (sub) roll(sub, E.fmtPair(tt.subtotal, tt.usd), 'sub');
+    cartNotes(box, tt);
+    var b = $('#wzNext'); if (b) cartPrimary(b, tt);
+  }
   function renderStep(body, foot, tt) {
     var f = state.form, st = curStep(), s = wzSteps(), idx = s.indexOf(st), title = $('#sheetTitle');
     /* speed 05.11: payment is opened only from the check screen («Изменить») - a side step, no «Шаг n из m» */
     if (st === 'pay') wzMeta(null); else wzMeta(idx + 1, s.length, s);
-    var box = el('div', { class: 'wz wz-' + st });
+    /* CEO 07.11 TG 2110: the step slides in when it is NEW; a redraw of the same step (stepper, «Убрать», live catalog) does not replay it */
+    var still = state.wzLast === st; state.wzLast = st;
+    var box = el('div', { class: 'wz wz-' + st + (still ? ' wz-still' : '') });
     var primary = el('button', { class: 'btn fill', type: 'button', id: 'wzNext', text: t('wz_next'), onclick: wzNext });
     if (st === 'cart') {
       title.textContent = t('cart_title');
-      tt.lines.forEach(function (l) {
-        var it = C.byId[l.id];
-        box.appendChild(el('div', { class: 'line' }, [
-          el('div', { class: 'nm', text: nm(it) + (l.pre ? ' · ' + t('pre_tag') : '') }),
-          el('div', { class: 'sum', text: l.sum == null ? E.priceTbd(lang) : E.fmtMoney(l.sum, l.cur) }),
-          el('div', { class: 'step' }, [
-            el('button', { type: 'button', 'aria-label': t('less'), text: '−', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, -1)); E.saveCart(cart); renderCartUI(); } }),
-            el('output', { text: E.fmtWeight(it, l.qty, lang) }),
-            el('button', { type: 'button', 'aria-label': t('more'), text: '+', onclick: function () { cart = E.cartSet(cart, l.id, E.stepQty(it, l.qty, 1)); E.saveCart(cart); renderCartUI(); } })
-          ]),
-          el('button', { class: 'rm', type: 'button', text: t('remove'), onclick: function () { cart = E.cartSet(cart, l.id, 0); E.saveCart(cart); renderCartUI(); } })
-        ]));
-      });
-      box.appendChild(el('div', { class: 'tots' }, [el('div', { class: 'grand' }, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })])]));
+      tt.lines.forEach(function (l) { box.appendChild(cartLine(l)); });
+      var subS = el('span', { class: 'cart-sub' });
+      box.appendChild(el('div', { class: 'tots' }, [el('div', { class: 'grand' }, [el('span', { text: t('subtotal') }), subS])]));
+      roll(subS, E.fmtPair(tt.subtotal, tt.usd), 'sub');   /* W-MOT-06: the cart subtotal rolls like the header and the button */
       var ups = upsellRow(); if (ups) box.appendChild(ups);
       if (state.priceNote && state.priceNote.length) box.insertBefore(el('p', { class: 'minnote live-upd', role: 'status', text: priceNoteText(state.priceNote) }), box.firstChild);
-      if (tt.unpriced.length) box.appendChild(el('p', { class: 'minnote tbd', text: t('unpriced_note', { n: tt.lines.filter(function (l) { return l.sum == null; }).map(function (l) { return nm(C.byId[l.id]); }).join(', ') }) }));
-      if (tt.belowMin) { box.appendChild(el('p', { class: 'minnote', text: t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) })); primary.textContent = t('min_btn', { m: fm(tt.minOrder) }); primary.disabled = true; }
+      cartNotes(box, tt);
+      cartPrimary(primary, tt);
     } else if (st === 'how') {
       title.textContent = t('wz_how');
       var opts = el('div', { class: 'opts', role: 'radiogroup', 'aria-labelledby': 'sheetTitle' });
@@ -1198,7 +1354,7 @@
       if (!inTg && !(CH && CH.marker())) foot.appendChild(el('p', { class: 'tgnote', id: 'tgNote', text: t('tg_note') })); /* CEO 19.10: nothing opens in Telegram / IG / WA */
     }
     /* refs (Uber Eats, Glovo, Shop): the button carries the running total, so it never has to be scrolled for */
-    if (primary.id === 'wzNext' && !primary.disabled) { primary.textContent = ''; primary.appendChild(el('span', { text: t('wz_next') })); var bs = el('span', { class: 'sum' }); primary.appendChild(bs); roll(bs, E.fmtPair(st === 'cart' ? tt.subtotal : tt.total, tt.usd), 'btn'); }
+    if (st !== 'cart' && primary.id === 'wzNext' && !primary.disabled) { primary.textContent = ''; primary.appendChild(el('span', { text: t('wz_next') })); var bs = el('span', { class: 'sum' }); primary.appendChild(bs); roll(bs, E.fmtPair(st === 'cart' ? tt.subtotal : tt.total, tt.usd), 'btn'); }
     body.appendChild(box);
     var row = el('div', { class: 'wz-foot' });
     if (idx > 0) row.appendChild(el('button', { class: 'wz-back', type: 'button', id: 'wzBack', onclick: wzBack }, [el('span', { 'aria-hidden': 'true', text: '‹' }), el('span', { text: t('wz_back') })]));
@@ -1451,7 +1607,7 @@
       /* W-DATA-06 06.11: no browser copy of the order any more (the bot has it; bot.html is not opened from this page) */
       E.saveCustomer({ name: inTg ? (E.loadCustomer() || {}).name || '' : order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment, address: payload.address || (E.loadCustomer() || {}).address || '' });
       state.lastOrder = order; state.orderNonce = null; state.orderKey = null; cart = []; E.saveCart(cart); renderCartUI(); /* CEO 11.10: the header badge kept «2» after the order */ f.windowId = null; f.windowDate = null;
-      state.step = 'cart'; state.wzReturn = false; state.view = 'done'; renderSheet(); $('#sheetBody').scrollTop = 0;
+      state.step = 'cart'; state.wzReturn = false; state.view = 'done'; haptic('success'); renderSheet(); $('#sheetBody').scrollTop = 0;
       /* CEO live test 11.10: after EVERY order the bot chat opens (t.me/uafoodsbot?start=o<nonce>), the customer taps Start and
          the bot confirms the order there. Phone: a direct navigation (never popup-blocked, iOS Safari included). Desktop: a new tab
          (allowed while the click's activation lasts); if the browser blocks it, the big button on the done screen does the same. */
@@ -1591,7 +1747,8 @@
     var go = function (to) { return function () { state.wzReturn = true; wzGo(to); }; };
     var line = function (ico, label, to, main, sub) {
       var kids = [icon(ico, 'rvx-li'), el('span', { class: 'rvx-lt' }, [el('span', { class: 'm', text: main })].concat(sub ? [el('span', { class: 's', text: sub })] : []))];
-      return to ? el('button', { class: 'rvx-line', type: 'button', 'aria-label': t('wz_edit') + ': ' + label + ' - ' + main + (sub ? ', ' + sub : ''), onclick: go(to) }, kids) : el('div', { class: 'rvx-line' }, kids);
+      /* 07.11 audit (axe label-content-name-mismatch): the name starts with what the line SHOWS; «Изменить: …» follows as hidden text */
+      return to ? el('button', { class: 'rvx-line', type: 'button', onclick: go(to) }, kids.concat([el('span', { class: 'sr', text: ' · ' + t('wz_edit') + ': ' + label })])) : el('div', { class: 'rvx-line' }, kids);
     };
     var info = el('section', { class: 'rvx-info', 'aria-label': t('wz_get') + ', ' + t('f_pay') + ', ' + t('wz_contacts') });
     var place = dpPlaces().length && f.place ? f.place : t('dlv_' + d.id + '_sub');
@@ -1739,6 +1896,29 @@
     closeOverlays(); if (sh) closeSheet();
     else if (!ov) srchClose();   /* the search closes last: Esc from the cart / an overlay opened over it returns to the results */
   });
+
+  /* 07.11 Telegram audit: inside the Mini App, Telegram's Back (Android back key, the «‹» in Telegram's header) closed the WHOLE shop while
+     the cart or a panel was open - one slip and the buyer is back in the chat. While any layer is open Telegram shows its Back button and
+     it steps back one layer: review -> sections list -> text page / bot -> the previous checkout step, else the cart closes -> search.
+     Outside Telegram nothing changes (Esc above, the x buttons). */
+  function tgLayer() { return $('#ovlRev').classList.contains('on') || !$('#qnSheet').hidden || !!document.querySelector('.ovl.on') || $('#sheet').classList.contains('on') || srchIsOpen(); }
+  function tgBack() {
+    if (closeRev() || qnClose()) return;
+    if (document.querySelector('.ovl.on')) { closeOverlays(); return; }
+    if ($('#sheet').classList.contains('on')) { if (state.view === 'cart' && $('#wzBack')) wzBack(); else closeSheet(); return; }
+    srchClose();
+  }
+  if (CH && CH.inTelegram()) {
+    /* outside links (t.me, Instagram, WhatsApp) open through Telegram, never in place of the shop */
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="https://"]'); if (!a || a.host === location.host) return;
+      if (/^https:\/\/t\.me\//.test(a.href) ? CH.openTg(a.href) : CH.openLink(a.href)) e.preventDefault();
+    });
+    var tgSync = function () { CH.backButton(tgLayer(), tgBack); };
+    var tgMo = new MutationObserver(tgSync);
+    ['#sheet', '#ovlRev', '#ovlBot', '#ovlLegal', '#qnSheet', '#srch'].forEach(function (s) { var n = $(s); if (n) tgMo.observe(n, { attributes: true, attributeFilter: ['class', 'hidden'] }); });
+    tgSync();
+  }
 
   /* ---------- 10.10 site search (CEO): magnifier in the header, results across all sections with the normal card controls ---------- */
   function srchIsOpen() { return !$('#srch').hidden; }
