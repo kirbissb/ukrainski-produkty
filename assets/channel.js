@@ -37,11 +37,30 @@
     document.documentElement.classList.add('in-tg');
     /* the official script: ready / expand / close. Loaded only inside Telegram (no third-party request for other visitors) */
     var w0 = webApp();
-    var setup = function () { var w = webApp(); if (!w) return; try { w.ready(); w.expand(); } catch (e) { /* older client */ } try { window.dispatchEvent(new Event('shop-tg-ready')); } catch (e) { /* old browser */ } };
+    var setup = function () {
+      var w = webApp(); if (!w) return;
+      try { w.ready(); w.expand(); } catch (e) { /* older client */ }
+      /* 07.11 Telegram audit: telegram-web-app.js paints the Mini App header and the area behind the page in the USER's Telegram theme
+         (white in a light theme) - a white strip over Margo's dark shop. Header, background and bottom bar take the site's own colour
+         (the page's theme-color, one source). Telegram 6.1+ (header/background), 7.10+ (bottom bar). */
+      try {
+        var m = document.querySelector('meta[name="theme-color"]'), bg = (m && m.getAttribute('content')) || '#161615', at = function (v) { return !w.isVersionAtLeast || w.isVersionAtLeast(v); };
+        if (at('6.1')) { w.setHeaderColor(bg); w.setBackgroundColor(bg); }
+        if (at('7.10') && w.setBottomBarColor) w.setBottomBarColor(bg);
+      } catch (e) { /* older client */ } try { window.dispatchEvent(new Event('shop-tg-ready')); } catch (e) { /* old browser */ } };
     if (w0) setup();
     else { var sc = document.createElement('script'); sc.src = 'https://telegram.org/js/telegram-web-app.js'; sc.async = true; sc.onload = setup; document.head.appendChild(sc); }
   }
+  var backFn = null, backOn = false, backBound = false;
+  function backApply() {
+    var w = webApp(), b = w && w.BackButton; if (!b || (w.isVersionAtLeast && !w.isVersionAtLeast('6.1'))) return;
+    try { if (backFn && !backBound) { b.onClick(function () { if (backFn) backFn(); }); backBound = true; } if (backOn) b.show(); else b.hide(); } catch (e) { /* older client */ }
+  }
+  window.addEventListener('shop-tg-ready', backApply);
   window.SHOP_CHANNEL = {
+    /* 07.11 Telegram audit: Telegram's own Back (header «‹», Android back key) steps back inside the shop while a layer is open
+       (assets/app.js tgBack); hidden = Telegram's default (Back closes the Mini App) */
+    backButton: function (show, fn) { if (fn) backFn = fn; backOn = !!show; if (inTg) backApply(); },
     inTelegram: function () { return !!initData(); },
     initData: initData,
     tgUser: tgUser,
@@ -51,6 +70,9 @@
     channel: function () { return inTg ? 'telegram' : marker ? (marker.charAt(0) === 'w' ? 'whatsapp' : 'instagram') : ''; },
     /* the order is in the chat: back to it (Telegram closes the Mini App) */
     close: function () { var w = webApp(); if (w && w.close) { try { w.close(); return true; } catch (e) { /* fall through */ } } return false; },
+    /* 07.11 Telegram audit: any other outside link (Instagram, WhatsApp) from inside the Mini App goes through Telegram's openLink - a plain
+       target=_blank is not a new window in every Telegram webview (Android / Desktop can load it in place of the shop) */
+    openLink: function (url) { var w = webApp(); if (w && w.openLink && /^https:\/\//.test(url)) { try { w.openLink(url); return true; } catch (e) { /* fall through */ } } return false; },
     /* a t.me link from inside the Mini App: Telegram opens it itself */
     openTg: function (url) { var w = webApp(); if (w && w.openTelegramLink && /^https:\/\/t\.me\//.test(url)) { try { w.openTelegramLink(url); return true; } catch (e) { /* fall through */ } } return false; },
     /* CEO 19.10 evening: «Поделиться номером» - Telegram.WebApp.requestContact (Telegram 6.9+). The client shows its own confirm popup;

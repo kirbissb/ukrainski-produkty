@@ -265,6 +265,7 @@ input, textarea, select { font: inherit; color: var(--ink); }
 .wz-back span:first-child { font-size: 22px; line-height: 1; color: var(--acc); }
 .wz-back:hover { color: var(--ink); }
 .wz { animation: wz-in 0.3s var(--spring) both; }
+.wz.wz-still { animation: none; }   /* CEO 07.11 TG 2110: a redraw of the same step never replays the slide-in (it read as a blink) */
 @keyframes wz-in { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .wz { animation: none; } .sheet, .sheet.on { transition: none; } }
 /* big options (delivery, payment): one row = one tap target */
@@ -1462,8 +1463,6 @@ h1, h2, .sec h2, .sheet .head h2, .done h2, .doc-body h2 { text-wrap: balance; }
    a card gets it when its item carries «promo: true» (no item does today), so it never reads as a sale on ordinary goods */
 .card.cb.is-promo .cb-price b { display: inline-block; padding: 4px 12px 2px; border-radius: var(--r); background: var(--acc-fill); color: var(--on-acc); text-shadow: none; }
 .card.cb.is-promo .cb-price span { display: inline-block; padding: 3px 8px; border-radius: 8px; background: #1b1b1a; color: var(--ink-2); text-shadow: none; }
-/* tile swap after the tick: the new suggestion fades in (off with reduced motion) */
-@media (prefers-reduced-motion: no-preference) { .ups-it.is-new { animation: ups-in 0.32s cubic-bezier(.2,.8,.2,1) both; } @keyframes ups-in { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } } /* CEO 07.11 TG 1967: the next of her recommendations slides into the freed place */ }
 .ups-it.is-added .ups-mk { background: var(--acc-fill); color: var(--on-acc); box-shadow: none; }
 .ups-n { -webkit-hyphens: auto; hyphens: auto; overflow-wrap: anywhere; }
 /* CEO 06.11 TG 1894: the sheet footer covered the add-on row on a phone: a lower row (photo 52 px, the 44 px tap area kept but drawn inside the row) */
@@ -1472,3 +1471,18 @@ h1, h2, .sec h2, .sheet .head h2, .done h2, .doc-body h2 { text-wrap: balance; }
 .ups-it { gap: 4px; }
 .ups-it .ups-img, .ups-it picture { height: 52px; }
 .ups-add { margin: -7px -4px -7px 0; }
+
+/* CEO 07.11 TG 2110: the add-on tap moves instead of redrawing (app.js upsAdd). The row clips the tile that slides in from its right edge
+   (and no transformed tile ever widens the scroll area: MEM obs 0251); the ghost is the tapped tile flying onto its new cart line */
+.ups-row { overflow: hidden; overflow: clip; overflow-clip-margin: 4px; }
+.ups-ghost { position: fixed; z-index: 60; margin: 0; pointer-events: none; transform-origin: 0 0; will-change: transform, opacity; box-shadow: 0 14px 28px -12px rgba(0, 0, 0, 0.7); }
+/* 07.11 Telegram audit: with the page locked (cart, search, text pages) <html> AND <body> both had overflow set, so <body> became a scroll
+   box of its own (body keeps overflow-x: hidden) and the sticky header jumped to the top of the document: behind the search a strip of the
+   page showed where the header was, behind the cart the section titles doubled. The lock stays on <html> (iOS needs it there); <body> no
+   longer turns into a scroller. Browsers without :has keep the old body lock. */
+html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
+/* 07.11 audit: a scrolled checkout step ran its text right up against the step dots (the current dot and its ring hang 4-5 px below the
+   path), so cut letters showed between the dots. The 8 px gap moves from inside the scroll area to under the path: the same layout at rest,
+   and scrolled content now ends 10 px below the dots */
+.sheet.wz-on .wz-prog:not([hidden]) { margin-bottom: 10px; }
+.sheet.wz-on .wz-prog:not([hidden]) + .scroll { padding-top: 0; }
