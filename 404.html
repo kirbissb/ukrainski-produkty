@@ -152,7 +152,7 @@ a.st-row strong { color: var(--st-accent-ink); }
 .cd-stage { position: relative; margin: 0; padding-left: 16px; }
 .cd-cat { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; border-radius: var(--st-r-lg);
   animation: cd-in .9s var(--st-spring) .15s both; }
-.cd-cat img { width: 249.64%; max-width: none; height: auto;   /* 2082/834: the cat keeps its size, the string trails off-screen */
+.cd-cat img { width: 249.64%; max-width: none; height: auto;   /* stage_scale: the cat keeps its size, a long string trails off-screen */
   transition: transform .5s var(--st-spring); }
 .cd-cat.is-tug img { transform: translateX(-14px) rotate(-1.5deg); transition-duration: .14s; }
 @keyframes cd-in { from { transform: translateX(56px); opacity: 0; } to { transform: none; opacity: 1; } }
