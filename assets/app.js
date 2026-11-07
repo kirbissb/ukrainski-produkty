@@ -892,6 +892,8 @@
     moves.reverse().forEach(function (m, k) { m[0].style.transitionDelay = (k * 0.1) + 's'; if (m[1] === null) m[0].style.opacity = '1'; else m[0].style.transform = 'translateY(' + (-m[1] * 1.2) + 'em)'; });
   }
   function renderCartUI() {
+    /* CEO 07.11 recs phase 0: a good from the add-on row that left the cart -> «removed» (the order clears the map first: an ordered good is not removed) */
+    E.upsPrune(cart).forEach(function (x) { E.recEvent('removed', x.id, x.src, '', -1); });
     var sheetOpen = renderCartChrome();
     /* a redraw while the buyer types (live catalog arriving) would drop the focused field and its keyboard */
     var a = document.activeElement, typing = a && /^(INPUT|TEXTAREA)$/.test(a.tagName) && $('#sheet').contains(a);
@@ -1064,7 +1066,15 @@
      the cart (other categories, priced, in stock, not in the cart; by the piece first, cheaper first), one tap «+» adds the usual amount */
   var UPS_BY = { salo: ['ikra_ryba', 'syr_molochne', 'sosysky'], kovbasy: ['ikra_ryba', 'syr_molochne', 'salo'], sosysky: ['syr_molochne', 'kovbasy', 'ikra_ryba'], balyk: ['ikra_ryba', 'syr_molochne', 'salo'], kabanosy: ['ikra_ryba', 'salo', 'syr_molochne'], ikra_ryba: ['syr_molochne', 'salo', 'kovbasy'], syr_molochne: ['solodke', 'ikra_ryba', 'kovbasy'], miaso: ['syr_molochne', 'sosysky', 'ikra_ryba'], solodke: ['syr_molochne', 'ikra_ryba'], inshe: ['ikra_ryba', 'syr_molochne'] };
   /* step 2 (CEO 06.11): the owner's own add-ons from the live catalog come first and replace these rules for their good (engine.js upsellPicks) */
-  function upsellPicks() { return E.upsellPicks(C, cart, UPS_BY, 10); }   /* CEO TG 1967: up to 10 queue up, the row shows 3 and refills */
+  /* CEO 07.11 recs phase 0: her list + the mutual layer first, topped up by these rules (engine.js upsellRanked); UPS_INFO = the layer and the
+     cart good of every pick, for the add-on row events (shown / added / removed -> the worker's rec_events) and the order line's via:'ups' */
+  var UPS_INFO = {}, UPS_SEEN = {};
+  function upsellPicks() {   /* CEO TG 1967: up to 10 queue up, the row shows 3 and refills */
+    var r = E.upsellRanked(C, cart, UPS_BY, 10); UPS_INFO = {};
+    r.forEach(function (x) { UPS_INFO[x.it.id] = x; }); return r.map(function (x) { return x.it; });
+  }
+  /* «shown» once per good per page view (the worker also counts a repeat on its row) */
+  function upsShown(ids) { ids.forEach(function (id, i) { var x = UPS_INFO[id]; if (!x || UPS_SEEN[id]) return; UPS_SEEN[id] = 1; E.recEvent('shown', id, x.src, x.anchor, i); }); }
   /* CEO TG 1885: a plain caramel «+» circle under the photo, no text; goods already in the cart are never suggested; more of the same =
      the stepper in the cart line.
      CEO 07.11 TG 2110 (the page BLINKED on «+»: the tap redrew the whole cart and its fade-in ran again, twice - at the tap and 1.2 s later
@@ -1122,12 +1132,15 @@
     var ids = upsellIds(); UPS_SNAP = ids;
     var picks = ids.map(function (id) { return C.byId[id]; }).filter(Boolean);
     if (!picks.length) return null;
+    upsShown(ids);
     return el('div', { class: 'ups' }, [el('p', { class: 'ups-h', text: t('ups_h') }), el('div', { class: 'ups-row' }, picks.map(upsTile))]);
   }
   /* the «+» on a tile: the cart is patched in place (see above) */
   function upsAdd(it, q, tile) {
     upsSettle();
     var row = tile.parentNode, box = row && row.parentNode && row.parentNode.parentNode, sb = $('#sheetBody');
+    var ux = UPS_INFO[it.id] || { src: 'cat_rule', anchor: '' }, us = UPS_SNAP ? UPS_SNAP.indexOf(it.id) : -1;
+    E.upsMark(it.id, ux.src); E.recEvent('added', it.id, ux.src, ux.anchor, us);
     cart = E.cartAdd(cart, it.id, q); E.saveCart(cart); haptic('light');
     if (!box || !box.classList.contains('wz-cart') || !box.isConnected) { renderCartUI(); return; }
     var move = upsMotion(), hadFocus = tile.contains(document.activeElement), r0 = tile.getBoundingClientRect();
@@ -1142,7 +1155,7 @@
     cartSums(box, tt);
     /* 3. the row: the chosen tile leaves, the rest keep their nodes and order, the next suggestion joins at the end */
     var ids = upsellIds(), keep = {}, incoming = [];
-    UPS_SNAP = ids;
+    UPS_SNAP = ids; upsShown(ids);
     tiles.forEach(function (n) { keep[n.getAttribute('data-id')] = n; });
     row.removeChild(tile);
     ids.forEach(function (id) {
@@ -1586,6 +1599,7 @@
     var key = JSON.stringify(payload); /* the same checkout retried keeps its nonce: the worker returns the same order, never a second one */
     if (state.orderKey !== key || !state.orderNonce) { state.orderKey = key; state.orderNonce = E.orderNonce(); }
     payload.nonce = state.orderNonce;
+    var rv = E.recVid(); if (rv) payload.v = rv;   /* CEO 07.11 recs phase 0: the same visitor id as the add-on row events (the worker stores only its daily hash) */
     if (CH) CH.decorate(payload);
     var btn = $('#sendBtn'); state.sending = true; err.textContent = ''; if (btn) { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
     E.sendOrder(payload).then(function (r) {
@@ -1606,7 +1620,7 @@
       if (dplan() && f.delivery === 'alanya' && d.fee_try == null) order.feeTbd = true; /* CEO 29.10: the shop names the courier fee */
       /* W-DATA-06 06.11: no browser copy of the order any more (the bot has it; bot.html is not opened from this page) */
       E.saveCustomer({ name: inTg ? (E.loadCustomer() || {}).name || '' : order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment, address: payload.address || (E.loadCustomer() || {}).address || '' });
-      state.lastOrder = order; state.orderNonce = null; state.orderKey = null; cart = []; E.saveCart(cart); renderCartUI(); /* CEO 11.10: the header badge kept «2» after the order */ f.windowId = null; f.windowDate = null;
+      state.lastOrder = order; state.orderNonce = null; state.orderKey = null; E.upsClear(); cart = []; E.saveCart(cart); renderCartUI(); /* CEO 11.10: the header badge kept «2» after the order */ f.windowId = null; f.windowDate = null;
       state.step = 'cart'; state.wzReturn = false; state.view = 'done'; haptic('success'); renderSheet(); $('#sheetBody').scrollTop = 0;
       /* CEO live test 11.10: after EVERY order the bot chat opens (t.me/uafoodsbot?start=o<nonce>), the customer taps Start and
          the bot confirms the order there. Phone: a direct navigation (never popup-blocked, iOS Safari included). Desktop: a new tab
