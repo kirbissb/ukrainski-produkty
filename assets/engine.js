@@ -9,7 +9,7 @@
   var THIN = ' '; // narrow no-break space for thousands
   /* orders live under a new key since 10.10 (numbers changed from UA-1043 to the real bot's №101 format); the old key is
      migrated once by migrateOrders() below */
-  var KEYS = { orders: 'ukr-demo-orders-v2', ordersOld: 'ukr-demo-orders', customer: 'ukr-demo-customer', stock: 'ukr-demo-stock', prices: 'ukr-demo-prices', cart: 'ukr-demo-cart',
+  var KEYS = { orders: 'ukr-demo-orders-v2', ordersOld: 'ukr-demo-orders', customer: 'ukr-demo-customer', stock: 'ukr-demo-stock', prices: 'ukr-demo-prices', cart: 'ukr-demo-cart', ups: 'ukr-demo-ups',
     lang: 'ukr-lang', notify: 'ukr-demo-notify', newitems: 'ukr-demo-newitems', delivery: 'ukr-demo-delivery', special: 'ukr-demo-special' };
   var HOUR = 3600000;
   var NEW_BATCH_HOURS = 48;
@@ -20,7 +20,8 @@
   function pickStore() {
     if (store) return store;
     try {
-      if (typeof localStorage !== 'undefined') {
+      if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.getItem === 'function') {
+        localStorage.getItem('ukr-lang'); /* a storage that throws on read (blocked, or a non-browser host) -> the memory store below */
         store = { get: function (k) { return localStorage.getItem(k); }, set: function (k, v) { localStorage.setItem(k, v); } };
         return store;
       }
@@ -211,35 +212,93 @@
     if (ad) {
       var keep = function (m) { var o = {}; Object.keys(m && typeof m === 'object' ? m : {}).forEach(function (k) { var v = Array.isArray(m[k]) ? m[k].filter(function (x) { return typeof x === 'string' && c.byId[x]; }) : []; if (v.length) o[k] = v; }); return o; };
       c.addons = { pairs: keep(ad.pairs), hide: keep(ad.hide) };
+      /* CEO 07.11 recs phase 0 (bot-engine src/recs.ts): ranked[good] = [{id, src}] = her list, then the MUTUAL layer (goods she picked together in
+         one list are offered with each other); only = the goods whose list is offered alone («только мои»). Absent = an older worker: her pairs replace */
+      if (ad.ranked && typeof ad.ranked === 'object') {
+        var rk = {}; Object.keys(ad.ranked).forEach(function (k) { if (!c.byId[k] || !Array.isArray(ad.ranked[k])) return;
+          var v = ad.ranked[k].filter(function (x) { return x && typeof x.id === 'string' && c.byId[x.id] && REC_SRC.test(String(x.src)); }).map(function (x) { return { id: x.id, src: String(x.src) }; });
+          if (v.length) rk[k] = v; });
+        c.addons.ranked = rk;
+        c.addons.only = {}; (Array.isArray(ad.only) ? ad.only : []).forEach(function (k) { if (typeof k === 'string' && c.byId[k]) c.addons.only[k] = 1; });
+      }
     }
     return c;
   }
   /* CEO 06.11 (TG 1778-1782; research: the cart is the stage that sells add-ons, never inside checkout): the row of up to 3 goods that go WITH
-     the cart. Step 2 (owner's own add-ons, catalog.addons): a good's own list (else its category's list) REPLACES the category rules for that
-     good and comes first, in her order (up to 10, CEO 07.11 TG 1967: the row shows 3; a good the customer adds leaves the picks, so the next
-     of her list takes its place - app.js keeps the other tiles in their slots); her «не предлагать» goods are skipped from the rules. Step 1 (rules = {cat: [cats]}): goods of other
-     categories, priced, in stock, by the piece first, cheaper first, lira only, with a photo. Never what is already in the cart. Pure. */
-  var UPS_STATES = /^(in_stock|new_batch|few_left)$/;
-  function upsellPicks(catalog, cart, rules, max) {
+     the cart. CEO 07.11 recs phase 0 «её первыми + добор» (bot-engine src/recs.ts): for every good of the cart her list and the mutual layer
+     (catalog.addons.ranked, in that order) come first; the free places are topped up with the category rules (rules = {cat: [cats]}: goods of
+     other categories, priced, in stock, by the piece first, cheaper first, lira only, with a photo) unless that good is «только мои»
+     (catalog.addons.only). Her «не предлагать» goods are never picked. An older worker (no ranked): a good's own list (else its category's)
+     REPLACES the category rules for that good, as before. Never what is already in the cart. Pure.
+     -> [{it, src, anchor}]: src = the layer (manual | mutual | cat_rule), anchor = the cart good it was picked for ('' = the category rules) */
+  var UPS_STATES = /^(in_stock|new_batch|few_left)$/, REC_SRC = /^(manual|mutual|stats|cat_rule|pairings)$/;
+  function upsellRanked(catalog, cart, rules, max) {
     var c = catalog || CATALOG, n = max || 3, inCart = {}, cats = {}, autoCats = {}, hide = {}, own = [], A = c.addons || { pairs: {}, hide: {} };
     var sells = function (it) { return it && !inCart[it.id] && it.price != null && UPS_STATES.test(it.state || 'in_stock'); };
+    var has = function (it) { for (var i = 0; i < own.length; i++) if (own[i].it === it) return true; return false; };
     (cart || []).forEach(function (l) { inCart[l.id] = 1; });
     (cart || []).forEach(function (l) {
       var it = c.byId[l.id]; if (!it) return; cats[it.cat] = 1;
-      var list = (A.pairs || {})[it.id] || (A.pairs || {})['cat:' + it.cat];
       ((A.hide || {})[it.id] || []).concat((A.hide || {})['cat:' + it.cat] || []).forEach(function (x) { hide[x] = 1; });
-      if (list && list.length) list.forEach(function (x) { var g = c.byId[x]; if (sells(g) && own.indexOf(g) < 0) own.push(g); });
+      if (A.ranked) {
+        ((A.ranked || {})[it.id] || []).forEach(function (x) { var g = c.byId[x.id]; if (sells(g) && !has(g)) own.push({ it: g, src: x.src, anchor: it.id }); });
+        if (!(A.only || {})[it.id]) autoCats[it.cat] = 1;
+        return;
+      }
+      var list = (A.pairs || {})[it.id] || (A.pairs || {})['cat:' + it.cat];
+      if (list && list.length) list.forEach(function (x) { var g = c.byId[x]; if (sells(g) && !has(g)) own.push({ it: g, src: 'manual', anchor: it.id }); });
       else autoCats[it.cat] = 1;
     });
+    own = own.filter(function (x) { return !hide[x.it.id] || x.src === 'manual'; });
     var want = []; Object.keys(autoCats).forEach(function (k) { ((rules || {})[k] || []).forEach(function (x) { if (!cats[x] && want.indexOf(x) < 0) want.push(x); }); });
     /* 06.11 release check: a USD-priced item (caviar 120 $) sorted as «cheap» next to lira prices; the rules pick lira goods only */
-    var pool = c.items.filter(function (it) { return sells(it) && !hide[it.id] && own.indexOf(it) < 0 && it.currency !== 'USD' && it.photo && want.indexOf(it.cat) >= 0; });
+    var pool = c.items.filter(function (it) { return sells(it) && !hide[it.id] && !has(it) && it.currency !== 'USD' && it.photo && want.indexOf(it.cat) >= 0; });
     pool.sort(function (a, b) { var r = want.indexOf(a.cat) - want.indexOf(b.cat); if (r) return r; var pa = a.unit === 'pc' ? 0 : 1, pb = b.unit === 'pc' ? 0 : 1; return pa - pb || a.price - b.price; });
-    var out = own.slice(0, n), used = {}; out.forEach(function (it) { used[it.cat] = 1; });
-    pool.forEach(function (it) { if (out.length < n && !used[it.cat]) { out.push(it); used[it.cat] = 1; } });
-    pool.forEach(function (it) { if (out.length < n && out.indexOf(it) < 0) out.push(it); });
+    var out = own.slice(0, n), used = {}, inOut = function (it) { for (var i = 0; i < out.length; i++) if (out[i].it === it) return true; return false; };
+    out.forEach(function (x) { used[x.it.cat] = 1; });
+    pool.forEach(function (it) { if (out.length < n && !used[it.cat]) { out.push({ it: it, src: 'cat_rule', anchor: '' }); used[it.cat] = 1; } });
+    pool.forEach(function (it) { if (out.length < n && !inOut(it)) out.push({ it: it, src: 'cat_rule', anchor: '' }); });
     return out;
   }
+  function upsellPicks(catalog, cart, rules, max) { return upsellRanked(catalog, cart, rules, max).map(function (x) { return x.it; }); }
+
+  /* ---------- CEO 07.11 recs phase 0: what the add-on row did (bot-engine POST /api/event t:"r", rec_events) ----------
+     The visitor id = ONE random id in localStorage (the same key the trial tracker uses), sent only to the shop's own worker, which keeps a daily
+     salted hash of it; no cookie, no third party. ?notrack=1 (the tracker's switch, ukr_trk_off) keeps the events off. Fire-and-forget, never throws.
+     The goods added from the row are remembered (KEYS.ups: id -> src) until the order goes: the order's line then says via:'ups' + s */
+  var EVENT_URL = 'https://ukr-alanya-bot-test.bot-engine.workers.dev/api/event', TRK = 'ukr_trk';
+  function recVid() {
+    try {
+      var st = pickStore(); if (st.get(TRK + '_off') === '1') return null;
+      var v = st.get(TRK + '_vid'); if (v && /^[A-Za-z0-9_-]{16,40}$/.test(v)) return v;
+      var cr = (typeof crypto !== 'undefined' && crypto && crypto.getRandomValues) ? crypto : null; if (!cr) return null;
+      var u = new Uint8Array(18); cr.getRandomValues(u); v = btoa(String.fromCharCode.apply(null, Array.prototype.slice.call(u))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      st.set(TRK + '_vid', v); return v;
+    } catch (e) { return null; }
+  }
+  /* kind = shown | added | removed; src = the layer; anchor = the cart good it was picked for; slot = its place in the row (0..2) */
+  function recEvent(kind, id, src, anchor, slot, sendFn) {
+    try {
+      var v = recVid(); if (!v || !REC_SRC.test(String(src))) return false;
+      var b = { v: v, t: 'r', k: kind, i: String(id), s: String(src), p: (typeof location !== 'undefined' && location.pathname) || '/' };
+      if (anchor) b.a = String(anchor); if (typeof slot === 'number' && slot >= 0) b.n = slot;
+      var body = JSON.stringify(b);
+      if (sendFn) { sendFn(EVENT_URL, body); return true; }
+      if (typeof navigator !== 'undefined' && navigator.sendBeacon && navigator.sendBeacon(EVENT_URL, body)) return true;
+      if (typeof fetch !== 'undefined') fetch(EVENT_URL, { method: 'POST', body: body, keepalive: true, mode: 'cors', credentials: 'omit' }).catch(function () { /* nobody waits */ });
+      return true;
+    } catch (e) { return false; }
+  }
+  function upsMap() { var m = readJSON(KEYS.ups, {}); return m && typeof m === 'object' && !Array.isArray(m) ? m : {}; }
+  function upsMark(id, src) { var m = upsMap(); m[id] = String(src); writeJSON(KEYS.ups, m); }
+  function upsClear() { writeJSON(KEYS.ups, {}); }
+  /* the goods of the map no longer in the cart leave it -> [{id, src}] (the page sends «removed» for each) */
+  function upsPrune(cart) {
+    var m = upsMap(), inCart = {}, gone = []; (cart || []).forEach(function (l) { inCart[l.id] = 1; });
+    Object.keys(m).forEach(function (id) { if (!inCart[id]) { gone.push({ id: id, src: m[id] }); delete m[id]; } });
+    if (gone.length) writeJSON(KEYS.ups, m); return gone;
+  }
+
   /* -> Promise<live | null>; null on timeout (3 s), network error, non-200 or a malformed body. Never throws. */
   function fetchLiveCatalog(fetchFn, url, timeoutMs) {
     var f = fetchFn || (typeof fetch !== 'undefined' ? fetch : null);
@@ -749,7 +808,9 @@
   /* v5 (CEO 11.10): pickup / city courier carry a time window (window_id + window_date YYYY-MM-DD); cargo has none (null) */
   function sitePayload(cart, form, lang, nonce) {
     var kind = windowKind(form.delivery);
-    var p = { items: cart.map(function (l) { return { id: l.id, qty: l.qty }; }), name: String(form.name || '').trim(), contact: orderContact(form.phone) || String(form.phone || '').trim(),
+    /* CEO 07.11 recs phase 0: a good added from the add-on row says so (via:'ups' + the layer s); the worker marks its order line ups_site */
+    var um = upsMap();
+    var p = { items: cart.map(function (l) { return um[l.id] && REC_SRC.test(um[l.id]) ? { id: l.id, qty: l.qty, via: 'ups', s: um[l.id] } : { id: l.id, qty: l.qty }; }), name: String(form.name || '').trim(), contact: orderContact(form.phone) || String(form.phone || '').trim(),
       delivery: form.delivery, city: form.other ? String(form.city || '').trim() : '', payment: form.payment, comment: String(form.comment || '').trim(),
       date: form.date || '', lang: lang === 'uk' || lang === 'en' ? lang : 'ru', nonce: nonce, website: String(form.website || ''),
       window_id: kind && form.windowId ? String(form.windowId) : null, window_date: kind && form.windowDate ? String(form.windowDate) : null };
@@ -1039,7 +1100,8 @@
   return {
     KEYS: KEYS, THIN: THIN, STATE_ORDER: STATE_ORDER, DAYS: DAYS, NEW_BATCH_HOURS: NEW_BATCH_HOURS,
     setStore: function (s) { store = s; },
-    CATALOG_URL: CATALOG_URL, mergeLiveCatalog: mergeLiveCatalog, upsellPicks: upsellPicks, fetchLiveCatalog: fetchLiveCatalog,
+    CATALOG_URL: CATALOG_URL, mergeLiveCatalog: mergeLiveCatalog, upsellPicks: upsellPicks, upsellRanked: upsellRanked,
+    recVid: recVid, recEvent: recEvent, upsMap: upsMap, upsMark: upsMark, upsClear: upsClear, upsPrune: upsPrune, EVENT_URL: EVENT_URL, fetchLiveCatalog: fetchLiveCatalog,
     LIVE_POLL_MIN_MS: LIVE_POLL_MIN_MS, LIVE_POLL_MAX_MS: LIVE_POLL_MAX_MS, livePollDelay: livePollDelay, liveSig: liveSig, cartPriceChanges: cartPriceChanges, liveFacts: liveFacts, livePrice: livePrice, priceTbd: priceTbd, hasPrice: hasPrice,
     fmtMoney: fmtMoney, fmtWeight: fmtWeight, fmtKg: fmtKg, priceLabel: priceLabel, unitLabel: unitLabel, fmtPair: fmtPair,
     parseCatalog: parseCatalog, applyOverrides: applyOverrides, setStock: setStock, setPrice: setPrice, setState: setState, setNextBatch: setNextBatch,
