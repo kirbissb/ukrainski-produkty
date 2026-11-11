@@ -240,5 +240,8 @@ var CATALOG_RAW = /*CAT_START*/{"shop":{"name":"Українські проду�
   if (!h || h.complete) go(); else { h.addEventListener('load', go); h.addEventListener('error', go); setTimeout(go, 3000); }
 })();
 </script>
+<!-- trial report (CEO 03.11, wired 11.11 TG 2785): opens with their source, page views and the six main clicks -> the bot worker (/api/open, /api/event); no cookie,
+     no third party, one random id in localStorage; ?notrack=1 turns it off in this browser. 'self' script: the CSP needs no new hash. Copy of bot-engine site-tracker/trial-tracker.js -->
+<script src="assets/trial-tracker.js" defer></script>
 </body>
 </html>
