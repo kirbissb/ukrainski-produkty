@@ -58,7 +58,7 @@
       producer: 'Производитель: {b}',
       cb_few: 'Осталось {q}', cb_items: ['товар', 'товара', 'товаров'], cb_sections: 'Разделы', cb_more: 'Ещё', cb_all: 'Все товары', cb_in_cart_cap: 'В корзине', cb_live_in: 'В корзине: {q}', cb_live_out: 'Удалено из корзины', cb_switch: 'Карточки', cb_add: 'В корзину', cb_next_batch: 'Ближайшая поставка', cb_in_cart: 'В корзине: {q}. Открыть корзину',
       cart_title: 'Корзина', cart_empty: 'Корзина пуста. Выберите продукты в каталоге.', to_catalog: 'В каталог', subtotal: 'Продукты', free: 'бесплатно', total: 'Итого',
-      total_dlv: 'Итого с доставкой', min_note: 'Минимальный заказ - {m}. Не хватает {x}.', min_btn: 'Минимальный заказ - {m}', unpriced_note: 'Цену уточним при подтверждении заказа: {n}.', live_price: 'Цена обновилась: {n} - теперь {p}', ph_new: 'Новинка', pos: ['позиция', 'позиции', 'позиций'],
+      total_dlv: 'Итого с доставкой', min_note: 'Минимальный заказ - {m}. Не хватает {x}.', min_btn: 'Минимальный заказ - {m}', unpriced_note: 'Цену уточним при подтверждении заказа: {n}', live_price: 'Цена обновилась: {n} - теперь {p}', ph_new: 'Новинка', pos: ['позиция', 'позиции', 'позиций'],
       checkout: 'Оформление', f_name: 'Имя', f_name_ph: 'Как к вам обращаться', f_phone: 'Телефон (Telegram или WhatsApp)', f_city: 'Город', city_alanya: 'Алания', city_other: 'Другой город', city_ph: 'Какой город',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Желаемая дата доставки (необязательно)', f_date_ph: 'Выбрать в календаре', no_date: 'Без даты', prev_m: 'Предыдущий месяц', next_m: 'Следующий месяц',
       f_comment: 'Комментарий', f_comment_ph: 'Например: позвонить перед доставкой', send: 'Отправить заказ', err_contact: 'Укажите имя и телефон, чтобы мы могли подтвердить заказ.', err_send: 'Заказ не отправлен: нет связи с сервером. Корзина сохранена - попробуйте ещё раз.', err_reject: 'Заказ не отправлен: проверьте корзину и данные или напишите нам в Telegram. Корзина сохранена.', f_contact: 'Номер телефона', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Укажите имя и номер телефона, чтобы мы могли связаться с вами по заказу.', err_phone_tg: 'Укажите номер телефона, чтобы мы могли связаться с вами по заказу.', share_phone: 'Поделиться номером', tg_note: 'После заказа откроется Telegram - там вы увидите заказ и подтвердите его одной кнопкой.', f_when_pickup: 'Когда удобно забрать?', f_when_courier: 'Когда удобно принять курьера?', day_today: 'Сегодня', day_tomorrow: 'Завтра', day_none: 'окон больше нет', day_closed: 'выходной', err_window: 'Выберите день и время, когда вам удобно.', done_when: 'Время', done_tg_msg: 'Ваш заказ - в Telegram', done_tg_hint: 'Статус, курьер и итоговая сумма', done_tg_btn: 'Открыть чат заказа', err_city: 'Укажите город для карго.',
@@ -130,7 +130,7 @@
       producer: 'Виробник: {b}',
       cb_few: 'Залишилось {q}', cb_items: ['товар', 'товари', 'товарів'], cb_sections: 'Розділи', cb_more: 'Ще', cb_all: 'Усі товари', cb_in_cart_cap: 'У кошику', cb_live_in: 'У кошику: {q}', cb_live_out: 'Видалено з кошика', cb_switch: 'Картки', cb_add: 'У кошик', cb_next_batch: 'Найближча поставка', cb_in_cart: 'У кошику: {q}. Відкрити кошик',
       cart_title: 'Кошик', cart_empty: 'Кошик порожній. Оберіть продукти в каталозі.', to_catalog: 'До каталогу', subtotal: 'Продукти', free: 'безкоштовно', total: 'Разом',
-      total_dlv: 'Разом з доставкою', min_note: 'Мінімальне замовлення - {m}. Не вистачає {x}.', min_btn: 'Мінімальне замовлення - {m}', unpriced_note: 'Ціну уточнимо під час підтвердження замовлення: {n}.', live_price: 'Ціна оновилася: {n} - тепер {p}', ph_new: 'Новинка', pos: ['позиція', 'позиції', 'позицій'],
+      total_dlv: 'Разом з доставкою', min_note: 'Мінімальне замовлення - {m}. Не вистачає {x}.', min_btn: 'Мінімальне замовлення - {m}', unpriced_note: 'Ціну уточнимо під час підтвердження замовлення: {n}', live_price: 'Ціна оновилася: {n} - тепер {p}', ph_new: 'Новинка', pos: ['позиція', 'позиції', 'позицій'],
       checkout: 'Оформлення', f_name: 'Ім\'я', f_name_ph: 'Як до вас звертатися', f_phone: 'Номер телефону (Telegram або WhatsApp)', f_city: 'Місто', city_alanya: 'Аланія', city_other: 'Інше місто', city_ph: 'Яке місто',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Бажана дата доставки (необов\'язково)', f_date_ph: 'Обрати в календарі', no_date: 'Без дати', prev_m: 'Попередній місяць', next_m: 'Наступний місяць',
       f_comment: 'Коментар', f_comment_ph: 'Наприклад: подзвонити перед доставкою', send: 'Надіслати замовлення', err_contact: 'Вкажіть ім\'я та номер телефону, щоб ми могли підтвердити замовлення.', err_send: 'Замовлення не надіслано: немає зв\'язку з сервером. Кошик збережено - спробуйте ще раз.', err_reject: 'Замовлення не надіслано: перевірте кошик і дані або напишіть нам у Telegram. Кошик збережено.', f_contact: 'Номер телефону', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Вкажіть ім\'я та номер телефону, щоб ми могли зв\'язатися з вами щодо замовлення.', err_phone_tg: 'Вкажіть номер телефону, щоб ми могли зв\'язатися з вами щодо замовлення.', share_phone: 'Поділитися номером', tg_note: 'Після замовлення відкриється Telegram - там ви побачите замовлення і підтвердите його однією кнопкою.', f_when_pickup: 'Коли зручно забрати?', f_when_courier: 'Коли зручно прийняти кур\'єра?', day_today: 'Сьогодні', day_tomorrow: 'Завтра', day_none: 'вікон більше немає', day_closed: 'вихідний', err_window: 'Оберіть день і час, коли вам зручно.', done_when: 'Час', done_tg_msg: 'Ваше замовлення - в Telegram', done_tg_hint: 'Статус, кур\'єр і підсумкова сума', done_tg_btn: 'Відкрити чат замовлення', err_city: 'Вкажіть місто для карго.',
@@ -202,7 +202,7 @@
       producer: 'Producer: {b}',
       cb_few: 'Only {q} left', cb_items: ['item', 'items', 'items'], cb_sections: 'Sections', cb_more: 'More', cb_all: 'All products', cb_in_cart_cap: 'In your cart', cb_live_in: 'In your cart: {q}', cb_live_out: 'Removed from cart', cb_switch: 'Cards', cb_add: 'Add to cart', cb_next_batch: 'With the next batch', cb_in_cart: 'In your cart: {q}. Open cart',
       cart_title: 'Cart', cart_empty: 'Your cart is empty. Browse the catalog to add products.', to_catalog: 'Browse the catalog', subtotal: 'Subtotal', free: 'free', total: 'Total',
-      total_dlv: 'Total with delivery', min_note: 'Minimum order - {m}. {x} more to go.', min_btn: 'Minimum order - {m}', unpriced_note: 'We will name the price when we confirm the order: {n}.', live_price: 'Price updated: {n} - now {p}', ph_new: 'New in', pos: ['item', 'items', 'items'],
+      total_dlv: 'Total with delivery', min_note: 'Minimum order - {m}. {x} more to go.', min_btn: 'Minimum order - {m}', unpriced_note: 'We will name the price when we confirm the order: {n}', live_price: 'Price updated: {n} - now {p}', ph_new: 'New in', pos: ['item', 'items', 'items'],
       checkout: 'Checkout', f_name: 'Name', f_name_ph: 'What should we call you', f_phone: 'Phone (Telegram or WhatsApp)', f_city: 'City', city_alanya: 'Alanya', city_other: 'Other city', city_ph: 'Which city',
       f_dlv: 'Delivery', f_pay: 'Payment', f_date: 'Preferred delivery date (optional)', f_date_ph: 'Pick a date', no_date: 'No date', prev_m: 'Previous month', next_m: 'Next month',
       f_comment: 'Comment', f_comment_ph: 'e.g. call before delivery', send: 'Confirm order', err_contact: 'Add your name and phone so we can confirm the order.', err_send: 'The order was not sent: no connection to the server. Your cart is saved - please try again.', err_reject: 'The order was not sent: please check your cart and details or message us on Telegram. Your cart is saved.', f_contact: 'Phone number', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Add your name and phone number so we can reach you about your order.', err_phone_tg: 'Add your phone number so we can reach you about your order.', share_phone: 'Share my number', tg_note: 'After you order, Telegram opens - you\'ll see your order there and confirm it with one tap.', f_when_pickup: 'When would you like to pick it up?', f_when_courier: 'When can you receive the courier?', day_today: 'Today', day_tomorrow: 'Tomorrow', day_none: 'no slots left', day_closed: 'closed', err_window: 'Pick a day and a time that suits you.', done_when: 'Time', done_tg_msg: 'Your order is in Telegram', done_tg_hint: 'Status, courier and final total', done_tg_btn: 'Open the order chat', err_city: 'Enter your city for cargo delivery.',
@@ -361,6 +361,9 @@
 
   function delivName(d) { return t('dlv_' + d.id); }
   function fm(n) { return E.fmtMoney(n); }
+  /* a cart of ONLY price-on-request items has no sum: never «0 ₺» - the words «цена по запросу» on a text line, nothing on a button/chip */
+  function noSum(tt, amt, usd) { return tt.unpriced.length > 0 && !amt && !usd; }
+  function sumTxt(tt, amt, usd, words) { return noSum(tt, amt, usd) ? (words ? E.priceTbd(lang) : '') : E.fmtPair(amt, usd); }
 
   /* ---------- static text ---------- */
   /* redesign 06.11 (CEO 22.09 rule, check_design «copy period»): a text block on the page ends without a period. One place: the static
@@ -907,11 +910,11 @@
     var f = state.form;
     var t0 = E.totals(cart, f.delivery, C);
     $('#cartCount').textContent = t0.count ? String(t0.count) : '';
-    roll($('#cartSum'), t0.count ? E.fmtPair(t0.subtotal, t0.usd) : '', 'hdr');
+    roll($('#cartSum'), t0.count ? sumTxt(t0, t0.subtotal, t0.usd) : '', 'hdr');
     /* redesign 06.11 (axe label-content-name-mismatch): the button's name carries the count and sum it shows */
-    $('#cartBtn').setAttribute('aria-label', t('cart') + (t0.count ? ' ' + t0.count + ', ' + E.fmtPair(t0.subtotal, t0.usd) : ''));
+    $('#cartBtn').setAttribute('aria-label', t('cart') + (t0.count ? ' ' + t0.count + (noSum(t0, t0.subtotal, t0.usd) ? '' : ', ' + E.fmtPair(t0.subtotal, t0.usd)) : ''));
     $('#barLeft').textContent = t('cart_title') + ' · ' + t0.count + ' ' + plural(t0.count);
-    roll($('#barRight'), E.fmtPair(t0.subtotal, t0.usd), 'bar');
+    roll($('#barRight'), sumTxt(t0, t0.subtotal, t0.usd), 'bar');
     var sheetOpen = $('#sheet').classList.contains('on');
     $('#bar').classList.toggle('on', t0.count > 0 && !sheetOpen);
     syncCartBadges();
@@ -1254,10 +1257,10 @@
   function cartPrimary(b, tt) {
     b.textContent = '';
     if (tt.belowMin) { b.disabled = true; b.textContent = t('min_btn', { m: fm(tt.minOrder) }); return; }
-    b.disabled = false; b.appendChild(el('span', { text: t('wz_next') })); var bs = el('span', { class: 'sum' }); b.appendChild(bs); roll(bs, E.fmtPair(tt.subtotal, tt.usd), 'btn');
+    b.disabled = false; b.appendChild(el('span', { text: t('wz_next') })); var bs = el('span', { class: 'sum' }); b.appendChild(bs); roll(bs, sumTxt(tt, tt.subtotal, tt.usd), 'btn');
   }
   function cartSums(box, tt) {
-    var sub = box.querySelector('.cart-sub'); if (sub) roll(sub, E.fmtPair(tt.subtotal, tt.usd), 'sub');
+    var sub = box.querySelector('.cart-sub'); if (sub) roll(sub, sumTxt(tt, tt.subtotal, tt.usd, true), 'sub');
     cartNotes(box, tt);
     var b = $('#wzNext'); if (b) cartPrimary(b, tt);
   }
@@ -1274,7 +1277,7 @@
       tt.lines.forEach(function (l) { box.appendChild(cartLine(l)); });
       var subS = el('span', { class: 'cart-sub' });
       box.appendChild(el('div', { class: 'tots' }, [el('div', { class: 'grand' }, [el('span', { text: t('subtotal') }), subS])]));
-      roll(subS, E.fmtPair(tt.subtotal, tt.usd), 'sub');   /* W-MOT-06: the cart subtotal rolls like the header and the button */
+      roll(subS, sumTxt(tt, tt.subtotal, tt.usd, true), 'sub');   /* W-MOT-06: the cart subtotal rolls like the header and the button */
       var ups = upsellRow(); if (ups) box.appendChild(ups);
       if (state.priceNote && state.priceNote.length) box.insertBefore(el('p', { class: 'minnote live-upd', role: 'status', text: priceNoteText(state.priceNote) }), box.firstChild);
       cartNotes(box, tt);
@@ -1362,15 +1365,15 @@
       block(t('f_pay'), payChoice() ? 'pay' : null, [el('p', { class: 'rv-p', text: t('pay_' + f.payment) })]);
       block(t('wz_contacts'), 'contact', [el('p', { class: 'rv-p', text: (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim() }), el('p', { class: 'rv-p sub', text: f.comment.trim() || t('wz_no_comment') })]);
       box.appendChild(el('div', { class: 'tots' }, [
-        el('div', {}, [el('span', { text: t('subtotal') }), el('span', { text: E.fmtPair(tt.subtotal, tt.usd) })]),
+        el('div', {}, [el('span', { text: t('subtotal') }), el('span', { text: sumTxt(tt, tt.subtotal, tt.usd, true) })]),
         tt.delivery ? el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: fm(tt.delivery) })]) : tt.feeTbd ? el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: E.dpText('fee_tbd_short', lang) })]) : null,
-        el('div', { class: 'grand' }, [el('span', { text: t(tt.delivery ? 'total_dlv' : 'total') }), el('span', { text: E.fmtPair(tt.total, tt.usd) })])
+        el('div', { class: 'grand' }, [el('span', { text: t(tt.delivery ? 'total_dlv' : 'total') }), el('span', { text: sumTxt(tt, tt.total, tt.usd, true) })])
       ]));
-      primary = el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') }), el('span', { class: 'sum', text: E.fmtPair(tt.total, tt.usd) })]);
+      primary = el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') }), el('span', { class: 'sum', text: sumTxt(tt, tt.total, tt.usd) })]);
       if (!inTg && !(CH && CH.marker())) foot.appendChild(el('p', { class: 'tgnote', id: 'tgNote', text: t('tg_note') })); /* CEO 19.10: nothing opens in Telegram / IG / WA */
     }
     /* refs (Uber Eats, Glovo, Shop): the button carries the running total, so it never has to be scrolled for */
-    if (st !== 'cart' && primary.id === 'wzNext' && !primary.disabled) { primary.textContent = ''; primary.appendChild(el('span', { text: t('wz_next') })); var bs = el('span', { class: 'sum' }); primary.appendChild(bs); roll(bs, E.fmtPair(st === 'cart' ? tt.subtotal : tt.total, tt.usd), 'btn'); }
+    if (st !== 'cart' && primary.id === 'wzNext' && !primary.disabled) { primary.textContent = ''; primary.appendChild(el('span', { text: t('wz_next') })); var bs = el('span', { class: 'sum' }); primary.appendChild(bs); roll(bs, sumTxt(tt, st === 'cart' ? tt.subtotal : tt.total, tt.usd), 'btn'); }
     body.appendChild(box);
     var row = el('div', { class: 'wz-foot' });
     if (idx > 0) row.appendChild(el('button', { class: 'wz-back', type: 'button', id: 'wzBack', onclick: wzBack }, [el('span', { 'aria-hidden': 'true', text: '‹' }), el('span', { text: t('wz_back') })]));
@@ -1716,11 +1719,11 @@
       var it = C.byId[l.id];
       goods.appendChild(el('li', {}, [el('span', { class: 'k', text: nm(it) + ', ' + E.fmtWeight(it, l.qty, lang) + (l.pre ? ' · ' + t('pre_tag') : '') }), el('span', { class: 'v', text: l.sum == null ? E.priceTbd(lang) : E.fmtMoney(l.sum, l.cur) })]));
     });
-    if (tt.delivery) goods.appendChild(el('li', { class: 'sub' }, [el('span', { class: 'k', text: t('subtotal') }), el('span', { class: 'v', text: E.fmtPair(tt.subtotal, tt.usd) })]));
+    if (tt.delivery) goods.appendChild(el('li', { class: 'sub' }, [el('span', { class: 'k', text: t('subtotal') }), el('span', { class: 'v', text: sumTxt(tt, tt.subtotal, tt.usd, true) })]));
     /* a free delivery is said in the «Получение» row, not as a goods line */
     var fv = feeVal(), freeDlv = !tt.delivery && !tt.feeTbd && fv === t('free');
     if (fv && !freeDlv) goods.appendChild(el('li', { class: 'dlv' }, [el('span', { class: 'k', text: delivName(d) }), el('span', { class: 'v', text: fv })]));
-    var total = el('div', { class: 'rvx-total' }, [el('span', { class: 'cap', text: t(tt.delivery ? 'total_dlv' : 'total') }), el('b', { class: 'num', text: E.fmtPair(tt.total, tt.usd) })]);
+    var total = el('div', { class: 'rvx-total' }, [el('span', { class: 'cap', text: t(tt.delivery ? 'total_dlv' : 'total') }), el('b', { class: 'num', text: sumTxt(tt, tt.total, tt.usd, true) })]);
     /* the four blocks as rows; each row label · value + one small «Изменить» */
     if (v === 'd1' || v === 'd2') return reviewD(box, foot, tt, s, total, goods, edit, freeDlv, fv);
     var rows = el('div', { class: 'rvx-rows' });
