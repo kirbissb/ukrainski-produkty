@@ -1026,6 +1026,7 @@
   }
   /* W-LAW-05 (canon pass 06.11): «Шаг n из m» + ONE connected path (a dot per step joined by a line; done = gold, current = big gold dot)
      + the next step named by its own title («Дальше: Контакты»). The path is updated in place, so the line grows between steps. */
+  var WZ_ICON = { cart: 'i-basket', how: 'i-truck', addr: 'i-pin', when: 'i-clock', where: 'i-box', pay: 'i-card', contact: 'i-phone', review: 'i-check' };
   var WZ_TITLE = { cart: 'cart_title', how: 'wz_how', addr: 'wz_addr', where: 'wz_where', pay: 'wz_pay', contact: 'wz_contact', review: 'wz_review' };
   function wzTitle(st) { return st === 'when' ? t(E.windowKind(state.form.delivery) === 'pickup' ? 'f_when_pickup' : 'f_when_courier') : t(WZ_TITLE[st]); }
   function wzMeta(n, m, steps) {
@@ -1035,10 +1036,12 @@
     meta.textContent = t('wz_step', { n: n, m: m });
     var nx = steps && steps[n] ? wzTitle(steps[n]) : '';
     if (nx) meta.appendChild(el('span', { class: 'wz-nx', text: ' · ' + t('wz_next') + ': ' + nx.replace(/\?$/, '') }));
+    /* CEO live test 15.11 (E): an icon per step instead of a bare dot (the page's own sprite); the path is rebuilt only when its steps change */
+    var ico = (steps || []).map(function (st) { return st === 'how' && state.form.delivery === 'pickup' ? 'i-bag' : WZ_ICON[st] || 'i-check'; }), sig = ico.join(' ');
     var ol = prog.querySelector('.wz-path');
-    if (!ol || ol.children.length !== m) {
-      prog.innerHTML = ''; ol = el('ol', { class: 'wz-path' });
-      for (var i = 0; i < m; i++) ol.appendChild(el('li', {}, [el('span', { class: 'dot' }), i < m - 1 ? el('span', { class: 'seg' }, [el('i')]) : null]));
+    if (!ol || ol.children.length !== m || ol.getAttribute('data-sig') !== sig) {
+      prog.innerHTML = ''; ol = el('ol', { class: 'wz-path', 'data-sig': sig });
+      for (var i = 0; i < m; i++) ol.appendChild(el('li', {}, [el('span', { class: 'dot' }, ico[i] ? [icon(ico[i], 'wz-pi')] : []), i < m - 1 ? el('span', { class: 'seg' }, [el('i')]) : null]));
       prog.appendChild(ol); void ol.offsetWidth;
     }
     [].forEach.call(ol.children, function (li, i) { li.className = i < n - 1 ? 'done' : i === n - 1 ? 'cur' : ''; });

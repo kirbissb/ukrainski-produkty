@@ -1104,15 +1104,19 @@ div.rvx-line { cursor: default; }
 .wz-path { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; }
 .wz-path li { flex: 1 1 0; display: flex; align-items: center; min-width: 0; }
 .wz-path li:last-child { flex: 0 0 auto; }
-.wz-path .dot { flex: 0 0 auto; width: 10px; height: 10px; border-radius: var(--r-pill); border: 1.5px solid var(--ink-3); background: var(--card); transition: background-color 0.2s, border-color 0.2s, transform 0.3s var(--spring); }
-.wz-path .seg { flex: 1 1 auto; height: 2px; margin: 0 4px; background: var(--line); border-radius: var(--r); overflow: hidden; }
+/* CEO 15.11 (E): each dot carries its step's icon (24 px circle, 13 px line icon); done + current = gold with a dark icon, next = outline */
+.wz-path .dot { flex: 0 0 auto; display: grid; place-items: center; width: 24px; height: 24px; border-radius: var(--r-pill); border: 1.5px solid var(--ink-3); background: var(--card); transition: background-color 0.2s, border-color 0.2s, transform 0.3s var(--spring); }
+.wz-path .wz-pi { width: 13px; height: 13px; stroke: var(--ink-3); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s; }
+.wz-path li.done .wz-pi, .wz-path li.cur .wz-pi { stroke: var(--on-acc); }
+.wz-path .seg { flex: 1 1 auto; height: 2px; margin: 0 3px; background: var(--line); border-radius: var(--r); overflow: hidden; }
 .wz-path .seg i { display: block; height: 100%; width: 0; background: var(--acc); transition: width 0.35s var(--spring); }
 .wz-path li.done .dot { background: var(--acc); border-color: var(--acc); }
 .wz-path li.done .seg i { width: 100%; }
-.wz-path li.cur .dot { border-color: var(--acc); background: var(--acc); transform: scale(1.3); box-shadow: 0 0 0 3px rgba(240, 232, 216, 0.22); }
+.wz-path li.cur .dot { border-color: var(--acc); background: var(--acc); transform: scale(1.12); box-shadow: 0 0 0 3px rgba(240, 232, 216, 0.22); }
 .wz-meta .wz-nx { color: var(--ink-2); }
 .sheet.rvx .wz-path li.done .dot, .sheet.rvx .wz-path li.cur .dot { background: var(--ink-3); border-color: var(--ink-3); box-shadow: none; }
 .sheet.rvx .wz-path .seg i { background: var(--ink-3); }
+.sheet.rvx .wz-path li.done .wz-pi, .sheet.rvx .wz-path li.cur .wz-pi { stroke: var(--card); }
 
 /* W-MOT-09: order confirmed - the circle draws, then the tick */
 .okdraw { display: block; width: 56px; height: 56px; margin: 6px 0 4px; }
