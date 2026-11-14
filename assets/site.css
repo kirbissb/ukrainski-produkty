@@ -300,6 +300,10 @@ input, textarea, select { font: inherit; color: var(--ink); }
 .wz-when .row.days .chip.day { min-height: 60px; }
 .wz-when .row.wins .chip.win { min-height: 52px; }
 .wz-contact .f:first-child { margin-top: 4px; }
+/* CEO 15.11 (D): the courier address - map link button under the street, floor + flat side by side, door code and note under them */
+.wz-addr .wz-geo { min-height: 48px; margin-top: 10px; gap: 10px; font-size: 15px; }
+.wz-addr .addr-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.wz-addr .addr-pair .f.fl { margin-top: 0; }
 /* CEO 15.11 (C): Telegram one-tap number first (52 px, the Telegram mark), «Другой номер» a quiet text button under it */
 .wz-contact .tgshare { min-height: 52px; margin-top: 12px; font-size: 16px; gap: 10px; }
 .wz-contact #tgWho + .tgshare { margin-top: 14px; }

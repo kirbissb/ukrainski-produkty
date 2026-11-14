@@ -1029,6 +1029,22 @@
     var stem = place.toLowerCase().replace(/ё/g, 'е'); stem = stem.length > 5 ? stem.slice(0, stem.length - 2) : stem;
     return a.toLowerCase().replace(/ё/g, 'е').indexOf(stem) >= 0 ? a : place + ', ' + a;
   }
+  /* CEO live test 15.11 (D): the courier address with floor, flat and door code, as ONE readable string for the bot's address field (the
+     worker's site-order parser takes only `address`, <= 200 chars): «Махмутлар, ул. Ататюрк 15, этаж 3, кв. 12, код 45#». Owner / courier
+     words are Russian on purpose (they read the card); lg only changes the words the buyer sees on the check screen. The street part is cut
+     first so the floor / flat / code always fit; a map link the street holds is kept whole */
+  var ADDR_W = { ru: ['этаж', 'кв.', 'код'], uk: ['поверх', 'кв.', 'код'], en: ['floor', 'flat', 'door code'] };
+  function courierAddress(street, place, x, lg) {
+    var w = ADDR_W[lg] || ADDR_W.ru, c = function (v) { return clean(v).slice(0, 12); }, tail = [];
+    x = x || {};
+    if (c(x.floor)) tail.push(w[0] + ' ' + c(x.floor)); if (c(x.apt)) tail.push(w[1] + ' ' + c(x.apt)); if (c(x.code)) tail.push(w[2] + ' ' + c(x.code));
+    var t = tail.length ? ', ' + tail.join(', ') : '', a = placeAddress(place, street), room = ADDRESS_MAX - t.length;
+    if (a.length > room) {
+      var m = /https:\/\/maps\.google\.com\/\?q=[-\d.,]+/.exec(a), link = m ? m[0] : '';
+      a = link ? (a.replace(link, '').replace(/\s+/g, ' ').trim().slice(0, Math.max(0, room - link.length - 1)) + ' ' + link).trim() : a.slice(0, room).trim();
+    }
+    return a + t;
+  }
   /* DRAFT texts (CEO approves the wording): RU / UK / EN, gender-neutral */
   var DPW = {
     m_asap: { ru: 'По готовности', uk: 'Щойно буде готове', en: 'As soon as it\'s ready' },
@@ -1128,6 +1144,6 @@
     ORDER_URL: ORDER_URL, orderContact: orderContact, addressOk: addressOk, ADDRESS_MIN: ADDRESS_MIN, ADDRESS_MAX: ADDRESS_MAX, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder, FORM_URL: FORM_URL, notifyPayload: notifyPayload, sendForm: sendForm,
     WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickupDays: pickupDays, daysText: daysText, pickWindow: pickWindow, windowValid: windowValid,
     deliveryPlan: deliveryPlan, planDays: planDays, planTimes: planTimes, planStarts: planStarts, planEnds: planEnds, planAsapDate: planAsapDate, planWindowId: planWindowId, planParseId: planParseId,
-    planValid: planValid, planHoursText: planHoursText, planText: planText, planFee: planFee, planFeeRange: planFeeRange, planMinMiss: planMinMiss, placeAddress: placeAddress, dpText: dpText
+    planValid: planValid, planHoursText: planHoursText, planText: planText, planFee: planFee, planFeeRange: planFeeRange, planMinMiss: planMinMiss, placeAddress: placeAddress, courierAddress: courierAddress, dpText: dpText
   };
 });
