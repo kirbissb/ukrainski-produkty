@@ -907,6 +907,9 @@
     return { modes: modes, hours: o != null && c != null && o < c ? { open: o, close: c, days: days && days.length && days.length < 7 ? days.sort() : null } : null,
       area: (Array.isArray(p.area) ? p.area : []).map(function (x) { return String(x || '').trim(); }).filter(Boolean),
       min: liveNum(p.min_delivery) > 0 ? liveNum(p.min_delivery) : null, perKm: km, ownerNamed: !!fee.owner_named,
+      /* CEO live test 15.11 (fee B): fee.per_place = her courier prices differ by place (bot delivery-plan.ts plan.perPlace). Absent (an older
+         worker) = false = the behaviour before */
+      perPlace: !!fee.per_place,
       freeFrom: liveNum(fee.free_from), outside: liveNum(fee.outside),
       zones: (Array.isArray(fx.courier_zones) ? fx.courier_zones : []).filter(function (z) { return z && String(z.name || '').trim(); }).map(function (z) { return { name: String(z.name).trim(), sum: liveNum(z.sum) }; }) };
   }
@@ -1000,6 +1003,12 @@
     if (!P) return { sum: b.price == null ? null : b.price, from: !!b.from, tbd: b.price == null };
     if (P.freeFrom != null && subtotal >= P.freeFrom) return { sum: 0, from: false, tbd: false };
     if (P.ownerNamed || P.perKm) return { sum: null, from: false, tbd: true };
+    /* CEO live test 15.11 (fee B, the bot's delivery-plan.ts planFee): prices per place - a place of her list other than the city, without its
+       own Cabinet zone row, is HERS to name: no sum (never the «outside» 500), the total is the goods only and the fee reads «уточним» */
+    if (P.perPlace && place && P.area.indexOf(place) > 0) {
+      var zp = P.zones.filter(function (x) { return x.name.toLowerCase() === String(place).toLowerCase(); })[0];
+      return zp ? { sum: zp.sum, from: false, tbd: zp.sum == null } : { sum: null, from: false, tbd: true };
+    }
     if (place && P.outside != null && P.area.length && place !== P.area[0] && P.area.indexOf(place) > 0) return { sum: P.outside, from: false, tbd: false };
     var z = place ? P.zones.filter(function (x) { return x.name.toLowerCase() === String(place).toLowerCase(); })[0] : null;
     if (z) return { sum: z.sum, from: false, tbd: z.sum == null };
