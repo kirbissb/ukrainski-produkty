@@ -1032,6 +1032,10 @@ div.rvx-line { cursor: default; }
 .rvx-lt { min-width: 0; display: grid; gap: 2px; }
 .rvx-lt .m { font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; }
 .rvx-lt .s { font-size: 13px; line-height: 1.4; color: var(--ink-3); overflow-wrap: anywhere; }
+/* CEO 15.11 (A): the payment line carries a visible «Изменить» on its right, the same quiet word as the block's own «Изменить» */
+.rvx-line.rvx-chg { padding-right: 0; }
+.rvx-chgw { margin-left: auto; align-self: center; flex: 0 0 auto; padding-left: 8px; font: 400 13px var(--font); color: var(--ink-2); }
+@media (hover: hover) { button.rvx-chg:hover .rvx-chgw { color: var(--ink); } }
 .rvx-line:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 2px; border-radius: var(--r); }
 @media (hover: hover) { button.rvx-line:hover .m { color: #fff; } }
 .sheet.rvx-d .rvx-send { justify-content: center; gap: 8px; text-align: center; line-height: 1.2; }

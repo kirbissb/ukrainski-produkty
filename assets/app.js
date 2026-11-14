@@ -357,7 +357,7 @@
   var cart = E.loadCart();
   var customer = E.loadCustomer() || {};
   var state = { legal: 'dlv', cat: 'all', sel: {}, view: 'cart', calMonth: null, lastOrder: null, notifyItem: null,
-    form: { name: customer.name || '', phone: customer.phone || '', other: customer.cityMode === 'other', city: customer.cityMode === 'other' ? (customer.city || '') : '', delivery: customer.delivery || 'pickup', payment: (customer.payment && C.paymentById[customer.payment]) ? customer.payment : 'card', date: '', comment: '', windowId: null, windowDate: null, address: customer.address || '' }, step: 'cart', wzReturn: false };
+    form: { name: customer.name || '', phone: customer.phone || '', other: customer.cityMode === 'other', city: customer.cityMode === 'other' ? (customer.city || '') : '', delivery: customer.delivery || 'pickup', payment: (customer.payment && C.paymentById[customer.payment]) ? customer.payment : C.payment.length > 1 ? null : C.payment[0].id, date: '', comment: '', windowId: null, windowDate: null, address: customer.address || '' }, step: 'cart', wzReturn: false };
 
   function delivName(d) { return t('dlv_' + d.id); }
   function fm(n) { return E.fmtMoney(n); }
@@ -976,13 +976,23 @@
     /* CEO 19.10: windows only from the bot (/api/catalog); none confirmed = no time question */
     /* CEO 29.10 (delivery v5): her delivery options (facts.delivery_plan) ask the courier time even without fixed windows */
     if (kind) { if (dpWhen(kind) || siteWins()[kind].length) s.push('when'); } else s.push('where');
-    /* speed 05.11 (taps to order): payment is no longer a step of its own on the way - the preselected method (card, or the one used last
-       time on this device) goes to the order and the check screen shows it under «Оплата» with «Изменить», which opens this step */
-    if (payChoice() && state.step === 'pay') s.push('pay');
+    /* speed 05.11 had taken payment off the path (preselected card, changed from the check screen); CEO 15.11 put it back for shops with cash */
+    /* CEO live test 15.11 (A): «если магазин предоставляет наличные, надо как минимум иметь возможность выбрать» - with a real choice
+       (card AND cash, not cargo) payment is a step ON the path again (S-CO-02 order: before the contact). A fresh checkout has nothing
+       preselected (S-CO2-03: the tap is the answer); the method used last time on this device shows picked with «Дальше» */
+    payFix();
+    if (payChoice()) s.push('pay');
     s.push('contact', 'review');
     return s;
   }
   function payChoice() { return C.payment.length > 1 && state.form.delivery !== 'cargo'; }
+  /* no choice to make (one method, or cargo = card only): the order carries that method, never an empty or a cash payment */
+  function payFix() {
+    var f = state.form; if (f.payment && !C.paymentById[f.payment]) f.payment = null;
+    if (payChoice()) return;
+    var only = C.payment.filter(function (p) { return p.id !== 'cash'; })[0] || C.payment[0];
+    if (!f.payment || (f.delivery === 'cargo' && f.payment === 'cash')) f.payment = only ? only.id : 'card';
+  }
   function curStep() {
     var s = wzSteps(), st = state.step || 'cart';
     if (s.indexOf(st) < 0) st = (st === 'when' || st === 'where' || st === 'addr') ? s[2] : st === 'pay' ? 'contact' : 'cart';
@@ -1016,6 +1026,7 @@
     if (st === 'when' && dpWhen(E.windowKind(f.delivery))) { dpSync(); return E.planValid(dplan(), f.dm) ? '' : E.dpText(f.dm && f.dm.mode && f.dm.mode !== 'asap' ? 'err_time' : 'err_when', lang); }
     if (st === 'when') return E.windowValid(siteWins(), f.delivery, f.windowId, f.windowDate) ? '' : t('err_window');
     if (st === 'where') return f.other && !f.city.trim() ? t('err_city') : '';
+    if (st === 'pay') return payChoice() && !C.paymentById[f.payment] ? t('wz_pay') : '';
     if (st === 'addr') return !E.addressOk(f.address) ? t('err_addr') : dpPlaces().length && dpPlaces().indexOf(f.place) < 0 ? E.dpText('err_place', lang) : '';
     /* CEO 19.10 evening: a phone for EVERY order, Telegram too (the courier agrees the delivery by phone / WhatsApp); in Telegram the name comes from Telegram */
     if (st === 'contact') return inTg ? (phoneOk(f.phone) ? '' : t('err_phone_tg')) : !f.name.trim() || !phoneOk(f.phone) ? t('err_contact_ord') : '';
@@ -1268,8 +1279,7 @@
   }
   function renderStep(body, foot, tt) {
     var f = state.form, st = curStep(), s = wzSteps(), idx = s.indexOf(st), title = $('#sheetTitle');
-    /* speed 05.11: payment is opened only from the check screen («Изменить») - a side step, no «Шаг n из m» */
-    if (st === 'pay') wzMeta(null); else wzMeta(idx + 1, s.length, s);
+    wzMeta(idx + 1, s.length, s);   /* CEO 15.11 (A): payment is a step of the path again, counted like the others */
     /* CEO 07.11 TG 2110: the step slides in when it is NEW; a redraw of the same step (stepper, «Убрать», live catalog) does not replay it */
     var still = state.wzLast === st; state.wzLast = st;
     var box = el('div', { class: 'wz wz-' + st + (still ? ' wz-still' : '') });
@@ -1292,7 +1302,7 @@
       C.delivery.forEach(function (d) {
         var dt = dpTile(d, tt);   /* CEO 29.10: the courier tile by her plan (price by place, free from, minimum, hours); null = as before */
         opts.appendChild(wzOpt(f.delivery === d.id, ICO[d.id] || 'i-truck', delivName(d), dt ? dt.sub : t('dlv_' + d.id + '_sub'), dt ? dt.price : d.price, dt ? dt.note : t('dlv_' + d.id + '_note'), function () {
-          f.delivery = d.id; f.other = d.id === 'cargo'; if (!C.paymentById[f.payment]) f.payment = C.payment[0].id;
+          f.delivery = d.id; f.other = d.id === 'cargo'; payFix();
           if (E.planMinMiss(dplan(), d.id, tt.subtotal)) { renderSheet(); return; }
           wzPicked();
         }, dt ? dt.from : !!d.price_from));
@@ -1327,6 +1337,7 @@
         }));
       });
       box.appendChild(po);
+      if (!C.paymentById[f.payment]) primary = null;   /* S-CO2-03: a fresh choice step has no button - the tap is the answer */
     } else if (st === 'contact') {
       title.textContent = t('wz_contact');
       var clr = function (e) { e.target.removeAttribute('aria-invalid'); var x = $('#formErr'); if (x) x.textContent = ''; };
@@ -1375,11 +1386,11 @@
       if (!inTg && !(CH && CH.marker())) foot.appendChild(el('p', { class: 'tgnote', id: 'tgNote', text: t('tg_note') })); /* CEO 19.10: nothing opens in Telegram / IG / WA */
     }
     /* refs (Uber Eats, Glovo, Shop): the button carries the running total, so it never has to be scrolled for */
-    if (st !== 'cart' && primary.id === 'wzNext' && !primary.disabled) { primary.textContent = ''; primary.appendChild(el('span', { text: t('wz_next') })); var bs = el('span', { class: 'sum' }); primary.appendChild(bs); roll(bs, sumTxt(tt, st === 'cart' ? tt.subtotal : tt.total, tt.usd), 'btn'); }
+    if (st !== 'cart' && primary && primary.id === 'wzNext' && !primary.disabled) { primary.textContent = ''; primary.appendChild(el('span', { text: t('wz_next') })); var bs = el('span', { class: 'sum' }); primary.appendChild(bs); roll(bs, sumTxt(tt, st === 'cart' ? tt.subtotal : tt.total, tt.usd), 'btn'); }
     body.appendChild(box);
     var row = el('div', { class: 'wz-foot' });
     if (idx > 0) row.appendChild(el('button', { class: 'wz-back', type: 'button', id: 'wzBack', onclick: wzBack }, [el('span', { 'aria-hidden': 'true', text: '‹' }), el('span', { text: t('wz_back') })]));
-    row.appendChild(primary);
+    if (primary) row.appendChild(primary);
     foot.appendChild(row);
     if (st === 'review' && rvxAfter) { foot.appendChild(rvxAfter); rvxAfter = null; }
     if (st === 'review') foot.appendChild(consentLine());
@@ -1767,9 +1778,11 @@
     $('#sheet').classList.add('rvx-d', 'rvx-c', 'rvx-c2');   /* C2 look (centred total, goods panel), then the D changes */
     goods = el('section', { class: 'rvx-gblock' }, [el('div', { class: 'rvx-ghead' }, [el('span', { class: 'lb', text: t('wz_items') }), edit('cart', t('wz_items'))]), goods]);
     var go = function (to) { return function () { state.wzReturn = true; wzGo(to); }; };
-    var line = function (ico, label, to, main, sub) {
+    var line = function (ico, label, to, main, sub, chg) {
       var kids = [icon(ico, 'rvx-li'), el('span', { class: 'rvx-lt' }, [el('span', { class: 'm', text: main })].concat(sub ? [el('span', { class: 's', text: sub })] : []))];
       /* 07.11 audit (axe label-content-name-mismatch): the name starts with what the line SHOWS; «Изменить: …» follows as hidden text */
+      /* CEO 15.11 (A): the payment line says «Изменить» out loud (chg) - card or cash is a real choice the buyer must see he can change */
+      if (to && chg) return el('button', { class: 'rvx-line rvx-chg', type: 'button', onclick: go(to) }, kids.concat([el('span', { class: 'rvx-chgw', 'aria-hidden': 'true', text: t('wz_edit') }), el('span', { class: 'sr', text: ' · ' + t('wz_edit') + ': ' + label })]));
       return to ? el('button', { class: 'rvx-line', type: 'button', onclick: go(to) }, kids.concat([el('span', { class: 'sr', text: ' · ' + t('wz_edit') + ': ' + label })])) : el('div', { class: 'rvx-line' }, kids);
     };
     var info = el('section', { class: 'rvx-info', 'aria-label': t('wz_get') + ', ' + t('f_pay') + ', ' + t('wz_contacts') });
@@ -1786,8 +1799,8 @@
     /* CEO TG 1534: every line = a bright label, the value under it in grey (same shape as «Самовывоз» / address). RU only:
        «Оплата» / «перевод на карту» | «наличными», «Контактные данные» / name · phone (CEO TG 1536, label may still change); UA / EN keep their one-line texts */
     var ruShape = lang === 'ru' && PAY_SHORT_RU[f.payment];
-    if (ruShape) info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('f_pay'), PAY_SHORT_RU[f.payment]));
-    else info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment)));
+    if (ruShape) info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('f_pay'), PAY_SHORT_RU[f.payment], payChoice()));
+    else info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment), null, payChoice()));
     var who = (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim();
     if (lang === 'ru') info.appendChild(line('i-user', t('wz_contacts'), 'contact', 'Контактные данные', who + (f.comment.trim() ? '\n' + f.comment.trim() : '')));
     else info.appendChild(line('i-user', t('wz_contacts'), 'contact', who, f.comment.trim() || null));
