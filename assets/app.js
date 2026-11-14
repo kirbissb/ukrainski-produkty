@@ -1407,7 +1407,9 @@
          browser's own one-tap fill of his number (CEO 15.11) */
       if (showField) box.appendChild(field(shareMode ? t('other_phone') : t('f_contact'), el('input', { type: 'tel', id: 'fPhone', name: 'tel', autocomplete: 'tel', inputmode: 'tel', enterkeyhint: 'next', required: 'required', placeholder: t('f_contact_ph'), oninput: function (e) { f.phone = e.target.value; clr(e); }, onkeydown: enter('#fComment') }), f.phone));
       if (!showField) primary = null;   /* the share button IS the step's action (the same rule as a fresh choice step) */
-      box.appendChild(field(t('sp_comment'), el('textarea', { id: 'fComment', rows: '2', placeholder: t('f_comment_ph'), oninput: function (e) { f.comment = e.target.value; } }), f.comment));
+      /* CEO TG 4252: ONE comment field per order - the courier has «Комментарий курьеру» on the address step, so the contact step asks it only
+         for pickup / cargo */
+      if (E.windowKind(f.delivery) !== 'courier') box.appendChild(field(t('sp_comment'), el('textarea', { id: 'fComment', rows: '2', placeholder: t('f_comment_ph'), oninput: function (e) { f.comment = e.target.value; } }), f.comment));
       /* honeypot for bots (the worker rejects an order with it filled); invisible and unreachable for people */
       box.appendChild(el('div', { 'aria-hidden': 'true', style: 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden' }, [el('input', { type: 'text', id: 'fWebsite', name: 'website', tabindex: '-1', autocomplete: 'off', value: f.website || '', oninput: function (e) { f.website = e.target.value; } })]));
     } else if (st === 'review' && RVV) {
@@ -1428,7 +1430,7 @@
       if (s.indexOf('when') >= 0) block(t('done_when'), 'when', [el('p', { class: 'rv-p', id: 'rvWhen', text: dpWhen(E.windowKind(f.delivery)) && f.dm ? E.planText(E.planWindowId(f.dm), f.dm.date, lang, dpDayWord) : windowText(f) })]);
       else if (s.indexOf('where') >= 0) block(t('f_city'), 'where', [el('p', { class: 'rv-p', text: f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : '') })]);
       block(t('f_pay'), payChoice() ? 'pay' : null, [el('p', { class: 'rv-p', text: t('pay_' + f.payment) })]);
-      block(t('wz_contacts'), 'contact', [el('p', { class: 'rv-p', text: (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim() }), el('p', { class: 'rv-p sub', text: f.comment.trim() || t('wz_no_comment') })]);
+      block(t('wz_contacts'), 'contact', [el('p', { class: 'rv-p', text: (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim() }), el('p', { class: 'rv-p sub', text: buyerNote() || t('wz_no_comment') })]);
       box.appendChild(el('div', { class: 'tots' }, [
         el('div', {}, [el('span', { text: t('subtotal') }), el('span', { text: sumTxt(tt, tt.subtotal, tt.usd, true) })]),
         tt.delivery ? el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: fm(tt.delivery) })]) : tt.feeTbd ? el('div', {}, [el('span', { text: delivName(d) }), el('span', { text: E.dpText('fee_tbd_short', lang) })]) : null,
@@ -1460,6 +1462,7 @@
   function dplan() { return E.deliveryPlan(LIVE); }
   /* CEO 15.11 (D): the courier address as the order carries it (lg = 'ru': the owner's card) or as the buyer reads it (page language) */
   /* CEO TG 4252: the street (or landmark) as typed + the map link when the location was sent - the order's street part, exactly as before */
+  function buyerNote() { var f = state.form; return E.windowKind(f.delivery) === 'courier' ? '' : String(f.comment || '').trim(); }
   function addrStreet() { var f = state.form, a = String(f.address || '').replace(/\s+/g, ' ').trim(); return f.geo ? (a ? a.slice(0, Math.max(0, 120 - f.geo.length - 1)) + ' ' : '') + f.geo : a; }
   function addrOk() { return E.addressOk(state.form.address) || !!state.form.geo; }
   function addrFull(lg) { var f = state.form; return E.courierAddress(addrStreet(), dpPlaces().length ? f.place : '', { floor: f.floor, apt: f.apt, code: f.code }, lg); }
@@ -1678,7 +1681,7 @@
     if (payload.address != null) {
       payload.address = addrFull('ru');
       var cn = String(f.cnote || '').replace(/\s+/g, ' ').trim();
-      if (cn) payload.comment = ((payload.comment ? payload.comment + ' · ' : '') + 'Курьеру: ' + cn).slice(0, 500);
+      payload.comment = cn ? ('Курьеру: ' + cn).slice(0, 500) : '';   /* CEO TG 4252: the courier's one comment is the address-step note */
     }
     /* CEO 19.10: in Telegram the worker takes name + contact from the verified initData; IG / WA send the chat marker */
     /* CEO 19.10 evening: the contact is ALWAYS the phone (the worker refuses an order without one) */
@@ -1702,7 +1705,7 @@
       var lines = d.lines.map(function (l) { var it = C.byId[l.item_id]; return { id: l.item_id, name: it ? it.name_ru : l.item_id, qty: l.quantity, unit: it ? it.unit : '', cur: l.currency, sum: l.amount, weight: it ? E.fmtWeight(it, l.quantity, 'ru') : String(l.quantity), pre: !!l.preorder }; });
       var wl = payload.window_id ? (/^dm-/.test(payload.window_id) ? windowText({ windowId: payload.window_id, windowDate: payload.window_date }) : ((siteWins()[E.windowKind(f.delivery)] || []).filter(function (w) { return w.id === payload.window_id; })[0] || {}).label || '') : '';
       var bound = d.bound === 'telegram' || d.bound === 'instagram' || d.bound === 'whatsapp' ? d.bound : null;
-      var order = { no: d.no, bound: bound, customer: { name: inTg ? (CH.tgName() || 'Telegram') : f.name.trim(), phone: f.phone.trim(), city: cityRu, address: payload.address || '' }, delivery: f.delivery, payment: f.payment, date: f.date, comment: f.comment.trim(),
+      var order = { no: d.no, bound: bound, customer: { name: inTg ? (CH.tgName() || 'Telegram') : f.name.trim(), phone: f.phone.trim(), city: cityRu, address: payload.address || '' }, delivery: f.delivery, payment: f.payment, date: f.date, comment: payload.comment || "",
         windowId: payload.window_id, windowDate: payload.window_date, windowLabel: wl,
         lines: lines, subtotal: d.subtotal_try, usd: d.usd_total || 0, deliveryPrice: d.fee_try || 0, total: d.total_try != null ? d.total_try : d.subtotal_try + (d.fee_try || 0), status: 'new', tg: tgLink };
       if (dplan() && f.delivery === 'alanya' && d.fee_try == null) order.feeTbd = true; /* CEO 29.10: the shop names the courier fee */
@@ -1823,7 +1826,7 @@
     if (s.indexOf('when') >= 0) row(t('done_when'), 'when', dpWhen(E.windowKind(f.delivery)) && f.dm ? E.planText(E.planWindowId(f.dm), f.dm.date, lang, dpDayWord) : windowText(f));
     else if (s.indexOf('where') >= 0) row(t('f_city'), 'where', f.city.trim() + (f.date ? ' · ' + t('done_date') + ' ' + dateLabel(f.date) : ''));
     row(t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment));
-    row(t('wz_contacts'), 'contact', (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim(), f.comment.trim() ? [el('span', { class: 'v2', text: f.comment.trim() })] : []);
+    row(t('wz_contacts'), 'contact', (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim(), buyerNote() ? [el('span', { class: 'v2', text: buyerNote() })] : []);
     if (v === 'a') { box.appendChild(total); box.appendChild(goods); box.appendChild(rows); }
     else if (v === 'b2') { box.appendChild(goods); box.appendChild(rows); foot.appendChild(total); }
     else if (v === 'c2') { box.appendChild(total); box.appendChild(goods); box.appendChild(rows); }
@@ -1872,8 +1875,8 @@
     if (ruShape) info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('f_pay'), PAY_SHORT_RU[f.payment], payChoice()));
     else info.appendChild(line(f.payment === 'cash' ? 'i-cash' : 'i-card', t('f_pay'), payChoice() ? 'pay' : null, t('pay_' + f.payment), null, payChoice()));
     var who = (inTg ? (CH.tgName() || 'Telegram') : f.name.trim()) + ' · ' + f.phone.trim();
-    if (lang === 'ru') info.appendChild(line('i-user', t('wz_contacts'), 'contact', 'Контактные данные', who + (f.comment.trim() ? '\n' + f.comment.trim() : '')));
-    else info.appendChild(line('i-user', t('wz_contacts'), 'contact', who, f.comment.trim() || null));
+    if (lang === 'ru') info.appendChild(line('i-user', t('wz_contacts'), 'contact', 'Контактные данные', who + (buyerNote() ? '\n' + buyerNote() : '')));
+    else info.appendChild(line('i-user', t('wz_contacts'), 'contact', who, buyerNote() || null));
     box.appendChild(total); box.appendChild(goods); box.appendChild(info);
     var tgHand = !inTg && !(CH && CH.marker());
     if (tgHand && lang === 'ru') {
