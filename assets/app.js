@@ -1509,7 +1509,7 @@
     var row = el('div', { class: 'row dp-places', role: 'radiogroup', 'aria-label': E.dpText('place_q', lang) });
     P.area.forEach(function (pl) {
       var on = f.place === pl;
-      row.appendChild(el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(on), 'aria-pressed': String(on), 'data-place': pl,
+      row.appendChild(el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(on), 'data-place': pl,
         onclick: function () { f.place = pl; var e = $('#formErr'); if (e) e.textContent = ''; renderSheet(); var a = $('#fAddr'); if (a && !a.value.trim()) a.focus({ preventScroll: true }); } },
         [el('b', { text: pl }), el('small', { text: dpFeeText(E.planFee(P, pl, tt.subtotal, dpBase())) })]));
     });
@@ -1545,7 +1545,7 @@
       var pick = el('div', { class: 'dp-pick', id: 'dpPick' });
       var days = E.planDays(P, dm.mode), dRow = el('div', { class: 'row days dp-days', role: 'radiogroup', 'aria-label': E.dpText('day_q', lang) });
       days.forEach(function (d) {
-        var b = el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(dm.date === d.date), 'aria-pressed': String(dm.date === d.date), 'data-date': d.date,
+        var b = el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(dm.date === d.date), 'data-date': d.date,
           onclick: function () { if (dm.date !== d.date) { dm.date = d.date; if (dm.mode === 'time' && !E.planTimes(P, d.date).some(function (x) { return x.ok && x.min === dm.from; })) dm.from = null; if (dm.mode === 'interval' && !E.planStarts(P, d.date).some(function (x) { return x.ok && x.min === dm.from; })) { dm.from = dm.to = null; } } var e = $('#formErr'); if (e) e.textContent = ''; dpRender(); } }, [
           el('b', { text: d.key === 'day' ? dpWeekday(d.date) : t('day_' + d.key) }), el('small', { text: d.closed ? t('day_closed') : !d.ok ? E.dpText('day_late', lang) : shortDate(d.date) })]);
         if (!d.ok) b.disabled = true;
@@ -1556,7 +1556,7 @@
         var r = el('div', { class: 'row wins dp-grid', role: 'radiogroup', 'aria-label': label });
         list.forEach(function (x) {
           var hhmm = String(Math.floor(x.min / 60)).padStart(2, '0') + ':' + String(x.min % 60).padStart(2, '0');
-          var b = el('button', { class: 'chip win', type: 'button', role: 'radio', 'aria-checked': String(cur === x.min), 'aria-pressed': String(cur === x.min), 'data-min': String(x.min), text: hhmm,
+          var b = el('button', { class: 'chip win', type: 'button', role: 'radio', 'aria-checked': String(cur === x.min), 'data-min': String(x.min), text: hhmm,
             onclick: function () { set(x.min); var e = $('#formErr'); if (e) e.textContent = ''; dpRender(); } });
           if (!x.ok) b.disabled = true; r.appendChild(b);
         });
@@ -1595,7 +1595,7 @@
     var dRow = el('div', { class: 'row days', role: 'radiogroup' });
     days.forEach(function (d) {
       var empty = !d.wins.length;
-      var b = el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(f.windowDate === d.date), 'aria-pressed': String(f.windowDate === d.date), 'data-date': d.date,
+      var b = el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(f.windowDate === d.date), 'data-date': d.date,
         onclick: function () { if (f.windowDate !== d.date) { f.windowDate = d.date; f.windowId = null; } renderSheet(); } }, [
         el('b', { text: d.key === 'day' ? weekdayName(d.date) : t('day_' + d.key) }), el('small', { text: d.closed ? t('day_closed') : empty ? t('day_none') : shortDate(d.date) })]);
       if (empty) b.disabled = true;
@@ -1605,7 +1605,7 @@
     var day = days.filter(function (d) { return d.date === f.windowDate; })[0];
     var wRow = el('div', { class: 'row wins', role: 'radiogroup' });
     (day ? day.wins : []).forEach(function (w) {
-      wRow.appendChild(el('button', { class: 'chip win', type: 'button', role: 'radio', 'aria-checked': String(f.windowId === w.id), 'aria-pressed': String(f.windowId === w.id), 'data-win': w.id, text: w.label,
+      wRow.appendChild(el('button', { class: 'chip win', type: 'button', role: 'radio', 'aria-checked': String(f.windowId === w.id), 'data-win': w.id, text: w.label,
         onclick: function () { f.windowId = w.id; var e = $('#formErr'); if (e) e.textContent = ''; renderSheet(); } }));
     });
     box.appendChild(wRow);
