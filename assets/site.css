@@ -302,6 +302,12 @@ input, textarea, select { font: inherit; color: var(--ink); }
 .wz-contact .f:first-child { margin-top: 4px; }
 /* CEO 15.11 (D): the courier address - map link button under the street, floor + flat side by side, door code and note under them */
 .wz-addr .wz-geo { min-height: 48px; margin-top: 10px; gap: 10px; font-size: 15px; }
+.wz-addr .geo-on { display: flex; align-items: center; gap: 10px; min-height: 48px; margin-top: 10px; padding: 6px 4px 6px 16px; line-height: 1.3; border: 1px solid var(--acc); border-radius: var(--r); background: rgba(240, 232, 216, 0.08); color: var(--ink); font-size: 15px; font-weight: 700; }
+.wz-addr .geo-on .rvx-bti { stroke: var(--acc); }
+.wz-addr .geo-t { flex: 1 1 auto; min-width: 0; }
+.wz-addr .geo-chg { flex: 0 0 auto; min-height: 44px; min-width: 44px; padding: 0 12px; border: 0; background: none; cursor: pointer; font: 400 13px var(--font); color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.wz-addr .geo-chg:hover { color: var(--ink); }
+.wz-addr .geo-on:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 2px; }
 .wz-addr .addr-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
 .wz-addr .addr-pair .f.fl { margin-top: 0; }
 /* CEO 15.11 (C): Telegram one-tap number first (52 px, the Telegram mark), «Другой номер» a quiet text button under it */
