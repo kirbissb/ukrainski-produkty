@@ -1250,7 +1250,9 @@
   }
   function cartNotes(box, tt) {
     [].forEach.call(box.querySelectorAll('.minnote.cart-note'), function (n) { n.parentNode.removeChild(n); });
-    if (tt.unpriced.length) box.appendChild(el('p', { class: 'minnote tbd cart-note', text: t('unpriced_note', { n: tt.lines.filter(function (l) { return l.sum == null; }).map(function (l) { return nm(C.byId[l.id]); }).join(', ') }) }));
+    /* the note sits right under the sum, not below the add-on row off the screen: the sum is partial and the buyer must see why */
+    var tots = box.querySelector('.tots'), anchor = tots ? tots.nextSibling : null;
+    if (tt.unpriced.length) box.insertBefore(el('p', { class: 'minnote tbd cart-note', text: t('unpriced_note', { n: tt.lines.filter(function (l) { return l.sum == null; }).map(function (l) { return nm(C.byId[l.id]); }).join(', ') }) }), anchor);
     if (tt.belowMin) box.appendChild(el('p', { class: 'minnote cart-note', text: t('min_note', { m: fm(tt.minOrder), x: fm(tt.minOrder - tt.subtotal) }) }));
   }
   /* the main button carries the running total (refs Uber Eats, Glovo, Shop); under the minimum it says the minimum and is off */
