@@ -1630,7 +1630,7 @@
       E.saveCustomer({ name: inTg ? (E.loadCustomer() || {}).name || '' : order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment, address: payload.address || (E.loadCustomer() || {}).address || '' });
       state.lastOrder = order; state.orderNonce = null; state.orderKey = null; E.upsClear(); cart = []; E.saveCart(cart); renderCartUI(); /* CEO 11.10: the header badge kept «2» after the order */ f.windowId = null; f.windowDate = null;
       state.step = 'cart'; state.wzReturn = false; state.view = 'done'; haptic('success'); renderSheet(); $('#sheetBody').scrollTop = 0;
-      /* CEO live test 11.10: after EVERY order the bot chat opens (t.me/uafoodsbot?start=o<nonce>), the customer taps Start and
+      /* CEO live test 11.10: after EVERY order the bot chat opens (t.me/ukrproductbot?start=o<nonce>, the link the worker returns), the customer taps Start and
          the bot confirms the order there. Phone: a direct navigation (never popup-blocked, iOS Safari included). Desktop: a new tab
          (allowed while the click's activation lasts); if the browser blocks it, the big button on the done screen does the same. */
       /* CEO 19.10: Telegram Mini App / Instagram / WhatsApp - the order is ALREADY in that chat: nothing to open */

@@ -791,7 +791,7 @@
     return /^[+()\d\s.\/-]+$/.test(c) && c.replace(/\D/g, '').length >= 9 ? c : '';
   }
   /* after EVERY site order the bot chat opens with /start o<nonce> (the bot binds the chat to the order by the checkout's nonce) */
-  var BOT_LINK = 'https://t.me/uafoodsbot';
+  var BOT_LINK = 'https://t.me/ukrproductbot'; /* newbots-1115 (CEO TG 3902 A): fallback only - the worker's answer carries tg = t.me/<shop.json bot_username>?start=... */
   function tgStartLink(nonce) { return /^[A-Za-z0-9_-]{8,63}$/.test(String(nonce || '')) ? BOT_LINK + '?start=o' + nonce : BOT_LINK; }
   /* security review 05.11 L7: the nonce comes from crypto.getRandomValues (not Math.random); bytes >= 252 are dropped so the 36 letters stay
      equally likely (252 = 7 x 36). Same shape as before: 20 chars a-z0-9. Math.random only where no Web Crypto exists (very old browsers) */
