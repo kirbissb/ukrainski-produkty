@@ -82,9 +82,10 @@
         ['Кто отвечает в чате', 'Сначала отвечает помощник магазина - программа с искусственным интеллектом. Сложные вопросы он передаёт владельцу. Чтобы написать ответ, текст переписки обрабатывает сервис Anthropic (США). Он не использует ваши сообщения для обучения своих программ.'],
         ['Где хранятся данные', 'Заказы и переписка хранятся на защищённых серверах Cloudflare. Там же голосовые сообщения переводятся в текст. Учёт товаров и заказов владелец может вести в своей Google-таблице.'],
         ['Кто ещё видит', 'Курьер или карго-служба получают только то, что нужно для доставки. Мы не продаём ваши данные.'],
-        ['Что хранится в вашем браузере', 'Сайт запоминает корзину, язык и данные формы (имя, телефон, город, доставку и оплату) на вашем устройстве, чтобы в следующий раз не вводить их заново. Удалить их можно, очистив данные сайта в настройках браузера.'],
+        ['Что хранится в вашем браузере', 'Сайт запоминает корзину, язык и данные формы (имя, телефон, город, доставку и оплату) на вашем устройстве, чтобы в следующий раз не вводить их заново. Ещё там лежит одно случайное число: по нему магазин считает, какие товары из подборки к корзине смотрят и добавляют. Имя, телефон и адрес в нём не хранятся. Удалить всё это можно, очистив данные сайта в настройках браузера.'],
+        ['Счётчик посещений', 'Cloudflare, на серверах которого работает сайт, считает посещения страниц без куки и без данных, по которым можно узнать вас. Рекламных счётчиков на сайте нет.'],
         ['Сколько храним и как удалить', 'Храним, пока вы не попросите удалить. Напишите нам в Telegram t.me/ukrtovari или в Instagram @ukr.product.alanya - исправим или удалим.'],
-        ['', 'Обновлено 22.10.2026']] }
+        ['', 'Обновлено 14.11.2026']] }
     },
     uk: {
       brand: 'Українські продукти', brand_sub: 'Аланія', brand_full: 'Українські продукти · Аланія', foot_tag: 'доставка по всій Туреччині',
@@ -153,9 +154,10 @@
         ['Хто відповідає в чаті', 'Спершу відповідає помічник магазину - програма зі штучним інтелектом. Складні питання він передає власнику. Щоб написати відповідь, текст листування обробляє сервіс Anthropic (США). Він не використовує ваші повідомлення для навчання своїх програм.'],
         ['Де зберігаються дані', 'Замовлення та листування зберігаються на захищених серверах Cloudflare. Там само голосові повідомлення перетворюються на текст. Облік товарів і замовлень власник може вести у своїй Google-таблиці.'],
         ['Хто ще бачить', 'Кур\'єр або карго-служба отримують лише те, що потрібно для доставки. Ми не продаємо ваші дані.'],
-        ['Що зберігається у вашому браузері', 'Сайт запам\'ятовує кошик, мову та дані форми (ім\'я, номер телефону, місто, доставку й оплату) на вашому пристрої, щоб наступного разу не вводити їх знову. Видалити їх можна, очистивши дані сайту в налаштуваннях браузера.'],
+        ['Що зберігається у вашому браузері', 'Сайт запам\'ятовує кошик, мову та дані форми (ім\'я, номер телефону, місто, доставку й оплату) на вашому пристрої, щоб наступного разу не вводити їх знову. Ще там зберігається одне випадкове число: за ним магазин рахує, які товари з добірки до кошика переглядають і додають. Ім\'я, номер телефону й адреса в ньому не зберігаються. Видалити все це можна, очистивши дані сайту в налаштуваннях браузера.'],
+        ['Лічильник відвідувань', 'Cloudflare, на серверах якого працює сайт, рахує відвідування сторінок без кукі й без даних, за якими можна впізнати вас. Рекламних лічильників на сайті немає.'],
         ['Скільки зберігаємо і як видалити', 'Зберігаємо, доки ви не попросите видалити. Напишіть нам у Telegram t.me/ukrtovari або в Instagram @ukr.product.alanya - виправимо або видалимо.'],
-        ['', 'Оновлено 22.10.2026']] }
+        ['', 'Оновлено 14.11.2026']] }
     },
     en: {
       brand: 'Ukrainian products', brand_sub: 'Alanya', brand_full: 'Ukrainian products · Alanya', foot_tag: 'delivery across Turkey',
@@ -224,9 +226,10 @@
         ['Who answers in the chat', 'First, the shop\'s assistant answers - a program that uses artificial intelligence. It passes hard questions to the owner. To write a reply, the chat text is processed by Anthropic (USA). Anthropic does not use your messages to train its programs.'],
         ['Where the data is kept', 'Orders and chats are kept on secure Cloudflare servers. Voice messages are turned into text there too. The owner may keep track of products and orders in their own Google Sheet.'],
         ['Who else sees it', 'The courier or cargo service gets only what the delivery needs. We do not sell your data.'],
-        ['What is kept in your browser', 'The site remembers your cart, language and form details (name, phone, city, delivery and payment) on your device, so you do not have to type them again next time. You can delete them by clearing the site data in your browser settings.'],
+        ['What is kept in your browser', 'The site remembers your cart, language and form details (name, phone, city, delivery and payment) on your device, so you do not have to type them again next time. It also keeps one random number, so the shop can count which suggested add-ons in the cart are seen and added. Your name, phone and address are not in it. You can delete all of this by clearing the site data in your browser settings.'],
+        ['Visit counter', 'Cloudflare, whose servers run this site, counts page visits without cookies and without data that could identify you. There are no advertising trackers on the site.'],
         ['How long we keep it and how to delete it', 'We keep it until you ask us to delete it. Write to us on Telegram t.me/ukrtovari or on Instagram @ukr.product.alanya - we will correct or delete it.'],
-        ['', 'Updated 22.10.2026']] }
+        ['', 'Updated 14.11.2026']] }
     }
   };
 
