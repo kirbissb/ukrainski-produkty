@@ -1463,7 +1463,8 @@
   /* CEO 15.11 (D): the courier address as the order carries it (lg = 'ru': the owner's card) or as the buyer reads it (page language) */
   /* CEO TG 4252: the street (or landmark) as typed + the map link when the location was sent - the order's street part, exactly as before */
   function buyerNote() { var f = state.form; return E.windowKind(f.delivery) === 'courier' ? '' : String(f.comment || '').trim(); }
-  function addrStreet() { var f = state.form, a = String(f.address || '').replace(/\s+/g, ' ').trim(); return f.geo ? (a ? a.slice(0, Math.max(0, 120 - f.geo.length - 1)) + ' ' : '') + f.geo : a; }
+  /* CEO TG 4404 (15.11): a map link typed into the street field + the sent geolocation = two links on the owner's card; with the geolocation the typed link goes */
+  function addrStreet() { var f = state.form, a = String(f.address || '').replace(f.geo ? /https?:\/\/\S+/g : /$^/, ' ').replace(/\s+/g, ' ').replace(/^[\s,]+|[\s,]+$/g, '').trim(); return f.geo ? (a ? a.slice(0, Math.max(0, 120 - f.geo.length - 1)) + ' ' : '') + f.geo : a; }
   function addrOk() { return E.addressOk(state.form.address) || !!state.form.geo; }
   function addrFull(lg) { var f = state.form; return E.courierAddress(addrStreet(), dpPlaces().length ? f.place : '', { floor: f.floor, apt: f.apt, code: f.code }, lg); }
   /* the buyer reads «Геолокация отправлена» in place of the link */
