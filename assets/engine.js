@@ -762,21 +762,17 @@
   function cardsIsB(hash) { return cardsVariant(hash) !== 'a'; }
   /* the floating "Разделы" button: only in B, not while the tiles are on screen, not over an open sheet / overlay / its own list */
   function quickNavVisible(o) { return !!(o && o.b && !o.tilesOnScreen && !o.ctaOnScreen && !o.locked && !o.open); }   /* ctaOnScreen 07.11: never over the hero buttons */
-  /* in-cart stepper (CEO 10.10): weight items move along their own steps_g (300 -> 500 -> 1000 g), past the last step by
-     500 g (1 kg and more) or by the last step (smaller ladders), up to 5 kg; pieces by 1 up to 20. Returns the next
-     quantity; 0 = remove from the cart. A quantity off the ladder (e.g. 800 g) snaps to the nearest step in that direction. */
+  /* in-cart stepper (CEO TG 4388, 15.11; was a ladder 250 -> 500 -> 1000 since 10.10): every tap adds or removes the item's FIRST
+     step (salo: 250 -> 500 -> 750 -> 1000 g), up to 5 kg; pieces by 1 up to 20. Returns the next quantity; 0 = remove from the cart.
+     A quantity off the grid (e.g. 800 g on a 250 grid) snaps to the nearest multiple in that direction. */
   function stepQty(item, cur, dir) {
     cur = Number(cur) || 0;
     if (item.unit === 'pc') { var n = cur + (dir > 0 ? 1 : -1); return n <= 0 ? 0 : Math.min(n, 20); }
     var steps = (item.steps_g && item.steps_g.length ? item.steps_g : [100]).slice().sort(function (a, b) { return a - b; });
-    var last = steps[steps.length - 1], inc = last >= 1000 ? 500 : last, MAX = 5000, i;
-    if (dir > 0) {
-      for (i = 0; i < steps.length; i++) if (steps[i] > cur) return steps[i];
-      return Math.min(MAX, Math.max(cur, last + inc * Math.ceil((cur - last + 1) / inc)));
-    }
-    if (cur > last) return last + inc * (Math.ceil((cur - last) / inc) - 1);
-    for (i = steps.length - 1; i >= 0; i--) if (steps[i] < cur) return steps[i];
-    return 0;
+    var inc = steps[0] > 0 ? steps[0] : 100, MAX = 5000;
+    if (dir > 0) { var up = Math.floor(cur / inc) * inc + inc; return up > MAX ? Math.max(cur, Math.floor(MAX / inc) * inc) : up; }
+    var down = Math.ceil(cur / inc) * inc - inc;
+    return down < inc ? 0 : down;
   }
   /* ---------- real orders (CEO 10.10): the checkout goes to the test bot's worker, POST /site-order (bot-engine src/site-order.ts).
      The № on the done screen is the one the worker returns (the bot's own counter); nothing is numbered in the browser. ---------- */
