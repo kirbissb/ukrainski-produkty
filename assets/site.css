@@ -1514,3 +1514,9 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
    and scrolled content now ends 10 px below the dots */
 .sheet.wz-on .wz-prog:not([hidden]) { margin-bottom: 10px; }
 .sheet.wz-on .wz-prog:not([hidden]) + .scroll { padding-top: 0; }
+
+/* CEO TG 4390 (15.11): the send button while the order is on its way - a spinner before the label */
+#sendBtn[aria-busy="true"] { opacity: 1; cursor: progress; }
+#sendBtn[aria-busy="true"] > span:first-child::before { content: ""; display: inline-block; width: 1em; height: 1em; margin-right: .5em; vertical-align: -.15em; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: sendspin .8s linear infinite; }
+@keyframes sendspin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { #sendBtn[aria-busy="true"] > span:first-child::before { animation-duration: 2.4s; } }
