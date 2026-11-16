@@ -890,7 +890,7 @@
      the fee follows her rules (fixed / by place / free from a sum / she names it); a delivery order under min_delivery is held.
      The shop's clock = alanyaClock. LEAD = the minutes the shop needs before a courier can leave (delivery-plan.ts lead: 60).
      Texts DPW are DRAFT (CEO approves the wording). ---------- */
-  var DP_MODES = ['asap', 'time', 'interval', 'day'], DP_LEAD = 60, DP_TIME_STEP = 30, DP_INT_STEP = 60, DP_INT_MIN = 60, DP_DAY_CHIPS = 4;
+  var DP_MODES = ['asap', 'time', 'interval', 'day'], DP_LEAD = 60, DP_TIME_STEP = 30, DP_INT_STEP = 60, DP_INT_MIN = 60, DP_DAY_CHIPS = 4, DP_CAL_DAYS = 14;
   function dpDow(iso) { var p = iso.split('-'); return (new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])).getUTCDay() + 6) % 7; }
   function dpHHMM(m) { return String(Math.floor(m / 60)).padStart(2, '0') + String(m % 60).padStart(2, '0'); }
   function dpHm(m) { return String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
@@ -947,6 +947,13 @@
       if (n > 1 && !open) continue;
       out.push({ date: d, key: n === 0 ? 'today' : n === 1 ? 'tomorrow' : 'day', closed: !open, ok: dpDayOk(P, mode, d, nowMs) });
     }
+    return out;
+  }
+  /* CEO TG 4443 / 4747 (16.11): the day is picked in a CALENDAR. Her plan: every day from today for DP_CAL_DAYS (the same 14 days planDays
+     and planAsapDate look ahead; the worker's resolveWhen takes any open day) - closed days and a today that is too late are not ok */
+  function planCal(P, mode, nowMs) {
+    var c = alanyaClock(nowMs), out = [];
+    for (var n = 0; n < DP_CAL_DAYS; n++) { var d = addDaysIso(c.date, n); out.push({ date: d, key: n === 0 ? 'today' : n === 1 ? 'tomorrow' : 'day', closed: !dpDayOpen(P, d), ok: dpDayOk(P, mode, d, nowMs) }); }
     return out;
   }
   /* «По готовности»: today while a courier can still start, else the next open day (the worker reads it as «from the opening») */
@@ -1139,7 +1146,7 @@
     contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
     ORDER_URL: ORDER_URL, orderContact: orderContact, addressOk: addressOk, ADDRESS_MIN: ADDRESS_MIN, ADDRESS_MAX: ADDRESS_MAX, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder, FORM_URL: FORM_URL, notifyPayload: notifyPayload, sendForm: sendForm,
     WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickupDays: pickupDays, daysText: daysText, pickWindow: pickWindow, windowValid: windowValid,
-    deliveryPlan: deliveryPlan, planDays: planDays, planTimes: planTimes, planStarts: planStarts, planEnds: planEnds, planAsapDate: planAsapDate, planWindowId: planWindowId, planParseId: planParseId,
+    deliveryPlan: deliveryPlan, planDays: planDays, planCal: planCal, planTimes: planTimes, planStarts: planStarts, planEnds: planEnds, planAsapDate: planAsapDate, planWindowId: planWindowId, planParseId: planParseId,
     planValid: planValid, planHoursText: planHoursText, planText: planText, planFee: planFee, planFeeRange: planFeeRange, planMinMiss: planMinMiss, placeAddress: placeAddress, courierAddress: courierAddress, dpText: dpText
   };
 });

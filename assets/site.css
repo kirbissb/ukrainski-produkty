@@ -1517,6 +1517,53 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
 
 /* CEO TG 4390 (15.11): the send button while the order is on its way - a spinner before the label */
 #sendBtn[aria-busy="true"] { opacity: 1; cursor: progress; }
-#sendBtn[aria-busy="true"] > span:first-child::before { content: ""; display: inline-block; width: 1em; height: 1em; margin-right: .5em; vertical-align: -.15em; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: sendspin .8s linear infinite; }
+#sendBtn[aria-busy="true"] > span:first-child::before { content: ""; display: inline-block; width: 1em; height: 1em; margin-right: .5em; vertical-align: -.15em; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: sendspin .8s linear 150; }   /* 16.11: bounded (150 turns = 2 min, longer than any order answer), never an endless loop (check_design «loop») */
 @keyframes sendspin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { #sendBtn[aria-busy="true"] > span:first-child::before { animation-duration: 2.4s; } }
+
+/* ---------- CEO TG 4443 / 4747 (16.11): the «Когда» step - the day in a calendar card (.dcal), the time on a scroll wheel in its own
+   card (.dwh). Tokens of the page only: the frame = the option tile's (1 px --line on --bg), the chosen day = the old calendar's
+   caramel fill, the wheel's middle row = a quiet --card-2 band (no second accent). 44 px rows and cells; gaps 4 / 8 / 12 / 16 ---------- */
+.dp-pick { display: grid; gap: 12px; margin-top: 16px; scroll-margin-top: 0; }   /* inside the popup the page header's [id] scroll margin has no place */
+.wz-when .f.when:not(.dp) { gap: 12px; }
+.dcal, .dwh { border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--bg); min-width: 0; }
+.dcal { padding: 12px 6px; }
+.dcal-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 24px; padding: 0 6px; }
+.dcal-h b { font-size: 16px; font-weight: 600; line-height: 1.5; color: var(--ink); }
+.dcal-nv { display: flex; gap: 8px; }
+.dcal-n { width: 44px; height: 44px; padding: 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--card); color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer; }
+.dcal-n:hover:not(:disabled) { border-color: var(--hair); }
+.dcal-n:disabled { opacity: 0.45; cursor: not-allowed; }
+.f .row.dcal-q { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 12px 6px 0; }
+.f .row.dcal-q .chip.day { min-height: 60px; min-width: 0; }
+.dcal-w { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); margin-top: 16px; text-align: center; font-size: 12px; line-height: 16px; color: var(--ink-3); }
+.dcal-g { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); margin-top: 8px; }
+.dcal .dc { height: 44px; min-width: 0; padding: 0; border: 2px solid transparent; border-radius: var(--r-md); background: transparent; background-clip: padding-box; color: var(--ink);
+  font-size: 16px; font-variant-numeric: tabular-nums; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: transform 0.3s var(--spring), background-color 0.15s, color 0.15s; }
+@media (hover: hover) { .dcal .dc:hover:not(:disabled) { background-color: var(--card-2); } }   /* no sticky hover after a tap on a phone */
+.dcal .dc.today { box-shadow: inset 0 0 0 1px var(--ink-3); }
+.dcal .dc[aria-pressed="true"], .dcal .dc[aria-pressed="true"]:hover { background-color: var(--acc-fill); color: var(--on-acc); font-weight: 700; box-shadow: none; }
+.dcal .dc:disabled { color: var(--ink-3); opacity: 0.45; cursor: not-allowed; }
+.dcal .dc:focus-visible { outline: 2px solid var(--acc-2); outline-offset: -2px; }
+.dcal .dc:active:not(:disabled), .dcal-n:active:not(:disabled) { transform: scale(0.95); transition-duration: 0.08s; }
+.dwh { display: grid; gap: 12px; padding: 12px; }
+.dwh.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.dwh-w { display: grid; gap: 8px; min-width: 0; }
+.dwh .dwh-w .lbl { display: block; margin: 0; font-size: 13.5px; line-height: 18px; color: var(--ink-2); }
+.dwh-b { position: relative; }
+.dwh-b::before { content: ""; position: absolute; left: 0; right: 0; top: 44px; height: 44px; border-radius: var(--r); background: var(--card-2); box-shadow: inset 0 0 0 1px var(--hair); pointer-events: none; }
+.dwh-vp { position: relative; height: 132px; padding: 44px 0; overflow-y: auto; scroll-snap-type: y mandatory; overscroll-behavior: contain; scrollbar-width: none; border-radius: var(--r); cursor: ns-resize; }
+.dwh-vp::-webkit-scrollbar { display: none; }
+.dwh-vp:focus-visible { outline: 2px solid var(--acc-2); outline-offset: 2px; }
+.dwh-o { display: flex; align-items: center; justify-content: center; height: 44px; scroll-snap-align: center; scroll-margin: 0; color: var(--ink-3); font-size: 16px; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap;
+  cursor: pointer; user-select: none; -webkit-user-select: none; transition: color 0.15s; }
+.dwh-o[aria-selected="true"] { color: var(--ink); font-size: 20px; font-weight: 600; }
+@media (max-width: 389px) {
+  /* 7 cells of 44 px need 308 px: the two cards take the popup's side air on narrow phones (360, 375); at 320 a cell is 41 x 44 */
+  .dcal, .dwh { margin-inline: -14px; }
+  .dcal { padding-inline: 4px; }
+  .f .row.dcal-q { margin-inline: 8px; }
+}
+/* W-LOOK-15 (CEO TG 4570, button state 4): the checkout's full-width action button sinks to 97 % (a 95 % full-width row jumps 9 px a side) */
+.wz-foot .btn.fill:active:not([disabled]) { transform: scale(0.97); }

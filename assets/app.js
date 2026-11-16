@@ -1008,9 +1008,14 @@
        preselected (S-CO2-03: the tap is the answer); the method used last time on this device shows picked with «Дальше» */
     payFix();
     if (payChoice()) s.push('pay');
-    s.push('contact', 'review');
+    /* CEO TG 4443 (d) fewer steps: the courier's contact step asks only the name and the phone (its comment lives on the address step). When
+       both are already known and valid from the last order on this device, nothing is left to ask: the step is skipped (S-CO-02, W-LAW-04),
+       the check screen shows them and its row opens the step. A step the buyer has opened in this checkout stays on the path */
+    if (!contactKnown()) s.push('contact');
+    s.push('review');
     return s;
   }
+  function contactKnown() { var f = state.form; return E.windowKind(f.delivery) === 'courier' && !state.contactOpen && !!phoneOk(f.phone) && (inTg || !!String(f.name || '').trim()); }
   function payChoice() { return C.payment.length > 1 && state.form.delivery !== 'cargo'; }
   /* no choice to make (one method, or cargo = card only): the order carries that method, never an empty or a cash payment */
   function payFix() {
@@ -1020,6 +1025,7 @@
     if (!f.payment || (f.delivery === 'cargo' && f.payment === 'cash')) f.payment = only ? only.id : 'card';
   }
   function curStep() {
+    if (state.step === 'contact') state.contactOpen = true;   /* a checkout reopened on the contact step keeps it */
     var s = wzSteps(), st = state.step || 'cart';
     if (s.indexOf(st) < 0) st = (st === 'when' || st === 'where' || st === 'addr') ? s[2] : st === 'pay' ? 'contact' : 'cart';
     return (state.step = st);
@@ -1062,6 +1068,7 @@
     return '';
   }
   function wzGo(st, msg) {
+    if (st === 'contact') state.contactOpen = true;
     state.step = st; renderSheet();
     $('#sheetBody').scrollTop = 0;
     var e = $('#formErr'); if (e && msg) e.textContent = msg;
@@ -1095,6 +1102,7 @@
   /* a big tappable option (delivery / payment): the whole row is the target */
   /* CEO 19.10: a delivery price with price_from (shop-facts.js) is a minimum - shown as «от 300 ₺», never counted as an exact total */
   var FROM_WORD = { ru: 'от', uk: 'від', en: 'from' };
+  var RETRY_WORD = { ru: 'Повторить', uk: 'Повторити', en: 'Try again' };   /* RU = the word of canon W-LOOK-15; UK / EN its plain translation */
   function dlvPriceText(price, from) { return price ? (from ? FROM_WORD[lang] + ' ' : '') + fm(price) : t('free'); }
   function fromAdjust(tt, d) {
     if (!d || !d.price_from || !tt.delivery) return tt;
@@ -1549,41 +1557,128 @@
         var was = dm.mode; dm.mode = m; var e = $('#formErr'); if (e) e.textContent = '';
         if (m === 'asap') { dm.date = E.planAsapDate(P); dm.from = dm.to = null; wzPicked(); return; }
         if (was !== m) { dm.from = dm.to = null; }
-        if (!dm.date || !E.planDays(P, m).some(function (d) { return d.date === dm.date && d.ok; })) { var first = E.planDays(P, m).filter(function (d) { return d.ok; })[0]; dm.date = first ? first.date : null; }
-        dpRender(); var pk = $('#dpPick'); if (pk && pk.scrollIntoView) pk.scrollIntoView({ block: 'nearest' });
+        if (!dm.date || !E.planCal(P, m).some(function (d) { return d.date === dm.date && d.ok; })) { var first = E.planCal(P, m).filter(function (d) { return d.ok; })[0]; dm.date = first ? first.date : null; }
+        dpRender(); var pk = $('#dpPick'); if (pk && pk.scrollIntoView) pk.scrollIntoView({ block: 'start' });   /* the calendar and the wheel take the screen */
       });
       o.setAttribute('data-mode', m); opts.appendChild(o);
     });
     wrap.appendChild(opts);
     if (dm.mode && dm.mode !== 'asap') {
-      var pick = el('div', { class: 'dp-pick', id: 'dpPick' });
-      var days = E.planDays(P, dm.mode), dRow = el('div', { class: 'row days dp-days', role: 'radiogroup', 'aria-label': E.dpText('day_q', lang) });
-      days.forEach(function (d) {
-        var b = el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(dm.date === d.date), 'data-date': d.date,
-          onclick: function () { if (dm.date !== d.date) { dm.date = d.date; if (dm.mode === 'time' && !E.planTimes(P, d.date).some(function (x) { return x.ok && x.min === dm.from; })) dm.from = null; if (dm.mode === 'interval' && !E.planStarts(P, d.date).some(function (x) { return x.ok && x.min === dm.from; })) { dm.from = dm.to = null; } } var e = $('#formErr'); if (e) e.textContent = ''; dpRender(); } }, [
-          el('b', { text: d.key === 'day' ? dpWeekday(d.date) : t('day_' + d.key) }), el('small', { text: d.closed ? t('day_closed') : !d.ok ? E.dpText('day_late', lang) : shortDate(d.date) })]);
-        if (!d.ok) b.disabled = true;
-        dRow.appendChild(b);
-      });
-      pick.appendChild(el('span', { class: 'lbl', text: E.dpText('day_q', lang) })); pick.appendChild(dRow);
-      var chips = function (label, list, cur, set) {
-        var r = el('div', { class: 'row wins dp-grid', role: 'radiogroup', 'aria-label': label });
-        list.forEach(function (x) {
-          var hhmm = String(Math.floor(x.min / 60)).padStart(2, '0') + ':' + String(x.min % 60).padStart(2, '0');
-          var b = el('button', { class: 'chip win', type: 'button', role: 'radio', 'aria-checked': String(cur === x.min), 'data-min': String(x.min), text: hhmm,
-            onclick: function () { set(x.min); var e = $('#formErr'); if (e) e.textContent = ''; dpRender(); } });
-          if (!x.ok) b.disabled = true; r.appendChild(b);
-        });
-        pick.appendChild(el('span', { class: 'lbl', text: label })); pick.appendChild(r);
-      };
-      if (dm.date && dm.mode === 'time') chips(E.dpText('time_q', lang), E.planTimes(P, dm.date), dm.from, function (v) { dm.from = v; });
+      var pick = el('div', { class: 'dp-pick', id: 'dpPick' }), clr = function () { var e = $('#formErr'); if (e) e.textContent = ''; };
+      /* CEO TG 4443 / 4747 (16.11): the day in a calendar card (today and tomorrow one tap away, closed and too-late days off), the time on a
+         scroll wheel in its own card: only the times still possible that day, her step. «В течение дня» = the calendar alone,
+         «Ко времени» = calendar + one wheel, «В интервал» = calendar + two wheels (from / to) */
+      pick.appendChild(dayCal(E.planCal(P, dm.mode), dm.date, function (date) {
+        if (dm.date !== date) { dm.date = date; if (dm.mode === 'time' && !E.planTimes(P, date).some(function (x) { return x.ok && x.min === dm.from; })) dm.from = null; if (dm.mode === 'interval' && !E.planStarts(P, date).some(function (x) { return x.ok && x.min === dm.from; })) { dm.from = dm.to = null; } }
+        clr(); dpRender();
+      }, function (d) { return d.closed ? t('day_closed') : !d.ok ? E.dpText('day_late', lang) : shortDate(d.date); }));
+      var hh = function (m) { return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+      var rows = function (list) { return list.filter(function (x) { return x.ok; }).map(function (x) { return { v: x.min, text: hh(x.min) }; }); };
+      var has = function (list, v) { return list.some(function (x) { return x.v === v; }); };
+      if (dm.date && dm.mode === 'time') {
+        var tl = rows(E.planTimes(P, dm.date)); if (!has(tl, dm.from)) dm.from = null;
+        pick.appendChild(el('div', { class: 'dwh', id: 'dpWheel' }, [wheel('dpT', E.dpText('time_q', lang), tl, dm.from, function (v) { dm.from = v; clr(); })]));
+      }
       if (dm.date && dm.mode === 'interval') {
-        chips(E.dpText('from_q', lang), E.planStarts(P, dm.date), dm.from, function (v) { dm.from = v; if (dm.to != null && dm.to - v < 60) dm.to = null; });
-        if (dm.from != null) chips(E.dpText('to_q', lang), E.planEnds(P, dm.from), dm.to, function (v) { dm.to = v; });
+        var fl = rows(E.planStarts(P, dm.date)); if (!has(fl, dm.from)) { dm.from = dm.to = null; }
+        var toW = function () { var l2 = rows(E.planEnds(P, dm.from)); if (!has(l2, dm.to)) dm.to = null; return wheel('dpTo', E.dpText('to_q', lang), l2, dm.to, function (v) { dm.to = v; clr(); }); };
+        var card = el('div', { class: 'dwh two', id: 'dpWheel' }), cur2 = toW();
+        card.appendChild(wheel('dpFrom', E.dpText('from_q', lang), fl, dm.from, function (v) { dm.from = v; clr(); var nw = toW(); card.replaceChild(nw, cur2); cur2 = nw; }));
+        card.appendChild(cur2);
+        pick.appendChild(card);
       }
       wrap.appendChild(pick);
     }
     return wrap;
+  }
+  /* ---------- CEO TG 4443 / 4747 (16.11): the day = a calendar in a framed card, the time = a scroll wheel in a framed card ----------
+     dayCal(days, cur, pick, why): days = the days on offer from today on [{date, key, ok, closed}] (every other day is off); a month grid
+     that starts at this week and ends with the last week on offer (no dead weeks), today marked, «Сегодня» / «Завтра» one tap away above the grid with the reason
+     when they are off (why(d)); the month arrows appear only when the offer crosses into the next month. Arrow keys walk the open days */
+  function dayCal(days, cur, pick, why) {
+    var today = days[0].date, last = days[days.length - 1].date, by = {}, open = days.filter(function (d) { return d.ok; });
+    if (state.calCur !== cur) { state.calCur = cur; state.calView = null; }   /* a new choice (a chip, another mode) shows its own month */
+    days.forEach(function (d) { by[d.date] = d; });
+    var m0 = today.slice(0, 7), m1 = last.slice(0, 7), view = state.calView && state.calView >= m0 && state.calView <= m1 ? state.calView : (cur || (open[0] || days[0]).date).slice(0, 7);
+    state.calView = view;
+    var y = +view.slice(0, 4), mo = +view.slice(5, 7), p2 = function (n) { return String(n).padStart(2, '0'); };
+    var name = new Date(y, mo - 1, 1).toLocaleDateString(LOC[lang], { month: 'long' }); name = name.charAt(0).toUpperCase() + name.slice(1) + ' ' + y;
+    var card = el('div', { class: 'dcal', id: 'dpCal', role: 'group', 'aria-label': E.dpText('day_q', lang) });
+    var go = function (d, from) { pick(d); var b = from === 'q' ? $('#dpCal .dcal-q [data-date="' + d + '"]') : $('#dpCal .dcal-g [data-date="' + d + '"]'); if (b) b.focus({ preventScroll: true }); };
+    var head = el('div', { class: 'dcal-h' }, [el('b', { id: 'dpCalM', 'aria-live': 'polite', text: name })]);
+    if (m0 !== m1) {
+      var nav = function (step, lbl, txt, off) { var b = el('button', { class: 'dcal-n', type: 'button', 'aria-label': t(lbl), text: txt, onclick: function () { var d = new Date(y, mo - 1 + step, 1); state.calView = d.getFullYear() + '-' + p2(d.getMonth() + 1); dpRender(); var nb = $('#dpCal .dcal-n:not([disabled])'); if (nb) nb.focus({ preventScroll: true }); } }); if (off) b.disabled = true; return b; };
+      head.appendChild(el('span', { class: 'dcal-nv' }, [nav(-1, 'prev_m', '‹', view <= m0), nav(1, 'next_m', '›', view >= m1)]));
+    }
+    card.appendChild(head);
+    var q = el('div', { class: 'row days dcal-q' });
+    days.slice(0, 2).forEach(function (d) {
+      var b = el('button', { class: 'chip day', type: 'button', 'aria-pressed': String(cur === d.date), 'data-date': d.date, onclick: function () { state.calView = d.date.slice(0, 7); go(d.date, 'q'); } },
+        [el('b', { text: t('day_' + d.key) }), el('small', { text: why(d) })]);
+      if (!d.ok) b.disabled = true; q.appendChild(b);
+    });
+    card.appendChild(q);
+    var dow = el('div', { class: 'dcal-w', 'aria-hidden': 'true' });
+    for (var k = 0; k < 7; k++) dow.appendChild(el('span', { text: new Date(2024, 0, 1 + k).toLocaleDateString(LOC[lang], { weekday: 'short' }) }));
+    card.appendChild(dow);
+    var grid = el('div', { class: 'dcal-g' }), first = (new Date(y, mo - 1, 1).getDay() + 6) % 7, n = new Date(y, mo, 0).getDate();
+    var skip = view === m0 ? Math.floor((first + +today.slice(8) - 1) / 7) * 7 : 0;   /* the weeks before this one are not drawn */
+    var tab = cur && cur.slice(0, 7) === view && by[cur] && by[cur].ok ? cur : (open.filter(function (d) { return d.date.slice(0, 7) === view; })[0] || {}).date;
+    /* ... and the weeks after the last day on offer are not drawn either (two weeks at least, so it always reads as a calendar) */
+    var lastOn = days.filter(function (d) { return d.date.slice(0, 7) === view; }).pop(), end = Math.min(first + n, Math.max(skip + 14, lastOn ? (Math.floor((first + +lastOn.date.slice(8) - 1) / 7) + 1) * 7 : 0));
+    for (var i = skip; i < end; i++) {
+      if (i < first) { grid.appendChild(el('span', { class: 'pad' })); continue; }
+      (function (dn) {
+        var ds = view + '-' + p2(dn), info = by[ds], lbl = new Date(y, mo - 1, dn).toLocaleDateString(LOC[lang], { weekday: 'long', day: 'numeric', month: 'long' }) + (ds === today ? ', ' + t('day_today').toLowerCase() : '');
+        var b = el('button', { class: 'dc' + (ds === today ? ' today' : ''), type: 'button', 'aria-pressed': String(cur === ds), 'aria-label': lbl, 'data-date': ds, tabindex: ds === tab ? '0' : '-1', text: String(dn), onclick: function () { go(ds, 'g'); } });
+        if (ds === today) b.setAttribute('aria-current', 'date');
+        if (!info || !info.ok) b.disabled = true;
+        grid.appendChild(b);
+      })(i - first + 1);
+    }
+    grid.addEventListener('keydown', function (e) {
+      var live = [].slice.call(grid.querySelectorAll('.dc:not([disabled])')), at = live.indexOf(document.activeElement), to = null; if (at < 0) return;
+      if (e.key === 'ArrowRight') to = live[at + 1]; else if (e.key === 'ArrowLeft') to = live[at - 1]; else if (e.key === 'Home') to = live[0]; else if (e.key === 'End') to = live[live.length - 1];
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { var dd = +live[at].getAttribute('data-date').slice(8) + (e.key === 'ArrowDown' ? 7 : -7); to = grid.querySelector('.dc:not([disabled])[data-date="' + view + '-' + p2(dd) + '"]'); }
+      else return;
+      e.preventDefault(); if (to) to.focus();
+    });
+    card.appendChild(grid);
+    return card;
+  }
+  /* wheel(id, label, items, cur, onPick): a scroll wheel of 44 px rows (three in view, the middle one is the choice): finger and trackpad
+     scroll it with the browser's own momentum and snap, the mouse wheel turns it, a tap on a row brings it to the middle, the arrow keys /
+     Home / End / PageUp / PageDown step it. Nothing is pre-picked (S-CO-07): while there is no choice the first row is «--:--».
+     No animated scrolling of ours (reduced motion has nothing to switch off); onPick(value | null) fires when the wheel settles */
+  var WH_ROW = 44;
+  function wheel(id, label, items, cur, onPick) {
+    var rows = (cur == null ? [{ v: null, text: '--:--' }] : []).concat(items), sel = 0, val = cur == null ? null : cur, tmr = null;
+    rows.forEach(function (r, i) { if (cur != null && r.v === cur) sel = i; });
+    var vp = el('div', { class: 'dwh-vp', id: id, role: 'listbox', tabindex: '0', 'aria-labelledby': id + 'L', 'aria-activedescendant': id + '-' + sel });
+    var paint = function (i) { sel = i; [].forEach.call(vp.children, function (o, k) { o.setAttribute('aria-selected', String(k === i)); }); vp.setAttribute('aria-activedescendant', id + '-' + i); };
+    var commit = function (i) { if (rows[i].v !== val) { val = rows[i].v; haptic('selection'); onPick(val); } };
+    var to = function (i) { i = Math.max(0, Math.min(rows.length - 1, i)); vp.scrollTop = i * WH_ROW; paint(i); commit(i); };
+    rows.forEach(function (r, i) { vp.appendChild(el('div', { class: 'dwh-o' + (r.v == null ? ' none' : ''), role: 'option', id: id + '-' + i, 'aria-selected': String(i === sel), text: r.text, onclick: function () { to(i); vp.focus({ preventScroll: true }); } })); });
+    vp.addEventListener('scroll', function () {
+      var i = Math.max(0, Math.min(rows.length - 1, Math.round(vp.scrollTop / WH_ROW)));
+      if (i !== sel) paint(i);
+      clearTimeout(tmr); tmr = setTimeout(function () { commit(sel); }, 140);
+    }, { passive: true });
+    /* the mouse wheel: one notch = one row (the browser's own 100 px step would jump two rows and never stop on the odd ones); a trackpad's
+       small steps add up to a row (40 px). Touch is not touched: it stays the browser's own scroll */
+    var acc = 0, accT = 0;
+    vp.addEventListener('wheel', function (e) {
+      if (e.ctrlKey || !e.deltaY) return; e.preventDefault();
+      var now = Date.now(); if (now - accT > 250) acc = 0; accT = now;
+      acc += e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+      if (Math.abs(acc) >= 40) { var d = acc > 0 ? 1 : -1; acc = 0; to(sel + d); }
+    }, { passive: false });
+    vp.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : e.key === 'PageDown' ? 3 : e.key === 'PageUp' ? -3 : e.key === 'Home' ? -1e4 : e.key === 'End' ? 1e4 : 0;
+      if (!d) return; e.preventDefault(); to(sel + d);
+    });
+    setTimeout(function () { vp.scrollTop = sel * WH_ROW; }, 0);   /* once the step is in the page: the choice sits in the middle */
+    return el('div', { class: 'dwh-w' }, [el('span', { class: 'lbl', id: id + 'L', text: label }), el('div', { class: 'dwh-b' }, [vp])]);
   }
   function siteWins() {
     var src = LIVE && LIVE.windows && typeof LIVE.windows === 'object' ? LIVE.windows : {}, out = {};
@@ -1606,23 +1701,14 @@
   function renderWindows() {
     var f = state.form, W = syncWindow(), kind = E.windowKind(f.delivery), days = E.windowDays(W, kind);
     var box = el('div', { class: 'f when' }, [el('span', { class: 'lbl', text: t(kind === 'pickup' ? 'f_when_pickup' : 'f_when_courier') })]);
-    var dRow = el('div', { class: 'row days', role: 'radiogroup' });
-    days.forEach(function (d) {
-      var empty = !d.wins.length;
-      var b = el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(f.windowDate === d.date), 'data-date': d.date,
-        onclick: function () { if (f.windowDate !== d.date) { f.windowDate = d.date; f.windowId = null; } renderSheet(); } }, [
-        el('b', { text: d.key === 'day' ? weekdayName(d.date) : t('day_' + d.key) }), el('small', { text: d.closed ? t('day_closed') : empty ? t('day_none') : shortDate(d.date) })]);
-      if (empty) b.disabled = true;
-      dRow.appendChild(b);
-    });
-    box.appendChild(dRow);
+    /* CEO TG 4443 / 4747 (16.11): the same calendar card and wheel card. The days on offer are exactly the days the worker takes for a fixed
+       window (today, tomorrow, the next open day when tomorrow is closed: windowDays); every other day of the month is off */
+    var clr = function () { var e = $('#formErr'); if (e) e.textContent = ''; };
+    box.appendChild(dayCal(days.map(function (d) { return { date: d.date, key: d.key, closed: !!d.closed, ok: !!d.wins.length }; }), f.windowDate, function (date) {
+      if (f.windowDate !== date) { f.windowDate = date; f.windowId = null; } clr(); dpRender();
+    }, function (d) { return d.closed ? t('day_closed') : !d.ok ? t('day_none') : shortDate(d.date); }));
     var day = days.filter(function (d) { return d.date === f.windowDate; })[0];
-    var wRow = el('div', { class: 'row wins', role: 'radiogroup' });
-    (day ? day.wins : []).forEach(function (w) {
-      wRow.appendChild(el('button', { class: 'chip win', type: 'button', role: 'radio', 'aria-checked': String(f.windowId === w.id), 'data-win': w.id, text: w.label,
-        onclick: function () { f.windowId = w.id; var e = $('#formErr'); if (e) e.textContent = ''; renderSheet(); } }));
-    });
-    box.appendChild(wRow);
+    if (day && day.wins.length) box.appendChild(el('div', { class: 'dwh', id: 'dpWheel' }, [wheel('dpW', t('done_when'), day.wins.map(function (w) { return { v: w.id, text: w.label }; }), f.windowId, function (v) { f.windowId = v; clr(); })]));
     return box;
   }
   function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
@@ -1695,10 +1781,12 @@
     if (CH) CH.decorate(payload);
     var btn = $('#sendBtn'); state.sending = true; err.textContent = ''; if (btn) { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
     /* CEO TG 4390 (15.11): «долго грузилось, не был уверен, что кнопка сработала» - the button says it is sending and spins until the answer */
-    var lab = btn && btn.querySelector('span'), labTxt = lab ? lab.textContent : ''; if (lab) lab.textContent = t('sending');
+    var lab = btn && btn.querySelector('span'), labTxt = lab ? lab.textContent : ''; if (btn) btn.style.minWidth = btn.offsetWidth + 'px';   /* W-LOOK-15 (5): the button keeps its width while the label changes */
+    if (lab) lab.textContent = t('sending');
     E.sendOrder(payload).then(function (r) {
       state.sending = false; if (btn) { btn.disabled = false; btn.removeAttribute('aria-busy'); } if (lab) lab.textContent = labTxt;
-      if (!r.ok) { var e2 = $('#formErr'); if (e2) e2.textContent = t(r.error === 'tg_auth' ? 'err_tg_auth' : r.kind === 'network' ? 'err_send' : 'err_reject'); return; }
+      /* W-LOOK-15 (CEO TG 4570, button state 6): no answer from the server = the button itself offers «Повторить» (the same checkout, the same nonce) */
+      if (!r.ok) { var e2 = $('#formErr'); if (e2) e2.textContent = t(r.error === 'tg_auth' ? 'err_tg_auth' : r.kind === 'network' ? 'err_send' : 'err_reject'); if (lab && r.kind === 'network' && r.error !== 'tg_auth') lab.textContent = RETRY_WORD[lang] || RETRY_WORD.ru; return; }
       var d = r.data, cityRu = f.other ? f.city.trim() : 'Аланья', tgLink = E.tgStartLink(payload.nonce);
       /* SECURITY 07.11 (bot sec-audit-1107 fix 1): a repeat of an order already made (same phone + same goods, a new nonce) answers only
          order_id + duplicate: no lines, no sums, no link. The done screen shows the number from order_id and keeps THIS checkout's own link */
@@ -1716,7 +1804,7 @@
       var oc = E.loadCustomer() || {}, cour = payload.address != null;   /* the street, floor, flat and code as typed, for the next order */
       E.saveCustomer({ name: inTg ? oc.name || '' : order.customer.name, phone: order.customer.phone, city: f.other ? f.city.trim() : '', cityMode: f.other ? 'other' : 'alanya', delivery: f.delivery, payment: f.payment, address: cour ? String(f.address || '').trim() : oc.address || '', floor: cour ? f.floor : oc.floor || '', apt: cour ? f.apt : oc.apt || '', code: cour ? f.code : oc.code || '' });
       state.lastOrder = order; state.orderNonce = null; state.orderKey = null; E.upsClear(); cart = []; E.saveCart(cart); renderCartUI(); /* CEO 11.10: the header badge kept «2» after the order */ f.windowId = null; f.windowDate = null;
-      state.step = 'cart'; state.wzReturn = false; state.view = 'done'; haptic('success'); renderSheet(); $('#sheetBody').scrollTop = 0;
+      state.step = 'cart'; state.wzReturn = false; state.contactOpen = false; state.view = 'done'; haptic('success'); renderSheet(); $('#sheetBody').scrollTop = 0;
       /* CEO live test 11.10: after EVERY order the bot chat opens (t.me/ukrproductbot?start=o<nonce>, the link the worker returns), the customer taps Start and
          the bot confirms the order there. Phone: a direct navigation (never popup-blocked, iOS Safari included). Desktop: a new tab
          (allowed while the click's activation lasts); if the browser blocks it, the big button on the done screen does the same. */
