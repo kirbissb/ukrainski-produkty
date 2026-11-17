@@ -996,7 +996,7 @@
       var m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(link); b.disabled = true; b.setAttribute('aria-busy', 'true');
       E.geoLookup(m ? +m[1] : NaN, m ? +m[2] : NaN).then(function (r) {
         f.geo = link; f.geoPlace = r.place || ''; f.geoSeveral = r.places && r.places.length > 1 ? r.places : null; f.geoStreet = '';
-        if (f.placeBy !== 'text') { f.placeBy = ''; f.place = ''; }
+        f.placeBy = ''; f.place = '';
         if (r.street && !String(f.address || '').trim()) { f.address = r.street; f.geoStreet = r.street; }
         placeSync(); if (dpPlaces().length && !f.place) f.placeAsk = true;
         var e = $('#formErr'); if (e) e.textContent = ''; dpRender();
@@ -1511,7 +1511,14 @@
   /* the courier fee of this checkout by the plan (the chosen place, or the range before it is chosen); null = no plan / not courier */
   function dpFee(subtotal) {
     var P = dplan(), f = state.form; if (!P || f.delivery !== 'alanya') return null;
-    return P.area.length && P.area.indexOf(f.place) < 0 ? E.planFeeRange(P, subtotal, dpBase()) : E.planFee(P, f.place, subtotal, dpBase());
+    return P.area.length && P.area.indexOf(f.place) < 0 ? E.planFeeRange(P, subtotal, dpBase()) : dpPlFee(P, f.place, subtotal);
+  }
+  /* round 2 (17.11): a place the BUYER named for an address that carries a point (the point named none / several of hers, or the map was
+     silent) is his word - the worker counts a fee from it only when the point does not say otherwise, so the page promises no sum: «уточним»
+     (free delivery from a sum stays free). A place the point decided, and any place of an address without a point, shows its fee as before */
+  function dpPlFee(P, pl, subtotal) {
+    var fe = E.planFee(P, pl, subtotal, dpBase()), f = state.form;
+    return f.geo && f.placeBy !== 'geo' && !(fe.sum === 0 && !fe.tbd) ? { sum: null, from: false, tbd: true } : fe;
   }
   /* the totals with the plan's fee (the same shape as fromAdjust: a «from» price or «уточним» is not counted in the total) */
   function dpAdjust(tt) {
@@ -1543,16 +1550,21 @@
     primary.disabled = true;
   }
   /* ---------- CEO TG 4770 + 4443 + 4411 (17.11): her place is DECIDED, never picked from chips ----------
-     f.place = the typed address names it (E.placeIn, the worker's own rule) -> else the buyer's answer to the one question -> else the place
-     of the sent point (the worker's /site-geo at the tap). f.placeBy says which. The street the map itself filled is never read as his words. The place and its fee show as ONE quiet line under the
+     f.place = the place of the sent point when the point names ONE (the worker's /site-geo at the tap; it decides alone) -> else the buyer's
+     answer to the one question / a place his typed address names (E.placeIn, the worker's own rule). f.placeBy says which. The place and its fee show as ONE quiet line under the
      geolocation row (the fee by the same E.planFee the chips used). Only when none of the three names a place the question is asked in
      words, with her places as a short list to tap (f.placeAsk: after a point in none / several of her places, or on «Дальше») */
   function placeSync() {
     var f = state.form, ar = dpPlaces(); if (!ar.length) return;
-    /* the street the MAP wrote is not the buyer's words: a road named after the city («Alanya Yolu») must not move a Махмутлар point to the city price */
+    /* round 2 (17.11, the worker's rule - the fee may only come from what code can verify): a sent point that names ONE place of hers DECIDES,
+       no word beside it moves it («улица Алании 5» at a Махмутлар point is Махмутлар). The point names none / several: his answer to the
+       question, then a place his own words name (never the street the map wrote). No point: his words, then his answer */
+    var gp = f.geo && ar.indexOf(f.geoPlace) >= 0 ? f.geoPlace : '';
     var own = !(f.geo && f.geoStreet && String(f.address || '').replace(/\s+/g, ' ').trim() === f.geoStreet);
-    var tp = own ? E.placeIn(f.address, ar) : '', asked = f.placeBy === 'ask' && ar.indexOf(f.place) >= 0 ? f.place : '', gp = f.geo && ar.indexOf(f.geoPlace) >= 0 ? f.geoPlace : '';
-    f.place = tp || asked || gp || ''; f.placeBy = tp ? 'text' : asked ? 'ask' : gp ? 'geo' : '';
+    var tp = !gp && own ? E.placeIn(f.address, ar) : '', asked = !gp && f.placeBy === 'ask' && ar.indexOf(f.place) >= 0 ? f.place : '';
+    if (gp) { f.place = gp; f.placeBy = 'geo'; }
+    else if (f.geo) { f.place = asked || tp || ''; f.placeBy = asked ? 'ask' : tp ? 'text' : ''; }
+    else { f.place = tp || asked || ''; f.placeBy = tp ? 'text' : asked ? 'ask' : ''; }
     if (f.place) f.placeAsk = false;
   }
   /* the one question comes into view - its words at the top of the popup's visible part when it does not fit as it stands (320 px phones) - and
@@ -1571,7 +1583,7 @@
     var P = dplan(), f = state.form; if (!dpPlaces().length) return;
     placeSync();
     if (f.place) {
-      box.appendChild(el('div', { class: 'dp-pl', id: 'dpPl', role: 'status' }, [el('span', { class: 'dp-pl-k', text: E.dpText('place_q', lang) }), el('b', { text: f.place }), el('span', { class: 'dp-pl-fee', text: dpPlaceFee(E.planFee(P, f.place, tt.subtotal, dpBase())) })]));
+      box.appendChild(el('div', { class: 'dp-pl', id: 'dpPl', role: 'status' }, [el('span', { class: 'dp-pl-k', text: E.dpText('place_q', lang) }), el('b', { text: f.place }), el('span', { class: 'dp-pl-fee', text: dpPlaceFee(dpPlFee(P, f.place, tt.subtotal)) })]));
       return;
     }
     if (!f.placeAsk) return;
@@ -1580,7 +1592,7 @@
     list.forEach(function (pl) {
       row.appendChild(el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': 'false', 'data-place': pl,
         onclick: function () { f.place = pl; f.placeBy = 'ask'; f.placeAsk = false; var e = $('#formErr'); if (e) e.textContent = ''; dpRender(); var nx = !String(f.floor || '').trim() ? $('#fFloor') : !String(f.apt || '').trim() ? $('#fApt') : $('#wzNext'); if (nx) nx.focus({ preventScroll: true }); } },
-        [el('b', { text: pl }), el('small', { text: dpFeeText(E.planFee(P, pl, tt.subtotal, dpBase())) })]));
+        [el('b', { text: pl }), el('small', { text: dpFeeText(dpPlFee(P, pl, tt.subtotal)) })]));
     });
     box.appendChild(el('div', { class: 'f dp-place', id: 'dpAsk' }, [el('span', { class: 'lbl', id: 'dpAskQ', text: E.dpText('place_ask', lang) }), row]));
   }
