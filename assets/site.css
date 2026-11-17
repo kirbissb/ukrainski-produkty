@@ -946,7 +946,14 @@ body.srch-on .bar { z-index: 31; }   /* the cart bar stays on top of the results
 .f .row.dp-places .chip.day b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .f .row.dp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .f .row.dp-grid .chip.win { min-height: 48px; }
-.wz-addr .f.dp-place { margin-top: 2px; }
+/* CEO TG 4770 (17.11): no district chips. Her place, decided from the point or the typed address, is ONE quiet line with its fee;
+   the question (her places as a short list) shows only when nothing names the place */
+.wz-addr .dp-pl { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 8px; row-gap: 0; align-items: baseline; margin-top: 12px; padding: 0 4px; font-size: 15px; line-height: 24px; color: var(--ink); }
+.wz-addr .dp-pl-k { font-size: 13.5px; color: var(--ink-2); }
+.wz-addr .dp-pl b { min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wz-addr .dp-pl-fee { grid-column: 1 / -1; font-size: 13.5px; line-height: 20px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.wz-addr .f.dp-place { margin-top: 16px; }
+.wz-addr .f.dp-place .lbl { display: block; margin-bottom: 2px; font-size: 15px; line-height: 20px; color: var(--ink); }
 .btn.dp-pickup { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 52px; margin: 10px 0 14px; }
 .btn.dp-pickup .ico { width: 20px; height: 20px; }
 
@@ -1534,8 +1541,8 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
 .dcal-n { width: 44px; height: 44px; padding: 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--card); color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer; }
 .dcal-n:hover:not(:disabled) { border-color: var(--hair); }
 .dcal-n:disabled { opacity: 0.45; cursor: not-allowed; }
-.f .row.dcal-q { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 12px 6px 0; }
-.f .row.dcal-q .chip.day { min-height: 60px; min-width: 0; }
+/* CEO TG 4770 (17.11): no «Сегодня» / «Завтра» chips in the card; a today that cannot be taken says why in one quiet line */
+.dcal-why { margin: 8px 6px 0; font-size: 13.5px; line-height: 20px; color: var(--ink-2); }
 .dcal-w { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); margin-top: 16px; text-align: center; font-size: 12px; line-height: 16px; color: var(--ink-3); }
 .dcal-g { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); margin-top: 8px; }
 .dcal .dc { height: 44px; min-width: 0; padding: 0; border: 2px solid transparent; border-radius: var(--r-md); background: transparent; background-clip: padding-box; color: var(--ink);
@@ -1563,7 +1570,8 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
   /* 7 cells of 44 px need 308 px: the two cards take the popup's side air on narrow phones (360, 375); at 320 a cell is 41 x 44 */
   .dcal, .dwh { margin-inline: -14px; }
   .dcal { padding-inline: 4px; }
-  .f .row.dcal-q { margin-inline: 8px; }
 }
 /* W-LOOK-15 (CEO TG 4570, button state 4): the checkout's full-width action button sinks to 97 % (a 95 % full-width row jumps 9 px a side) */
 .wz-foot .btn.fill:active:not([disabled]) { transform: scale(0.97); }
+/* 17.11: at 320 px «Подтвердить в Telegram» ran 6 px past its button (icon + 17 px label in a 198 px button); narrow phones get a tighter button and the label may take two lines */
+@media (max-width: 340px) { .sheet.rvx #sendBtn { padding: 0 10px; gap: 8px; font-size: 15px; } .sheet.rvx #sendBtn > span { white-space: normal; text-align: center; min-width: 0; } }

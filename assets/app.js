@@ -990,8 +990,19 @@
       if (!link) { var a = $('#fAddr'); if (a) a.focus(); return; }   /* refused or no fix: typing stays */
       /* CEO TG 4252: the link is kept apart (f.geo) and the step shows «Геолокация отправлена», never the raw URL; the street field stays
          for an optional landmark; the order still carries the link in `address` */
-      f.geo = link; $('#formErr').textContent = ''; dpRender();
-      var nx = !String(f.floor || '').trim() ? $('#fFloor') : !String(f.apt || '').trim() ? $('#fApt') : null; if (nx) nx.focus(); else { var g = $('#geoOn'); if (g) g.focus(); }
+      /* CEO TG 4770 + 4411 (17.11): at the tap the worker reads the point on the map (E.geoLookup, 4.5 s at most): the street + house go into
+         the EMPTY street field (editable), her place is decided from the point - the buyer never picks a district. No answer, or a point in
+         none / several of her places = the one question (f.placeAsk). The button stays busy until then */
+      var m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(link); b.disabled = true; b.setAttribute('aria-busy', 'true');
+      E.geoLookup(m ? +m[1] : NaN, m ? +m[2] : NaN).then(function (r) {
+        f.geo = link; f.geoPlace = r.place || ''; f.geoSeveral = r.places && r.places.length > 1 ? r.places : null; f.geoStreet = '';
+        if (f.placeBy !== 'text') { f.placeBy = ''; f.place = ''; }
+        if (r.street && !String(f.address || '').trim()) { f.address = r.street; f.geoStreet = r.street; }
+        placeSync(); if (dpPlaces().length && !f.place) f.placeAsk = true;
+        var e = $('#formErr'); if (e) e.textContent = ''; dpRender();
+        if (askShow()) return;
+        var nx = !String(f.floor || '').trim() ? $('#fFloor') : !String(f.apt || '').trim() ? $('#fApt') : null; if (nx) nx.focus(); else { var g = $('#geoOn'); if (g) g.focus(); }
+      });
     });
   }
   function wzSteps() {
@@ -1062,7 +1073,7 @@
     if (st === 'when') return E.windowValid(siteWins(), f.delivery, f.windowId, f.windowDate) ? '' : t('err_window');
     if (st === 'where') return f.other && !f.city.trim() ? t('err_city') : '';
     if (st === 'pay') return payChoice() && !C.paymentById[f.payment] ? t('wz_pay') : '';
-    if (st === 'addr') return !addrOk() ? t('err_addr') : dpPlaces().length && dpPlaces().indexOf(f.place) < 0 ? E.dpText('err_place', lang) : !String(f.floor || '').trim() || !String(f.apt || '').trim() ? t('err_floor_apt') : '';
+    if (st === 'addr') return !addrOk() ? t('err_addr') : placeMiss() ? E.dpText('place_ask', lang) : !String(f.floor || '').trim() || !String(f.apt || '').trim() ? t('err_floor_apt') : '';
     /* CEO 19.10 evening: a phone for EVERY order, Telegram too (the courier agrees the delivery by phone / WhatsApp); in Telegram the name comes from Telegram */
     if (st === 'contact') return inTg ? (phoneOk(f.phone) ? '' : t('err_phone_tg')) : !f.name.trim() || !phoneOk(f.phone) ? t('err_contact_ord') : '';
     return '';
@@ -1074,7 +1085,10 @@
     var e = $('#formErr'); if (e && msg) e.textContent = msg;
     if (msg && st === 'contact') { var bad = !inTg && !state.form.name.trim() ? $('#fName') : $('#fPhone'); if (bad) { bad.setAttribute('aria-invalid', 'true'); bad.focus(); } return; }
     if (msg && st === 'where') { var c = $('#fCity'); if (c) { c.setAttribute('aria-invalid', 'true'); c.focus(); } return; }
-    if (msg && st === 'addr') { var f0 = state.form, a = !addrOk() ? $('#fAddr') : !String(f0.floor || '').trim() ? $('#fFloor') : !String(f0.apt || '').trim() ? $('#fApt') : null; if (a) { a.setAttribute('aria-invalid', 'true'); a.focus(); } return; }
+    if (msg && st === 'addr') { var f0 = state.form, a = !addrOk() ? $('#fAddr') : !String(f0.floor || '').trim() ? $('#fFloor') : !String(f0.apt || '').trim() ? $('#fApt') : null;
+      /* CEO TG 4770: the one place question is where the eye and the keyboard go; it is the message itself, so the line under the button stays empty */
+      if (addrOk() && askShow()) { if (e) e.textContent = ''; return; }
+      if (a) { a.setAttribute('aria-invalid', 'true'); a.focus(); } return; }
     /* speed 05.11 (taps to order): the contact step opens with the cursor in the first empty field (no extra tap on the field); this runs
        inside the «Дальше» tap, so phones open the keyboard */
     if (st === 'contact') { var ff = !inTg && !state.form.name.trim() ? $('#fName') : !state.form.phone.trim() ? $('#fPhone') : null; if (ff) { ff.focus(); return; } }
@@ -1354,12 +1368,15 @@
         onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); var fl = $('#fFloor'); if (fl) fl.focus(); else wzNext(); } } });
       ad.value = f.address || '';
       ad.setAttribute('name', 'street-address');
-      if (dpPlaces().length) dpPlaceBlock(box, tt, ad); else box.appendChild(el('div', { class: 'f addr' }, [ad]));
+      /* CEO TG 4770 (17.11): NO district chips - the street field first, as on a shop without places */
+      ad.addEventListener('input', function () { var was = state.form.place || '', asked = !!state.form.placeAsk; placeSync(); if ((state.form.place || '') !== was || !!state.form.placeAsk !== asked) { var pos = ad.selectionStart; dpRender(); var a2 = $('#fAddr'); if (a2) { a2.focus({ preventScroll: true }); try { a2.setSelectionRange(pos, pos); } catch (e) { /* not a text field */ } } } });
+      box.appendChild(el('div', { class: 'f addr' }, [ad]));
       /* CEO live test 15.11 (D): «📍 Отправить геолокацию» when the address is hard to type - the map link of where he stands goes into the
          address field (Telegram LocationManager in the Mini App, the browser's geolocation elsewhere); floor and flat are still asked */
       if (f.geo) box.appendChild(el('div', { class: 'geo-on', id: 'geoOn', tabindex: '-1', role: 'status' }, [icon('i-pin', 'rvx-bti'), el('span', { class: 'geo-t', text: t('geo_sent') }),
-        el('button', { class: 'geo-chg', type: 'button', id: 'geoChg', 'aria-label': t('wz_edit') + ': ' + t('geo_sent'), text: t('wz_edit'), onclick: function () { f.geo = ''; dpRender(); var b = $('#fGeo'); if (b) b.focus(); } })]));
+        el('button', { class: 'geo-chg', type: 'button', id: 'geoChg', 'aria-label': t('wz_edit') + ': ' + t('geo_sent'), text: t('wz_edit'), onclick: function () { if (f.geoStreet && String(f.address || '').trim() === f.geoStreet) f.address = ''; f.geo = ''; f.geoPlace = ''; f.geoSeveral = null; f.geoStreet = ''; if (f.placeBy !== 'text') { f.placeBy = ''; f.place = ''; } f.placeAsk = false; dpRender(); var b = $('#fGeo'); if (b) b.focus(); } })]));
       else if (geoAvail()) box.appendChild(el('button', { class: 'btn wide wz-geo', type: 'button', id: 'fGeo', onclick: function () { geoFill(this); } }, [icon('i-pin', 'rvx-bti'), el('span', { text: t('geo_btn') })]));
+      dpPlaceInfo(box, tt);
       /* floor + flat REQUIRED side by side, door code and a note for the courier optional (CEO 15.11) */
       var ainp = function (id, key, lbl, next, req) {
         var a0 = { type: 'text', id: id, maxlength: '12', autocomplete: 'off', enterkeyhint: next ? 'next' : 'done', oninput: function (e) { f[key] = e.target.value; e.target.removeAttribute('aria-invalid'); $('#formErr').textContent = ''; },
@@ -1525,18 +1542,47 @@
     box.insertBefore(el('button', { class: 'btn dp-pickup', type: 'button', id: 'dpPickup', onclick: function () { f.delivery = 'pickup'; f.other = false; wzPicked(); } }, [icon('i-bag'), el('span', { text: E.dpText('pickup_btn', lang) })]), top);
     primary.disabled = true;
   }
-  /* «Куда привезти?» with her places: the place chips (with their fee) above the address */
-  function dpPlaceBlock(box, tt, ad) {
-    var P = dplan(), f = state.form;
-    var row = el('div', { class: 'row dp-places', role: 'radiogroup', 'aria-label': E.dpText('place_q', lang) });
-    P.area.forEach(function (pl) {
-      var on = f.place === pl;
-      row.appendChild(el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': String(on), 'data-place': pl,
-        onclick: function () { f.place = pl; var e = $('#formErr'); if (e) e.textContent = ''; renderSheet(); var a = $('#fAddr'); if (a && !a.value.trim()) a.focus({ preventScroll: true }); } },
+  /* ---------- CEO TG 4770 + 4443 + 4411 (17.11): her place is DECIDED, never picked from chips ----------
+     f.place = the typed address names it (E.placeIn, the worker's own rule) -> else the buyer's answer to the one question -> else the place
+     of the sent point (the worker's /site-geo at the tap). f.placeBy says which. The street the map itself filled is never read as his words. The place and its fee show as ONE quiet line under the
+     geolocation row (the fee by the same E.planFee the chips used). Only when none of the three names a place the question is asked in
+     words, with her places as a short list to tap (f.placeAsk: after a point in none / several of her places, or on «Дальше») */
+  function placeSync() {
+    var f = state.form, ar = dpPlaces(); if (!ar.length) return;
+    /* the street the MAP wrote is not the buyer's words: a road named after the city («Alanya Yolu») must not move a Махмутлар point to the city price */
+    var own = !(f.geo && f.geoStreet && String(f.address || '').replace(/\s+/g, ' ').trim() === f.geoStreet);
+    var tp = own ? E.placeIn(f.address, ar) : '', asked = f.placeBy === 'ask' && ar.indexOf(f.place) >= 0 ? f.place : '', gp = f.geo && ar.indexOf(f.geoPlace) >= 0 ? f.geoPlace : '';
+    f.place = tp || asked || gp || ''; f.placeBy = tp ? 'text' : asked ? 'ask' : gp ? 'geo' : '';
+    if (f.place) f.placeAsk = false;
+  }
+  /* the one question comes into view - its words at the top of the popup's visible part when it does not fit as it stands (320 px phones) - and
+     its first place takes the focus. -> false when no question is on the step */
+  function askShow() {
+    var a = $('#dpAsk'), sb = $('#sheetBody'), r = a && a.querySelector('[role="radio"]'); if (!a || !sb || !r) return false;
+    var ar = a.getBoundingClientRect(), br = sb.getBoundingClientRect(), ft = $('.wz-foot'), low = ft ? Math.min(br.bottom, ft.getBoundingClientRect().top) : br.bottom;
+    if (ar.top < br.top || ar.bottom > low) sb.scrollTop += ar.top - br.top - 8;
+    r.focus({ preventScroll: true }); return true;
+  }
+  /* «Дальше» on the address step without a place: the question opens (it is the message: nothing is repeated under the button) */
+  function placeMiss() { if (!dpPlaces().length) return false; placeSync(); if (state.form.place) return false; state.form.placeAsk = true; return true; }
+  /* the fee of the decided place in whole words: «Курьер по Алании · 300 ₺» / «Стоимость доставки уточним» (a bare «уточним» says nothing here) */
+  function dpPlaceFee(fe) { var s = fe.tbd ? E.dpText('fee_tbd', lang) : delivName(C.deliveryById.alanya) + ' · ' + dlvPriceText(fe.sum, fe.from); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function dpPlaceInfo(box, tt) {
+    var P = dplan(), f = state.form; if (!dpPlaces().length) return;
+    placeSync();
+    if (f.place) {
+      box.appendChild(el('div', { class: 'dp-pl', id: 'dpPl', role: 'status' }, [el('span', { class: 'dp-pl-k', text: E.dpText('place_q', lang) }), el('b', { text: f.place }), el('span', { class: 'dp-pl-fee', text: dpPlaceFee(E.planFee(P, f.place, tt.subtotal, dpBase())) })]));
+      return;
+    }
+    if (!f.placeAsk) return;
+    var list = f.geoSeveral && f.geoSeveral.every(function (x) { return P.area.indexOf(x) >= 0; }) ? f.geoSeveral : P.area;
+    var row = el('div', { class: 'row dp-places', role: 'radiogroup', 'aria-labelledby': 'dpAskQ' });
+    list.forEach(function (pl) {
+      row.appendChild(el('button', { class: 'chip day', type: 'button', role: 'radio', 'aria-checked': 'false', 'data-place': pl,
+        onclick: function () { f.place = pl; f.placeBy = 'ask'; f.placeAsk = false; var e = $('#formErr'); if (e) e.textContent = ''; dpRender(); var nx = !String(f.floor || '').trim() ? $('#fFloor') : !String(f.apt || '').trim() ? $('#fApt') : $('#wzNext'); if (nx) nx.focus({ preventScroll: true }); } },
         [el('b', { text: pl }), el('small', { text: dpFeeText(E.planFee(P, pl, tt.subtotal, dpBase())) })]));
     });
-    box.appendChild(el('div', { class: 'f dp-place' }, [el('span', { class: 'lbl', text: E.dpText('place_q', lang) }), row]));
-    box.appendChild(el('div', { class: 'f addr' }, [el('label', { for: 'fAddr', text: t('wz_addr_h') }), ad]));
+    box.appendChild(el('div', { class: 'f dp-place', id: 'dpAsk' }, [el('span', { class: 'lbl', id: 'dpAskQ', text: E.dpText('place_ask', lang) }), row]));
   }
   /* «По готовности» follows the clock: today while a courier can still leave, else her next delivery day */
   /* a chip tap redraws the step where the finger is (the long time grid would jump back to the top) */
@@ -1565,7 +1611,7 @@
     wrap.appendChild(opts);
     if (dm.mode && dm.mode !== 'asap') {
       var pick = el('div', { class: 'dp-pick', id: 'dpPick' }), clr = function () { var e = $('#formErr'); if (e) e.textContent = ''; };
-      /* CEO TG 4443 / 4747 (16.11): the day in a calendar card (today and tomorrow one tap away, closed and too-late days off), the time on a
+      /* CEO TG 4443 / 4747 (16.11): the day in a calendar card (closed and too-late days off; CEO TG 4770: no «Сегодня» / «Завтра» chips, today = its first cell), the time on a
          scroll wheel in its own card: only the times still possible that day, her step. «В течение дня» = the calendar alone,
          «Ко времени» = calendar + one wheel, «В интервал» = calendar + two wheels (from / to) */
       pick.appendChild(dayCal(E.planCal(P, dm.mode), dm.date, function (date) {
@@ -1593,8 +1639,8 @@
   }
   /* ---------- CEO TG 4443 / 4747 (16.11): the day = a calendar in a framed card, the time = a scroll wheel in a framed card ----------
      dayCal(days, cur, pick, why): days = the days on offer from today on [{date, key, ok, closed}] (every other day is off); a month grid
-     that starts at this week and ends with the last week on offer (no dead weeks), today marked, «Сегодня» / «Завтра» one tap away above the grid with the reason
-     when they are off (why(d)); the month arrows appear only when the offer crosses into the next month. Arrow keys walk the open days */
+     that starts at this week and ends with the last week on offer (no dead weeks), today marked (its first cell on offer); a today that is off says why
+     in one line (why(d)); the month arrows appear only when the offer crosses into the next month. Arrow keys walk the open days */
   function dayCal(days, cur, pick, why) {
     var today = days[0].date, last = days[days.length - 1].date, by = {}, open = days.filter(function (d) { return d.ok; });
     if (state.calCur !== cur) { state.calCur = cur; state.calView = null; }   /* a new choice (a chip, another mode) shows its own month */
@@ -1604,20 +1650,16 @@
     var y = +view.slice(0, 4), mo = +view.slice(5, 7), p2 = function (n) { return String(n).padStart(2, '0'); };
     var name = new Date(y, mo - 1, 1).toLocaleDateString(LOC[lang], { month: 'long' }); name = name.charAt(0).toUpperCase() + name.slice(1) + ' ' + y;
     var card = el('div', { class: 'dcal', id: 'dpCal', role: 'group', 'aria-label': E.dpText('day_q', lang) });
-    var go = function (d, from) { pick(d); var b = from === 'q' ? $('#dpCal .dcal-q [data-date="' + d + '"]') : $('#dpCal .dcal-g [data-date="' + d + '"]'); if (b) b.focus({ preventScroll: true }); };
+    var go = function (d) { pick(d); var b = $('#dpCal .dcal-g [data-date="' + d + '"]'); if (b) b.focus({ preventScroll: true }); };
     var head = el('div', { class: 'dcal-h' }, [el('b', { id: 'dpCalM', 'aria-live': 'polite', text: name })]);
     if (m0 !== m1) {
       var nav = function (step, lbl, txt, off) { var b = el('button', { class: 'dcal-n', type: 'button', 'aria-label': t(lbl), text: txt, onclick: function () { var d = new Date(y, mo - 1 + step, 1); state.calView = d.getFullYear() + '-' + p2(d.getMonth() + 1); dpRender(); var nb = $('#dpCal .dcal-n:not([disabled])'); if (nb) nb.focus({ preventScroll: true }); } }); if (off) b.disabled = true; return b; };
       head.appendChild(el('span', { class: 'dcal-nv' }, [nav(-1, 'prev_m', '‹', view <= m0), nav(1, 'next_m', '›', view >= m1)]));
     }
     card.appendChild(head);
-    var q = el('div', { class: 'row days dcal-q' });
-    days.slice(0, 2).forEach(function (d) {
-      var b = el('button', { class: 'chip day', type: 'button', 'aria-pressed': String(cur === d.date), 'data-date': d.date, onclick: function () { state.calView = d.date.slice(0, 7); go(d.date, 'q'); } },
-        [el('b', { text: t('day_' + d.key) }), el('small', { text: why(d) })]);
-      if (!d.ok) b.disabled = true; q.appendChild(b);
-    });
-    card.appendChild(q);
+    /* CEO TG 4770 (17.11): no «Сегодня» / «Завтра» chips - the calendar alone picks the day; today is its first cell, marked. A today that
+       cannot be taken says why in one quiet line (the words the chip carried) */
+    if (!days[0].ok) card.appendChild(el('p', { class: 'dcal-why', id: 'dpCalWhy', text: t('day_today') + ' ' + why(days[0]) }));
     var dow = el('div', { class: 'dcal-w', 'aria-hidden': 'true' });
     for (var k = 0; k < 7; k++) dow.appendChild(el('span', { text: new Date(2024, 0, 1 + k).toLocaleDateString(LOC[lang], { weekday: 'short' }) }));
     card.appendChild(dow);
@@ -1630,9 +1672,9 @@
       if (i < first) { grid.appendChild(el('span', { class: 'pad' })); continue; }
       (function (dn) {
         var ds = view + '-' + p2(dn), info = by[ds], lbl = new Date(y, mo - 1, dn).toLocaleDateString(LOC[lang], { weekday: 'long', day: 'numeric', month: 'long' }) + (ds === today ? ', ' + t('day_today').toLowerCase() : '');
-        var b = el('button', { class: 'dc' + (ds === today ? ' today' : ''), type: 'button', 'aria-pressed': String(cur === ds), 'aria-label': lbl, 'data-date': ds, tabindex: ds === tab ? '0' : '-1', text: String(dn), onclick: function () { go(ds, 'g'); } });
+        var b = el('button', { class: 'dc' + (ds === today ? ' today' : ''), type: 'button', 'aria-pressed': String(cur === ds), 'aria-label': lbl, 'data-date': ds, tabindex: ds === tab ? '0' : '-1', text: String(dn), onclick: function () { go(ds); } });
         if (ds === today) b.setAttribute('aria-current', 'date');
-        if (!info || !info.ok) b.disabled = true;
+        if (!info || !info.ok) { b.disabled = true; if (info) b.setAttribute('aria-label', lbl + ', ' + why(info)); }
         grid.appendChild(b);
       })(i - first + 1);
     }
@@ -1767,6 +1809,8 @@
        the note for the courier in `comment` («Курьеру: …»), so the bot card and the owner card show them */
     if (payload.address != null) {
       payload.address = addrFull('ru');
+      /* CEO TG 4770 (17.11): her place goes with the order (the worker takes only a place of her own list), so the bot never re-asks the district */
+      placeSync(); if (dpPlaces().length && f.place) payload.place = f.place;
       var cn = String(f.cnote || '').replace(/\s+/g, ' ').trim();
       payload.comment = cn ? ('Курьеру: ' + cn).slice(0, 500) : '';   /* CEO TG 4252: the courier's one comment is the address-step note */
     }

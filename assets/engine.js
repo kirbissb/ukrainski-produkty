@@ -1026,6 +1026,46 @@
   }
   /* the delivery-only minimum this order misses (lira), null = met / none / pickup (the worker: courier and cargo, minDeliveryMiss) */
   function planMinMiss(P, delivery, subtotal) { return P && P.min && (delivery === 'alanya' || delivery === 'cargo') && subtotal < P.min ? P.min : null; }
+  /* ---------- CEO TG 4770 + 4443 + 4411 (17.11): the district is never picked by the buyer ----------
+     placeIn(text, places): the place of her list the typed address names, any case form («в Махмутларе» -> «Махмутлар»); '' = none.
+     The SAME rule as the worker (bot-engine src/delivery-plan.ts placeIn / wordHit) - the worker checks the address again on its side */
+  function placeHit(w, z) {
+    if (z.length <= 3) return w === z;
+    if (z.length <= 5) return w.indexOf(z.slice(0, -1)) === 0 && w.length <= z.length + 2;
+    return w.indexOf(z.slice(0, z.length - 2)) === 0 && w.length <= z.length + 3;
+  }
+  var PLACE_SPLIT = /[^a-z\u00c0-\u024f\u0400-\u04ff]+/, PLACE_SKIP = /^(?:и|в|по|до|за|на|the)$/;
+  function placeWords(s) { return String(s || '').toLowerCase().replace(/ё/g, 'е').split(PLACE_SPLIT).filter(Boolean); }
+  function placeIn(text, places) {
+    var words = placeWords(text); if (!words.length) return '';
+    for (var i = 0; i < (places || []).length; i++) {
+      var zw = placeWords(places[i]).filter(function (x) { return x.length >= 2 && !PLACE_SKIP.test(x); });
+      if (zw.length && zw.every(function (z) { return words.some(function (w) { return placeHit(w, z); }); })) return places[i];
+    }
+    return '';
+  }
+  /* geoLookup(lat, lng) -> Promise<{found, street, place, places}>: the worker's POST /site-geo (bot-engine src/worker-core.ts handleSiteGeo)
+     reads the point on the map: street = «road house» for the street field, place = the ONE place of her list the point stands in, places =
+     her places when several match. Never throws and never waits longer than GEO_WAIT_MS: no answer = {found: false} (the page asks its question) */
+  var GEO_URL = ORDER_URL.replace(/\/site-order$/, '/site-geo'), GEO_WAIT_MS = 4500;
+  function geoLookup(lat, lng, fetchFn, url) {
+    var none = { found: false, street: '', place: '', places: [] }, f = fetchFn || (typeof fetch !== 'undefined' ? fetch : null);
+    if (!f || !isFinite(lat) || !isFinite(lng)) return Promise.resolve(none);
+    var ac = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    return new Promise(function (res) {
+      var done = false, fin = function (v) { if (done) return; done = true; clearTimeout(tm); res(v); };
+      var tm = setTimeout(function () { if (ac) try { ac.abort(); } catch (e) { /* gone */ } fin(none); }, GEO_WAIT_MS);
+      try {
+        f(url || GEO_URL, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ lat: +lat, lon: +lng }), signal: ac ? ac.signal : undefined }).then(function (r) {
+          return r.ok ? r.json() : null;
+        }).then(function (j) {
+          if (!j || !j.ok || !j.found) return fin(none);
+          fin({ found: true, street: typeof j.street === 'string' ? clean(j.street).slice(0, 80) : '', place: typeof j.place === 'string' ? j.place : '',
+            places: Array.isArray(j.places) ? j.places.filter(function (x) { return typeof x === 'string'; }) : [] });
+        }).catch(function () { fin(none); });
+      } catch (e) { fin(none); }
+    });
+  }
   /* the address the worker reads: her place first when the typed address does not name it (the worker checks the place, placeIn) */
   function placeAddress(place, address) {
     var a = String(address || '').replace(/\s+/g, ' ').trim(); if (!place) return a;
@@ -1069,7 +1109,8 @@
     err_when: { ru: 'Выберите, когда привезти заказ.', uk: 'Оберіть, коли привезти замовлення.', en: 'Choose when to deliver the order.' },
     err_time: { ru: 'Выберите день и время доставки.', uk: 'Оберіть день і час доставки.', en: 'Choose the delivery day and time.' },
     place_q: { ru: 'Район', uk: 'Район', en: 'Area' },
-    err_place: { ru: 'Выберите район доставки.', uk: 'Оберіть район доставки.', en: 'Choose the delivery area.' },
+    /* CEO TG 4770 (17.11): no district chips. The ONE question in words, asked only when neither the point nor the typed address names her place */
+    place_ask: { ru: 'В каком из этих мест ваш адрес?', uk: 'У якому з цих місць ваша адреса?', en: 'Which of these places is your address in?' },
     fee_tbd: { ru: 'стоимость доставки уточним', uk: 'вартість доставки уточнимо', en: 'delivery price to be confirmed' },
     fee_tbd_short: { ru: 'уточним', uk: 'уточнимо', en: 'to be confirmed' },
     free_from: { ru: 'бесплатно от {m}', uk: 'безкоштовно від {m}', en: 'free from {m}' },
@@ -1147,6 +1188,7 @@
     ORDER_URL: ORDER_URL, orderContact: orderContact, addressOk: addressOk, ADDRESS_MIN: ADDRESS_MIN, ADDRESS_MAX: ADDRESS_MAX, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder, FORM_URL: FORM_URL, notifyPayload: notifyPayload, sendForm: sendForm,
     WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickupDays: pickupDays, daysText: daysText, pickWindow: pickWindow, windowValid: windowValid,
     deliveryPlan: deliveryPlan, planDays: planDays, planCal: planCal, planTimes: planTimes, planStarts: planStarts, planEnds: planEnds, planAsapDate: planAsapDate, planWindowId: planWindowId, planParseId: planParseId,
-    planValid: planValid, planHoursText: planHoursText, planText: planText, planFee: planFee, planFeeRange: planFeeRange, planMinMiss: planMinMiss, placeAddress: placeAddress, courierAddress: courierAddress, dpText: dpText
+    planValid: planValid, planHoursText: planHoursText, planText: planText, planFee: planFee, planFeeRange: planFeeRange, planMinMiss: planMinMiss, placeAddress: placeAddress, courierAddress: courierAddress, dpText: dpText,
+    placeIn: placeIn, geoLookup: geoLookup, GEO_URL: GEO_URL
   };
 });
