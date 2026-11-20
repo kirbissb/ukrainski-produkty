@@ -1480,32 +1480,36 @@
       if (!C.paymentById[f.payment]) primary = null;   /* S-CO2-03: a fresh choice step has no button - the tap is the answer */
     } else if (st === 'contact') {
       title.textContent = t('wz_contact');
+      /* item 4 (CEO TG 5436): the browser offered the name but not the phone - name + phone now sit in ONE <form> (display: contents, so the
+         layout is unchanged), the unit browsers fill a saved profile into; Enter never submits it */
+      var cbx = el('form', { class: 'wz-cform', autocomplete: 'on', novalidate: 'novalidate', onsubmit: function (e) { e.preventDefault(); } });
       var clr = function (e) { e.target.removeAttribute('aria-invalid'); var x = $('#formErr'); if (x) x.textContent = ''; };
       var enter = function (next) { return function (e) { if (e.key === 'Enter') { e.preventDefault(); if (next) $(next).focus(); else wzNext(); } }; };
       /* CEO 19.10 Mini App: no name field (Telegram knows it; the order goes to his chat with the bot) - but the PHONE is asked in Telegram too */
-      if (inTg) box.appendChild(el('p', { class: 'hint', id: 'tgWho', text: t('wz_tg_note', { n: CH.tgName() || 'Telegram' }) }));
-      else box.appendChild(field(t('f_name'), el('input', { type: 'text', id: 'fName', name: 'name', autocomplete: 'name', autocapitalize: 'words', enterkeyhint: 'next', placeholder: t('f_name_ph'), oninput: function (e) { f.name = e.target.value; clr(e); }, onkeydown: enter('#fPhone') }), f.name));
+      if (inTg) cbx.appendChild(el('p', { class: 'hint', id: 'tgWho', text: t('wz_tg_note', { n: CH.tgName() || 'Telegram' }) }));
+      else cbx.appendChild(field(t('f_name'), el('input', { type: 'text', id: 'fName', name: 'name', autocomplete: 'name', autocapitalize: 'words', enterkeyhint: 'next', placeholder: t('f_name_ph'), oninput: function (e) { f.name = e.target.value; clr(e); }, onkeydown: enter('#fPhone') }), f.name));
       /* CEO 15.11 (C): in Telegram the ONE-TAP share is the main way (requestContact, Telegram 6.9+, iPhone and Android): a big
          «Взять номер из Telegram» first, and while no number is in, it is the step's only action (the tap shares, the next step opens).
          Typing stays the second way: «Другой номер» (work, home) opens the field. Outside Telegram there is no button: the field leads */
       var shareMode = inTg && CH.canShareContact(), showField = !shareMode || !!f.phone.trim() || !!f.phoneManual;
       if (shareMode) {
-        box.appendChild(el('button', { class: 'btn wide tgshare' + (showField ? '' : ' fill'), type: 'button', id: 'tgShare', onclick: function () {
+        cbx.appendChild(el('button', { class: 'btn wide tgshare' + (showField ? '' : ' fill'), type: 'button', id: 'tgShare', onclick: function () {
           CH.shareContact(function (ph) {
             if (ph) { f.phone = ph; var x = $('#formErr'); if (x) x.textContent = ''; if (showField) { renderSheet(); var i = $('#fPhone'); if (i) i.removeAttribute('aria-invalid'); } else wzNext(); return; }
             f.phoneManual = true; renderSheet(); var i2 = $('#fPhone'); if (i2) i2.focus();   /* declined / older client: straight to typing */
           });
         } }, [icon('c-tg', 'rvx-bti'), el('span', { text: t('share_phone') })]));
-        if (!showField) box.appendChild(el('button', { class: 'wz-alt', type: 'button', id: 'phoneOther', text: t('other_phone'), onclick: function () { f.phoneManual = true; renderSheet(); var i = $('#fPhone'); if (i) i.focus(); } }));
+        if (!showField) cbx.appendChild(el('button', { class: 'wz-alt', type: 'button', id: 'phoneOther', text: t('other_phone'), onclick: function () { f.phoneManual = true; renderSheet(); var i = $('#fPhone'); if (i) i.focus(); } }));
       }
       /* CEO 19.10 evening: a phone number for every order (was: a phone OR a Telegram nick) - the tel keypad; autocomplete=tel = the
          browser's own one-tap fill of his number (CEO 15.11) */
-      if (showField) box.appendChild(field(shareMode ? t('other_phone') : t('f_contact'), el('input', { type: 'tel', id: 'fPhone', name: 'tel', autocomplete: 'tel', inputmode: 'tel', enterkeyhint: 'next', required: 'required', placeholder: t('f_contact_ph'), oninput: function (e) { f.phone = e.target.value; clr(e); }, onkeydown: enter('#fComment') }), f.phone));
+      if (showField) cbx.appendChild(field(shareMode ? t('other_phone') : t('f_contact'), el('input', { type: 'tel', id: 'fPhone', name: 'tel', autocomplete: 'tel', inputmode: 'tel', enterkeyhint: 'next', required: 'required', placeholder: t('f_contact_ph'), oninput: function (e) { f.phone = e.target.value; clr(e); }, onkeydown: enter('#fComment') }), f.phone));
       if (!showField) primary = null;   /* the share button IS the step's action (the same rule as a fresh choice step) */
       /* CEO TG 4252: ONE comment field per order - the courier has «Комментарий курьеру» on the address step, so the contact step asks it only
          for pickup / cargo */
-      if (E.windowKind(f.delivery) !== 'courier') box.appendChild(field(t('sp_comment'), el('textarea', { id: 'fComment', rows: '2', placeholder: t('f_comment_ph'), oninput: function (e) { f.comment = e.target.value; } }), f.comment));
+      if (E.windowKind(f.delivery) !== 'courier') cbx.appendChild(field(t('sp_comment'), el('textarea', { id: 'fComment', rows: '2', placeholder: t('f_comment_ph'), oninput: function (e) { f.comment = e.target.value; } }), f.comment));
       /* honeypot for bots (the worker rejects an order with it filled); invisible and unreachable for people */
+      box.appendChild(cbx);
       box.appendChild(el('div', { 'aria-hidden': 'true', style: 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden' }, [el('input', { type: 'text', id: 'fWebsite', name: 'website', tabindex: '-1', autocomplete: 'off', value: f.website || '', oninput: function (e) { f.website = e.target.value; } })]));
     } else if (st === 'review' && RVV) {
       title.textContent = t('wz_review');
