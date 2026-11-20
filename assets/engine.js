@@ -720,11 +720,27 @@
   /* 10.10: "special order" request - something from Ukraine that is not on the site. Required: what + contact.
      contact = Telegram @nick (5-32 letters, digits, _) or a phone / WhatsApp number (at least 9 digits). */
   function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
+  /* CEO live test 18.11 (TG 5436, item 5): «a non-existent phone was accepted» (any 9+ digits passed). phoneReal(s) -> true only for a number
+     that can exist: Turkey +90 / 0 / bare 10 digits = [2-5] + 9 digits (mobiles 5xx); Ukraine +380 / 0 = [3-9] + 8 digits; +7 = 10 digits;
+     any other +country = 8-15 digits not starting with 0; no run of 7 same digits, no number that is just 123456789 / 987654321. Stricter than the worker
+     (bot-engine sitePhone), so nothing the page lets through is refused there */
+  function phoneReal(s) {
+    var v = clean(s); if (v.length > 32 || !/^\+?[\d\s().-]+$/.test(v)) return false;
+    var d = v.replace(/\D/g, ''), plus = /^\+/.test(v) || /^00/.test(d); if (/^00/.test(d)) d = d.slice(2);
+    if (/(\d)\1{6,}/.test(d) || /(0123456789|1234567890|9876543210)$/.test(d) || /^(90|380|7)?(123456789|987654321)\d{0,3}$/.test(d)) return false;
+    if (/^90/.test(d) && d.length === 12) return /^90[2-5]\d{9}$/.test(d);
+    if (/^380/.test(d) && d.length === 12) return /^380[3-9]\d{8}$/.test(d);
+    if (/^7/.test(d) && d.length === 11) return /^7[3-9]\d{9}$/.test(d);
+    if (plus) return /^[1-9]\d{7,14}$/.test(d);
+    if (/^0/.test(d)) return /^0[2-5]\d{9}$/.test(d) || /^0[3-9]\d{8}$/.test(d);
+    if (d.length === 10) return /^5\d{9}$/.test(d);
+    return /^[1-9]\d{10,14}$/.test(d);
+  }
   function contactOk(c) {
     c = clean(c);
     if (/^@[A-Za-z0-9_]{5,32}$/.test(c)) return true;
     if (/^(https?:\/\/)?t\.me\/[A-Za-z0-9_]{5,32}$/.test(c)) return true;
-    return /^[+()\d\s.-]+$/.test(c) && c.replace(/\D/g, '').length >= 9;
+    return phoneReal(c);
   }
   function validateSpecial(f) {
     var err = [];
@@ -1184,7 +1200,7 @@
     loadCustomer: loadCustomer, saveCustomer: saveCustomer, loadCart: loadCart, saveCart: saveCart, loadLang: loadLang, saveLang: saveLang,
     saveNotify: saveNotify, loadNotify: loadNotify,
     cardsVariant: cardsVariant, cardsIsB: cardsIsB, quickNavVisible: quickNavVisible, stepQty: stepQty, cardInfo: cardInfo, groupByCategory: groupByCategory, pluralIdx: pluralIdx,
-    contactOk: contactOk, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
+    contactOk: contactOk, phoneReal: phoneReal, validateSpecial: validateSpecial, specialPayload: specialPayload, saveSpecial: saveSpecial, loadSpecial: loadSpecial,
     ORDER_URL: ORDER_URL, orderContact: orderContact, addressOk: addressOk, ADDRESS_MIN: ADDRESS_MIN, ADDRESS_MAX: ADDRESS_MAX, tgStartLink: tgStartLink, orderNonce: orderNonce, sitePayload: sitePayload, sendOrder: sendOrder, FORM_URL: FORM_URL, notifyPayload: notifyPayload, sendForm: sendForm,
     WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickupDays: pickupDays, daysText: daysText, pickWindow: pickWindow, windowValid: windowValid,
     deliveryPlan: deliveryPlan, planDays: planDays, planCal: planCal, planTimes: planTimes, planStarts: planStarts, planEnds: planEnds, planAsapDate: planAsapDate, planWindowId: planWindowId, planParseId: planParseId,
