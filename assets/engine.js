@@ -1092,9 +1092,9 @@
      src/geoapify.ts: the Geoapify key stays there). addrSuggest(text, pt, lang) -> Promise<items | null>: items = [{street, sub, lat, lon,
      exact}] (exact = a house, its point is the door), [] = nothing / the vendor slow, null = the worker has it OFF (no key: 404) - the page
      then keeps the plain field. Never throws, never waits longer than ADDR_WAIT_MS. Only the typed text and the bias point leave the page */
-  var ADDR_URL = ORDER_URL.replace(/\/site-order$/, '/site-addr'), TILE_URL = ORDER_URL.replace(/\/site-order$/, '/site-tile/{z}/{x}/{y}.png'), ADDR_WAIT_MS = 3500;
+  var ADDR_URL = ORDER_URL.replace(/\/site-order$/, '/site-addr'), TILE_URL = ORDER_URL.replace(/\/site-order$/, '/site-tile/{z}/{x}/{y}{r}.png'), ADDR_WAIT_MS = 3500;
   /* the map opens here when the buyer's place is unknown (Alanya centre; per shop) */
-  var MAP_HOME = { lat: 36.5444, lon: 31.9954, zoom: 14 };
+  var MAP_HOME = { lat: 36.5444, lon: 31.9954, zoom: 17 };   /* D-1766: house numbers show from 17 */
   function addrSuggest(text, pt, lang, fetchFn, url) {
     var f = fetchFn || (typeof fetch !== 'undefined' ? fetch : null), q = clean(text).slice(0, 120);
     if (!f || q.length < 3) return Promise.resolve([]);

@@ -1155,7 +1155,8 @@
      Both only when the worker serves them (the live catalog says addr_map: the Geoapify key is set on the worker); else the step is exactly
      as before. Suggestions: from 3 letters, 350 ms after the last key, the typed text only (+ the point the step already knows, rounded);
      a tap fills the field - a house brings its point (the courier's link), a street asks for the house number (the existing line).
-     The map: Leaflet (assets/vendor, loaded on the first open), tiles through the worker, the pin fixed in the middle - the map moves under
+     The map: Leaflet (assets/vendor, loaded on the first open), tiles through the worker (osm-bright: the familiar light street map, D-1766),
+     opens at zoom 18 on his point / his location (17 on the city centre until the location comes), the pin fixed in the middle - the map moves under
      it (refs: Glovo, Bolt Food, Uber Eats - a finger on a small pin hides the pin); the street + house under the map is read at each stop */
   function amOn() { return !!(LIVE && LIVE.addr_map) && !state.amOff; }
   var amT = 0, amSeq = 0, amItems = [], amAct = -1;
@@ -1263,7 +1264,7 @@
   }
   function amLocate(fly) {
     if (!geoAvail()) return;
-    geoGet(function (link) { var m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(link || ''); if (m && AM.map && !$('#amap').hidden) AM.map.setView([+m[1], +m[2]], 17, { animate: !!fly }); });
+    geoGet(function (link) { var m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(link || ''); if (m && AM.map && !$('#amap').hidden) AM.map.setView([+m[1], +m[2]], 18, { animate: !!fly }); });
   }
   function amOpen(btn) {
     var f = state.form, ov = amShell(); AM.opener = btn || null;
@@ -1275,14 +1276,14 @@
       if (!AM.map) {
         AM.map = L.map('amapMap', { zoomControl: false, attributionControl: true, minZoom: 10, maxZoom: 19, zoomSnap: 1 });
         AM.map.attributionControl.setPrefix(false);
-        L.tileLayer(E.TILE_URL, { maxZoom: 19, tileSize: 256, crossOrigin: false,
+        L.tileLayer(E.TILE_URL, { maxZoom: 19, tileSize: 256, crossOrigin: false, detectRetina: false, r: (window.devicePixelRatio || 1) > 1.4 ? '@2x' : '',   /* {r}: the sharp @2x tile on phone screens */
           attribution: '<a href="https://www.geoapify.com/" target="_blank" rel="noopener">Powered by Geoapify</a> | <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>' }).addTo(AM.map);
         L.control.zoom({ position: 'topright' }).addTo(AM.map);
         AM.map.on('movestart', function () { ov.classList.add('moving'); var o = $('#amapOk'); if (o) o.disabled = true; });
         AM.map.on('moveend', function () { ov.classList.remove('moving'); amLook(); });
       }
       AM.map.invalidateSize();
-      if (start) AM.map.setView([start.lat, start.lon], 17, { animate: false });
+      if (start) AM.map.setView([start.lat, start.lon], 18, { animate: false });   /* D-1766 (CEO TG 6012): house numbers readable */
       else { AM.map.setView([H.lat, H.lon], H.zoom, { animate: false }); amLocate(false); }   /* the buyer's own place when he allows it */
       amLook(); var bk = $('#amapBack'); if (bk) bk.focus();   /* focus inside the dialog at once («Доставить сюда» waits for the address) */
     }, function () { amClose(true); f.geoMsg = 'mapfail'; geoMsgShow(); });

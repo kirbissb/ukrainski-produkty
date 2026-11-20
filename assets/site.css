@@ -1640,7 +1640,7 @@ html.amap-open, html.amap-open body { overflow: hidden; }
 .amap-top { display: flex; align-items: center; gap: 4px; min-height: 60px; padding: 4px 16px 4px 8px; border-bottom: 1px solid var(--line); background: var(--card); }
 .amap-t { margin: 0; font-family: var(--display); color: var(--acc); font-size: 22px; font-weight: 700; line-height: 1.2; }
 .amap-body { position: relative; flex: 1 1 auto; min-height: 0; }
-.amap-map { position: absolute; inset: 0; background: #1c1b19; }
+.amap-map { position: absolute; inset: 0; background: #ece8e0; }   /* the light street map (D-1766): its land colour while tiles load */
 .amap-pin { position: absolute; z-index: 500; left: 50%; top: 50%; width: 36px; height: 48px; margin: -48px 0 0 -18px; pointer-events: none; transition: transform 0.18s var(--spring-soft, ease-out); }
 .amap-pin-i { display: block; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55)); }
 .amap-pin-i path { fill: var(--acc-fill); stroke: var(--bg); stroke-width: 2; }
@@ -1658,7 +1658,7 @@ html.amap-open, html.amap-open body { overflow: hidden; }
 .amap-bar .btn.fill { min-height: 56px; font-size: 17px; justify-content: center; }
 .amap-bar .btn.fill[disabled] { opacity: 0.55; cursor: default; }
 /* Leaflet's own controls, in the page's look */
-.amap .leaflet-container { background: #1c1b19; font: 400 13px var(--font); }
+.amap .leaflet-container { background: #ece8e0; font: 400 13px var(--font); }
 .amap .leaflet-bar, .amap .leaflet-touch .leaflet-bar { border: 1px solid var(--hair); border-radius: var(--r); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4); overflow: hidden; }
 .amap .leaflet-bar a, .amap .leaflet-bar a:hover, .amap .leaflet-touch .leaflet-bar a { width: 44px; height: 44px; line-height: 44px; font-size: 20px; background: var(--card); color: var(--ink); border-bottom-color: var(--line); }
 .amap .leaflet-top.leaflet-right { top: 4px; right: 4px; }
