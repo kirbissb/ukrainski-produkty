@@ -1583,10 +1583,10 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
   font-size: min(10.5px, calc((100cqi + 16px) / 35.6)); }
 .sheet.wz-on .foot .consent:is(:lang(uk), :lang(en)) { font-size: min(10.5px, calc((100cqi + 16px) / 38)); }
 .sheet.wz-on .foot .consent a { color: var(--ink-3); text-decoration: underline; text-underline-offset: 2px; padding: 17px 0; margin: -17px 0; }
-/* item 2 (CEO TG 5436): a point far from Alanya - one quiet line + the cargo switch (same .btn wide as «Отправить геолокацию») */
-.wz-addr .dp-far { margin-top: 12px; }
-.wz-addr .dp-far p { margin: 0 4px 10px; color: var(--ink-2); font-size: 15px; line-height: 1.4; }
-.wz-addr .dp-far .btn { min-height: 48px; }
+/* CEO TG 5612: a point outside her courier places - one quiet line + the cargo switch (same .btn wide as «Отправить геолокацию») */
+.wz-addr .dp-out { margin-top: 12px; }
+.wz-addr .dp-out p { margin: 0 4px 10px; color: var(--ink-2); font-size: 15px; line-height: 1.4; }
+.wz-addr .dp-out .btn { min-height: 48px; }
 .wz-addr .dp-pl > .dp-pl-fee:only-child { grid-column: 1 / -1; }
 /* item 3 (CEO TG 5436): the time wheel on a computer shows an up and a down arrow on its right edge (hidden on touch screens) */
 .dwh-ar { display: none; }
