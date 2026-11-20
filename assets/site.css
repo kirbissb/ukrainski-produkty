@@ -1598,3 +1598,5 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
   .dwh-ar:hover { color: var(--acc); background: var(--card-2); }
 }
 .wz-cform { display: contents; }   /* item 4: the autofill group, no box of its own */
+/* item 7 (CEO TG 5436): contact links inside the document texts - accent colour (S-PAGE-08), 44 px hit box, line height unchanged */
+.doc-body p a { color: var(--acc); text-decoration: underline; text-underline-offset: 2px; display: inline-block; padding: 12px 0; margin: -12px 0; }

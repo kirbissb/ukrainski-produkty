@@ -77,7 +77,7 @@
         ['{F:courier}', '{F:courier_fees}. {F:courier_note}.'],
         ['{F:cargo}', 'Любой город Турции, карго {f:cargo_via}. {F:cargo_fee}. {F:cargo_note}.'],
         ['Оплата', '{F:pay_all}. Номер карты для перевода присылаем вместе с точной суммой после подтверждения. Цены - в турецких лирах (₺). Товары с ценой в долларах ($) указаны и считаются в долларах, отдельной суммой; реквизиты для оплаты присылаем вместе с подтверждением.'],
-        ['При получении', 'Проверьте заказ при получении. Если что-то не так, напишите нам в Telegram t.me/ukrtovari.']] },
+        ['При получении', 'Проверьте заказ при получении. Если что-то не так, напишите нам в {L:tg}.']] },
       legal_data: { h: 'Персональные данные', items: [
         ['Кто получает данные', 'Владелец магазина «{brand}». Он принимает и собирает ваш заказ и решает, как используются ваши данные.'],
         ['Что мы получаем', 'Из заказа на сайте: имя, телефон, город и адрес доставки, геолокацию, если вы её отправили, способ оплаты, дату, комментарий и состав заказа. Из переписки в Telegram, Instagram и WhatsApp: ваши сообщения, голосовые, фото и имя из профиля. Из форм «Сообщить о поставке» и «Привезти под заказ»: имя, телефон и то, что вы написали.'],
@@ -88,10 +88,10 @@
         ['Кто ещё видит', 'Курьер или карго-служба получают только то, что нужно для доставки. Мы не продаём ваши данные.'],
         ['Что хранится в вашем браузере', 'Сайт запоминает корзину, язык и данные формы (имя, телефон, город, доставку и оплату) на вашем устройстве, чтобы в следующий раз не вводить их заново. Ещё там лежит одно случайное число: по нему магазин считает, какие товары из подборки к корзине смотрят и добавляют. Имя, телефон и адрес в нём не хранятся. Удалить всё это можно, очистив данные сайта в настройках браузера.'],
         ['Счётчик посещений', 'Cloudflare, на серверах которого работает сайт, считает посещения страниц без куки и без данных, по которым можно узнать вас. Рекламных счётчиков на сайте нет.'],
-        ['Сколько храним и как удалить', 'Храним, пока вы не попросите удалить. Чтобы посмотреть, исправить или удалить свои данные, напишите нам в Telegram t.me/ukrtovari или в Instagram @ukr.product.alanya.'],
+        ['Сколько храним и как удалить', 'Храним, пока вы не попросите удалить. Чтобы посмотреть, исправить или удалить свои данные, напишите нам в {L:tg} или в {L:ig}.'],
         ['', 'Обновлено 20.11.2026']] },
       legal_terms: { h: 'Условия заказа', items: [
-        ['Продавец', 'Магазин «{brand}». Связь с нами: Telegram t.me/ukrtovari, Instagram @ukr.product.alanya.'],
+        ['Продавец', 'Магазин «{brand}». Связь с нами: {L:tg}, {L:ig}.'],
         ['Как принимаем заказ', 'Заказ на сайте - это заявка. Заказ принят, когда мы подтвердили его в Telegram или WhatsApp и назвали точный вес и сумму. Позиции «под заказ» привозим с ближайшей поставкой.'],
         ['Цены', 'Цены - в турецких лирах (₺). Товары с ценой в долларах ($) считаются в долларах, отдельной суммой. Весовые продукты взвешиваем, поэтому итог может немного отличаться от суммы в корзине. Точную сумму называем в подтверждении.'],
         ['Оплата и доставка', 'Платите после подтверждения. Способы оплаты и доставки - в разделе «Доставка и оплата».'],
@@ -100,7 +100,7 @@
         ['', 'Обновлено 20.11.2026']] },
       legal_ret: { h: 'Возврат и замена', items: [
         ['При получении', 'Проверьте заказ при получении.'],
-        ['Если что-то не так', 'Напишите нам в Telegram t.me/ukrtovari или в Instagram @ukr.product.alanya.'],
+        ['Если что-то не так', 'Напишите нам в {L:tg} или в {L:ig}.'],
         ['', 'Обновлено 20.11.2026']] }
     },
     uk: {
@@ -165,7 +165,7 @@
         ['{F:courier}', '{F:courier_fees}. {F:courier_note}.'],
         ['{F:cargo}', 'Будь-яке місто Туреччини, карго {f:cargo_via}. {F:cargo_fee}. {F:cargo_note}.'],
         ['Оплата', '{F:pay_all}. Номер картки для переказу надсилаємо разом з точною сумою після підтвердження. Ціни - у турецьких лірах (₺). Товари з ціною в доларах ($) вказані й рахуються в доларах, окремою сумою; реквізити для оплати надсилаємо разом із підтвердженням.'],
-        ['При отриманні', 'Перевірте замовлення при отриманні. Якщо щось не так, напишіть нам у Telegram t.me/ukrtovari.']] },
+        ['При отриманні', 'Перевірте замовлення при отриманні. Якщо щось не так, напишіть нам у {L:tg}.']] },
       legal_data: { h: 'Персональні дані', items: [
         ['Хто отримує дані', 'Власник магазину «{brand}». Він приймає та збирає ваше замовлення і вирішує, як використовуються ваші дані.'],
         ['Що ми отримуємо', 'Із замовлення на сайті: ім\'я, номер телефону, місто та адресу доставки, геолокацію, якщо ви її надіслали, спосіб оплати, дату, коментар і склад замовлення. Із листування в Telegram, Instagram і WhatsApp: ваші повідомлення, голосові, фото та ім\'я з профілю. З форм «Повідомити про поставку» і «Привезти під замовлення»: ім\'я, номер телефону і те, що ви написали.'],
@@ -176,10 +176,10 @@
         ['Хто ще бачить', 'Кур\'єр або карго-служба отримують лише те, що потрібно для доставки. Ми не продаємо ваші дані.'],
         ['Що зберігається у вашому браузері', 'Сайт запам\'ятовує кошик, мову та дані форми (ім\'я, номер телефону, місто, доставку й оплату) на вашому пристрої, щоб наступного разу не вводити їх знову. Ще там зберігається одне випадкове число: за ним магазин рахує, які товари з добірки до кошика переглядають і додають. Ім\'я, номер телефону й адреса в ньому не зберігаються. Видалити все це можна, очистивши дані сайту в налаштуваннях браузера.'],
         ['Лічильник відвідувань', 'Cloudflare, на серверах якого працює сайт, рахує відвідування сторінок без кукі й без даних, за якими можна впізнати вас. Рекламних лічильників на сайті немає.'],
-        ['Скільки зберігаємо і як видалити', 'Зберігаємо, доки ви не попросите видалити. Щоб переглянути, виправити або видалити свої дані, напишіть нам у Telegram t.me/ukrtovari або в Instagram @ukr.product.alanya.'],
+        ['Скільки зберігаємо і як видалити', 'Зберігаємо, доки ви не попросите видалити. Щоб переглянути, виправити або видалити свої дані, напишіть нам у {L:tg} або в {L:ig}.'],
         ['', 'Оновлено 20.11.2026']] },
       legal_terms: { h: 'Умови замовлення', items: [
-        ['Продавець', 'Магазин «{brand}». Зв\'язок з нами: Telegram t.me/ukrtovari, Instagram @ukr.product.alanya.'],
+        ['Продавець', 'Магазин «{brand}». Зв\'язок з нами: {L:tg}, {L:ig}.'],
         ['Як приймаємо замовлення', 'Замовлення на сайті - це заявка. Замовлення прийнято, коли ми підтвердили його в Telegram або WhatsApp і назвали точну вагу та суму. Позиції «під замовлення» привозимо з найближчою поставкою.'],
         ['Ціни', 'Ціни - у турецьких лірах (₺). Товари з ціною в доларах ($) рахуються в доларах, окремою сумою. Вагові продукти зважуємо, тому підсумок може трохи відрізнятися від суми в кошику. Точну суму називаємо в підтвердженні.'],
         ['Оплата та доставка', 'Платите після підтвердження. Способи оплати та доставки - у розділі «Доставка та оплата».'],
@@ -188,7 +188,7 @@
         ['', 'Оновлено 20.11.2026']] },
       legal_ret: { h: 'Повернення та заміна', items: [
         ['При отриманні', 'Перевірте замовлення при отриманні.'],
-        ['Якщо щось не так', 'Напишіть нам у Telegram t.me/ukrtovari або в Instagram @ukr.product.alanya.'],
+        ['Якщо щось не так', 'Напишіть нам у {L:tg} або в {L:ig}.'],
         ['', 'Оновлено 20.11.2026']] }
     },
     en: {
@@ -253,7 +253,7 @@
         ['{F:courier}', '{F:courier_fees}. {F:courier_note}.'],
         ['{F:cargo}', 'Any city in Turkey, {F:cargo_via}. {F:cargo_fee}. {F:cargo_note}.'],
         ['Payment', '{F:pay_all}. We send the card number for the transfer together with the exact total after confirmation. Prices are in Turkish lira (₺). Goods priced in dollars ($) are priced and totalled in dollars, as a separate sum; we send the payment details with the confirmation.'],
-        ['On receipt', 'Check your order when you receive it. If something is wrong, write to us on Telegram t.me/ukrtovari.']] },
+        ['On receipt', 'Check your order when you receive it. If something is wrong, write to us on {L:tg}.']] },
       legal_data: { h: 'Personal data', items: [
         ['Who receives the data', 'The owner of the shop "{brand}". The owner takes and packs your order and decides how your data is used.'],
         ['What we receive', 'From an order on the site: your name, phone, city and delivery address, your location if you sent it, payment method, date, comment and the items in your order. From chats on Telegram, Instagram and WhatsApp: your messages, voice messages, photos and the name in your profile. From the "Notify me when back in stock" and "Special order" forms: name, phone and what you wrote.'],
@@ -264,10 +264,10 @@
         ['Who else sees it', 'The courier or cargo service gets only what the delivery needs. We do not sell your data.'],
         ['What is kept in your browser', 'The site remembers your cart, language and form details (name, phone, city, delivery and payment) on your device, so you do not have to type them again next time. It also keeps one random number, so the shop can count which suggested add-ons in the cart are seen and added. Your name, phone and address are not in it. You can delete all of this by clearing the site data in your browser settings.'],
         ['Visit counter', 'Cloudflare, whose servers run this site, counts page visits without cookies and without data that could identify you. There are no advertising trackers on the site.'],
-        ['How long we keep it and how to delete it', 'We keep it until you ask us to delete it. To see, correct or delete your data, write to us on Telegram t.me/ukrtovari or on Instagram @ukr.product.alanya.'],
+        ['How long we keep it and how to delete it', 'We keep it until you ask us to delete it. To see, correct or delete your data, write to us on {L:tg} or on {L:ig}.'],
         ['', 'Updated 20.11.2026']] },
       legal_terms: { h: 'Order terms', items: [
-        ['Seller', 'The shop "{brand}". Contact us: Telegram t.me/ukrtovari, Instagram @ukr.product.alanya.'],
+        ['Seller', 'The shop "{brand}". Contact us: {L:tg}, {L:ig}.'],
         ['How we take an order', 'An order placed on the site is a request. The order is accepted when we have confirmed it on Telegram or WhatsApp with the exact weight and total. Pre-order items arrive with the next batch.'],
         ['Prices', 'Prices are in Turkish lira (₺). Goods priced in dollars ($) are totalled in dollars, as a separate sum. Weighed goods are weighed, so the total can differ slightly from the cart. We give the exact total in the confirmation.'],
         ['Payment and delivery', 'You pay after the confirmation. Payment and delivery options are in "Delivery and payment".'],
@@ -276,7 +276,7 @@
         ['', 'Updated 20.11.2026']] },
       legal_ret: { h: 'Returns and replacement', items: [
         ['On receipt', 'Check your order when you receive it.'],
-        ['If something is wrong', 'Write to us on Telegram t.me/ukrtovari or on Instagram @ukr.product.alanya.'],
+        ['If something is wrong', 'Write to us on {L:tg} or on {L:ig}.'],
         ['', 'Updated 20.11.2026']] }
     }
   };
@@ -557,10 +557,17 @@
     var v = { brand: t('brand_full') };
     var b = $('#legalBody'); b.innerHTML = '';
     b.appendChild(el('h2', { text: doc.h }));
+    /* item 7 (CEO TG 5436): contacts are links named by the channel, never a bare t.me address or an @nick: {L:tg} / {L:ig} */
+    var LNK = { tg: ['Telegram', C.shop && C.shop.telegram || 'https://t.me/ukrtovari'], ig: ['Instagram', C.shop && C.shop.instagram || 'https://www.instagram.com/ukr.product.alanya/'] };
     doc.items.forEach(function (x) {
       var txt = x[1].replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; });
       if (x[0]) b.appendChild(el('h3', { text: x[0] }));
-      b.appendChild(el('p', x[0] ? { text: txt, class: /^\[/.test(txt) ? 'ph' : '' } : { text: txt, style: 'color:var(--ink-3);font-size:13px' }));
+      var p = el('p', x[0] ? { class: /^\[/.test(txt) ? 'ph' : '' } : { style: 'color:var(--ink-3);font-size:13px' });
+      txt.split(/(\{L:\w+\})/).forEach(function (part) {
+        var m = /^\{L:(\w+)\}$/.exec(part), l = m && LNK[m[1]];
+        p.appendChild(l ? el('a', { href: l[1], target: '_blank', rel: 'noopener', text: l[0] }) : document.createTextNode(part));
+      });
+      b.appendChild(p);
     });
     b.scrollTop = 0;
   }
