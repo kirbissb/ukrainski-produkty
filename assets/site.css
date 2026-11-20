@@ -1612,3 +1612,9 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
 
 /* CEO TG 5660: the blocked-geolocation hint has two paragraphs */
 .geo-msg { white-space: pre-line; }
+
+/* CEO TG 5664 (20.11): the reason a field is refused sits right under the field - icon + text, no colour alone; the field border turns danger (rules above) */
+.ferr { display: flex; align-items: flex-start; gap: 6px; margin: 6px 2px 0; color: var(--danger); font-size: 14px; line-height: 1.35; }
+.ferr::before { content: "!"; flex: none; width: 16px; height: 16px; margin-top: 1px; border: 1.5px solid currentColor; border-radius: 50%; box-sizing: border-box; font-size: 11px; font-weight: 700; line-height: 13px; text-align: center; }
+.f.fl .ferr { position: static; }
+.f.fl input[aria-invalid="true"], .f.fl textarea[aria-invalid="true"], .f.addr textarea[aria-invalid="true"] { border-color: var(--danger); }
