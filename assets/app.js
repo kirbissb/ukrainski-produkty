@@ -43,11 +43,10 @@
       dlv2: '{F:courier}', dlv2t: '{F:courier_fees}. {F:courier_note}.',
       dlv3: '{F:cargo}', dlv3t: 'Любой город Турции, карго {f:cargo_via}. {F:cargo_fee}. {F:cargo_note}.',
       faq_title: 'Вопросы', faq_q: [
-        'Сколько стоит и где весь прайс?', 'Откуда вы привозите продукты?', 'Есть ли в наличии?', 'Когда новая поставка?', 'Доставка в мой город - в Белек, Махмутлар, Анталию?', 'Где забрать в Алании?'],
+        'Откуда вы привозите продукты?', 'Возите ли под заказ?', 'Когда новая поставка?', 'Доставка в мой город - в Белек, Махмутлар, Анталию?', 'Где забрать в Алании?'],
       faq_a: [
-        'Цена стоит на каждой карточке в каталоге выше - это и есть весь прайс. Он всегда актуален: цены меняет владелец в чате, и они сразу меняются на сайте.',
         'С Благбаза - Центрального рынка Харькова. Туда харьковчане поколениями ходят за салом и колбасами. {F:supply}.',
-        'Наличие видно на каждой карточке под ценой: «В наличии», «Осталось ~1,5 кг» или «Закончилось». Закончилось? «Сообщить о поставке» - напишем, когда привезём. «Заказать к поставке» - товар попадёт в заказ «под заказ».',
+        'Да. Привезём из Украины не только продукты (косметика, бытовая химия, детские товары). Нажмите «Привезти под заказ» и напишите, что вам нужно. Мы уточним, получится ли привезти, цену и сроки, и напишем вам.',
         '{F:supply}. Как только день следующей поставки известен, он появляется на карточках закончившихся товаров. Сейчас: {nb}.',
         '{F:courier}: {f:courier_fees}. Любой город Турции, карго {f:cargo_via}. {F:cargo_fee}. В корзине выберите «{F:cargo}».',
         '{F:pickup}: {f:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
@@ -131,11 +130,10 @@
       dlv2: '{F:courier}', dlv2t: '{F:courier_fees}. {F:courier_note}.',
       dlv3: '{F:cargo}', dlv3t: 'Будь-яке місто Туреччини, карго {f:cargo_via}. {F:cargo_fee}. {F:cargo_note}.',
       faq_title: 'Питання', faq_q: [
-        'Скільки коштує і де весь прайс?', 'Звідки ви привозите продукти?', 'Чи є в наявності?', 'Коли нова поставка?', 'Доставка в моє місто - у Белек, Махмутлар, Анталію?', 'Де забрати в Аланії?'],
+        'Звідки ви привозите продукти?', 'Чи возите під замовлення?', 'Коли нова поставка?', 'Доставка в моє місто - у Белек, Махмутлар, Анталію?', 'Де забрати в Аланії?'],
       faq_a: [
-        'Ціна стоїть на кожній картці в каталозі вище - це і є весь прайс. Він завжди актуальний: ціни змінює власник у чаті, і вони одразу змінюються на сайті.',
         'З Благбазу - Центрального ринку Харкова. Туди харків\'яни поколіннями ходять по сало й ковбаси. {F:supply}.',
-        'Наявність видно на кожній картці під ціною: «В наявності», «Залишилось ~1,5 кг» або «Закінчилося». Закінчилося? «Повідомити про поставку» - напишемо, коли привеземо. «Замовити до поставки» - товар потрапить у замовлення «під замовлення».',
+        'Так. Привеземо з України не тільки продукти (косметика, побутова хімія, дитячі товари). Натисніть «Привезти під замовлення» і напишіть, що вам потрібно. Ми уточнимо, чи вийде привезти, ціну та терміни, і напишемо вам.',
         '{F:supply}. Щойно день наступної поставки відомий, він з\'являється на картках товарів, що закінчилися. Зараз: {nb}.',
         '{F:courier}: {f:courier_fees}. Будь-яке місто Туреччини, карго {f:cargo_via}. {F:cargo_fee}. У кошику оберіть «{F:cargo}».',
         '{F:pickup}: {f:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
@@ -219,11 +217,10 @@
       dlv2: '{F:courier}', dlv2t: '{F:courier_fees}. {F:courier_note}.',
       dlv3: '{F:cargo}', dlv3t: 'Any city in Turkey, {F:cargo_via}. {F:cargo_fee}. {F:cargo_note}.',
       faq_title: 'Questions', faq_q: [
-        'What are your prices, and where is the full price list?', 'Where do your products come from?', 'Is it in stock?', 'When is the next batch?', 'Do you deliver to my city (Belek, Mahmutlar, Antalya)?', 'Where can I pick up in Alanya?'],
+        'Where do your products come from?', 'Can you bring something to order?', 'When is the next batch?', 'Do you deliver to my city (Belek, Mahmutlar, Antalya)?', 'Where can I pick up in Alanya?'],
       faq_a: [
-        'The price is on every card in the catalog above - that is the full price list. It is always up to date: prices change in the shop\'s chat and the site updates instantly. Items priced in dollars are shown and totalled in dollars, as a separate sum.',
         'From Blagbaz, Kharkiv\'s Central Market. Kharkiv families have bought salo and sausages there for generations. {F:supply}.',
-        'Each card shows availability under the price: "In stock", "Only ~1.5 kg left" or "Sold out". Sold out? "Notify me when back in stock" - we\'ll message you when it arrives. "Pre-order" - it goes into your order as a pre-order.',
+        'Yes. We bring more than food from Ukraine (cosmetics, household goods, kids\' products). Tap "Special order" and tell us what you need. We\'ll check whether we can bring it, the price and the timing, and get back to you.',
         '{F:supply}. As soon as the date of the next batch is set, it appears on the sold-out cards. Right now: {nb}.',
         '{F:courier}: {f:courier_fees}. Any city in Turkey, {F:cargo_via}. {F:cargo_fee}. Choose "{F:cargo}" in the cart.',
         '{F:pickup}: {f:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
@@ -451,8 +448,21 @@
     var v = { nb: nd ? t('nb_day', { d: dayLabel(nd) }) : t('nb_none') };
     var box = $('#faqBox'); box.innerHTML = '';
     I18N[lang].faq_q.forEach(function (q, i) {
-      box.appendChild(el('details', {}, [el('summary', { text: q }), sentLines(el('p', {}), t('faq_a')[i].replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }))]));
+      box.appendChild(el('details', {}, [el('summary', { text: q }), mapLink(sentLines(el('p', {}), t('faq_a')[i].replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; })))]));
     });
+  }
+  /* item 8 (CEO TG 5436): the pickup address in the FAQ is a link that opens the phone's own maps app (Apple Maps on iPhone / Mac, Google
+     Maps elsewhere); the query is the address of the facts, without the «near the road» clause a map search cannot read */
+  function mapLink(p) {
+    var ft = F && F.t, addr = ft && ft[lang] && ft[lang].pickup_addr, q = ft && ft.en && ft.en.pickup_addr; if (!addr || !q) return p;
+    q = q.replace(/,?\s*near [^,]*/i, '');
+    var href = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent) ? 'https://maps.apple.com/?q=' + encodeURIComponent(q) : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+    [].forEach.call(p.querySelectorAll('.sl'), function (sp) {
+      var tx = sp.textContent, at = tx.indexOf(addr); if (at < 0) return;
+      sp.textContent = ''; sp.appendChild(document.createTextNode(tx.slice(0, at)));
+      sp.appendChild(el('a', { class: 'map-a', href: href, target: '_blank', rel: 'noopener', text: addr })); sp.appendChild(document.createTextNode(tx.slice(at + addr.length)));
+    });
+    return p;
   }
   /* redesign 06.11: a review is shown word for word; emoji are not drawn (20-WEB-CANON W-LOOK-02, check_design icon-glyph) and a name
      ends without a period (the canon's no-final-period rule): «Artem H.» -> «Artem H». The data keeps the original */
