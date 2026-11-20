@@ -1609,3 +1609,6 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
 .cb-tile.more.has-mos::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: rgba(0, 0, 0, 0.5); }
 .cb-tile.more.has-mos .cb-mt, .cb-tile.more.has-mos small { position: relative; z-index: 2; color: var(--ink); }
 .cb-tile.more.has-mos small { color: rgba(240, 232, 216, 0.78); }   /* the same tokens as the photo tiles (.cb-tl) */
+
+/* CEO TG 5660: the blocked-geolocation hint has two paragraphs */
+.geo-msg { white-space: pre-line; }
