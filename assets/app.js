@@ -1189,7 +1189,8 @@
   }
   function wzNext() {
     var st = curStep(), s = wzSteps(), msg = wzCheck(st);
-    if (st === 'addr' && !msg && placeMiss()) { toCargo(); return; }   /* CEO TG 5612: outside her courier places the order goes by cargo */
+    /* 20.11: no forced switch on «Дальше» - the map can return a bare road + town for a point inside Alanya (geo-place.ts placeAt gives no place),
+       so the cargo line + button is an OFFER; the buyer taps it, else the order goes on with «Стоимость доставки уточним» */
     if (st === 'contact') { var hp = $('#fWebsite'); if (hp) state.form.website = hp.value; }
     if (msg) { var e = $('#formErr'); if (e) e.textContent = msg; if (st === 'contact' || st === 'where' || st === 'addr') wzGo(st, msg); return; }
     /* came here from "Изменить" on the check screen: back to it, unless a later step now needs an answer (pickup -> cargo asks the city) */
