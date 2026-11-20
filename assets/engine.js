@@ -828,7 +828,13 @@
       window_id: kind && form.windowId ? String(form.windowId) : null, window_date: kind && form.windowDate ? String(form.windowDate) : null };
     /* CEO 11.10: the city courier carries the street address (bot: optional string, max 200, asked in Telegram when missing);
        pickup and cargo send no address key at all, so their payload stays byte-identical to before */
-    if (kind === 'courier') p.address = clean(form.address).slice(0, ADDRESS_MAX);
+    if (kind === 'courier') {
+      p.address = clean(form.address).slice(0, ADDRESS_MAX);
+      /* addrmap-1120 (CEO TG 5833): the point of the address (map pin / picked suggestion / geolocation) rides as numbers too; the worker
+         keeps it on the order (Order.point) and makes sure the address holds its map link */
+      var pm = /q=(-?\d{1,2}(?:\.\d+)?),(-?\d{1,3}(?:\.\d+)?)/.exec(String(form.geo || ''));
+      if (pm) { p.lat = +pm[1]; p.lon = +pm[2]; p.pt_by = form.geoBy === 'pin' || form.geoBy === 'pick' ? form.geoBy : 'geo'; }
+    }
     return p;
   }
   /* courier address: 5-200 characters after trimming (район, улица, дом, квартира) */
@@ -1082,6 +1088,34 @@
       } catch (e) { fin(none); }
     });
   }
+  /* addrmap-1120 (CEO TG 5833, D-1745): street / house suggestions while typing and the map tiles, both through the worker (bot-engine
+     src/geoapify.ts: the Geoapify key stays there). addrSuggest(text, pt, lang) -> Promise<items | null>: items = [{street, sub, lat, lon,
+     exact}] (exact = a house, its point is the door), [] = nothing / the vendor slow, null = the worker has it OFF (no key: 404) - the page
+     then keeps the plain field. Never throws, never waits longer than ADDR_WAIT_MS. Only the typed text and the bias point leave the page */
+  var ADDR_URL = ORDER_URL.replace(/\/site-order$/, '/site-addr'), TILE_URL = ORDER_URL.replace(/\/site-order$/, '/site-tile/{z}/{x}/{y}{r}.png'), ADDR_WAIT_MS = 3500;
+  /* the map opens here when the buyer's place is unknown (Alanya centre; per shop) */
+  var MAP_HOME = { lat: 36.5444, lon: 31.9954, zoom: 17 };   /* D-1766: house numbers show from 17 */
+  function addrSuggest(text, pt, lang, fetchFn, url) {
+    var f = fetchFn || (typeof fetch !== 'undefined' ? fetch : null), q = clean(text).slice(0, 120);
+    if (!f || q.length < 3) return Promise.resolve([]);
+    var body = { text: q, lang: lang === 'uk' || lang === 'en' ? lang : 'ru' };
+    if (pt && isFinite(pt.lat) && isFinite(pt.lon)) { body.lat = Math.round(pt.lat * 1000) / 1000; body.lon = Math.round(pt.lon * 1000) / 1000; }
+    var ac = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    return new Promise(function (res) {
+      var done = false, fin = function (v) { if (done) return; done = true; clearTimeout(tm); res(v); };
+      var tm = setTimeout(function () { if (ac) try { ac.abort(); } catch (e) { /* gone */ } fin([]); }, ADDR_WAIT_MS);
+      try {
+        f(url || ADDR_URL, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal: ac ? ac.signal : undefined }).then(function (r) {
+          if (r.status === 404) return fin(null);
+          return r.ok ? r.json().then(function (j) {
+            fin(j && j.ok && Array.isArray(j.items) ? j.items.filter(function (x) { return x && typeof x.street === 'string' && isFinite(x.lat) && isFinite(x.lon); }).slice(0, 5).map(function (x) {
+              var st = clean(x.street).slice(0, 80); return { street: st, sub: typeof x.sub === 'string' ? clean(x.sub).slice(0, 80) : '', lat: +x.lat, lon: +x.lon, exact: x.exact === true };
+            }) : []);
+          }) : fin([]);
+        }).catch(function () { fin([]); });
+      } catch (e) { fin([]); }
+    });
+  }
   /* the address the worker reads: her place first when the typed address does not name it (the worker checks the place, placeIn) */
   function placeAddress(place, address) {
     var a = String(address || '').replace(/\s+/g, ' ').trim(); if (!place) return a;
@@ -1205,6 +1239,6 @@
     WINDOWS_DEFAULT: WINDOWS_DEFAULT, WINDOW_CUTOFF_MIN: WINDOW_CUTOFF_MIN, windowKind: windowKind, parseWindow: parseWindow, siteWindows: siteWindows, alanyaClock: alanyaClock, windowDays: windowDays, pickupDays: pickupDays, daysText: daysText, pickWindow: pickWindow, windowValid: windowValid,
     deliveryPlan: deliveryPlan, planDays: planDays, planCal: planCal, planTimes: planTimes, planStarts: planStarts, planEnds: planEnds, planAsapDate: planAsapDate, planWindowId: planWindowId, planParseId: planParseId,
     planValid: planValid, planHoursText: planHoursText, planText: planText, planFee: planFee, planFeeRange: planFeeRange, planMinMiss: planMinMiss, placeAddress: placeAddress, courierAddress: courierAddress, dpText: dpText,
-    placeIn: placeIn, geoLookup: geoLookup, GEO_URL: GEO_URL
+    placeIn: placeIn, geoLookup: geoLookup, GEO_URL: GEO_URL, addrSuggest: addrSuggest, ADDR_URL: ADDR_URL, TILE_URL: TILE_URL, MAP_HOME: MAP_HOME
   };
 });

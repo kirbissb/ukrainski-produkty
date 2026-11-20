@@ -60,7 +60,7 @@
       total_dlv: 'Итого с доставкой', min_note: 'Минимальный заказ - {m}. Не хватает {x}.', min_btn: 'Минимальный заказ - {m}', unpriced_note: 'Цену уточним при подтверждении заказа: {n}', live_price: 'Цена обновилась: {n} - теперь {p}', ph_new: 'Новинка', pos: ['позиция', 'позиции', 'позиций'],
       checkout: 'Оформление', f_name: 'Имя', f_name_ph: 'Как к вам обращаться', f_phone: 'Телефон (Telegram или WhatsApp)', f_city: 'Город', city_alanya: 'Алания', city_other: 'Другой город', city_ph: 'Какой город',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Желаемая дата доставки (необязательно)', f_date_ph: 'Выбрать в календаре', no_date: 'Без даты', prev_m: 'Предыдущий месяц', next_m: 'Следующий месяц',
-      f_comment: 'Комментарий', f_comment_ph: 'Например: позвонить перед доставкой', send: 'Отправить заказ', sending: 'Отправляем заказ', err_contact: 'Укажите имя и телефон, чтобы мы могли подтвердить заказ.', err_send: 'Заказ не отправлен: нет связи с сервером. Корзина сохранена - попробуйте ещё раз.', err_reject: 'Заказ не отправлен: проверьте корзину и данные или напишите нам в Telegram. Корзина сохранена.', f_contact: 'Номер телефона', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Укажите имя и номер телефона, чтобы мы могли связаться с вами по заказу.', err_phone_tg: 'Укажите номер телефона, чтобы мы могли связаться с вами по заказу.', share_phone: 'Взять номер из Telegram', other_phone: 'Другой номер', f_floor: 'Этаж', f_apt: 'Квартира', f_code: 'Код домофона', f_cnote: 'Комментарий курьеру', geo_btn: 'Отправить геолокацию', geo_nohouse: 'Улицу нашли, допишите номер дома', err_phone_bad: 'Проверьте номер телефона, например: +90 5xx xxx xx xx', err_name_empty: 'Напишите, как к вам обращаться', err_phone_empty: 'Введите номер телефона', err_phone_chars: 'Лишние символы - оставьте только цифры и +', err_phone_short: 'Не хватает цифр: в номере должно быть минимум 9', err_phone_long: 'Слишком много цифр: в номере не больше 15', err_phone_same: 'Проверьте номер - одна и та же цифра подряд', err_addr_short: 'Допишите адрес: район, улица и дом', err_addr_long: 'Адрес слишком длинный - не больше 200 знаков', err_floor: 'Укажите этаж', err_apt: 'Укажите квартиру', err_city_f: 'Укажите город для карго', wh_up: 'Раньше', wh_dn: 'Позже', dp_out: 'Сюда доставим карго по Турции', dp_out_btn: 'Выбрать карго по Турции', geo_sent: 'Геолокация отправлена', geo_busy: 'Определяем, где вы…',
+      f_comment: 'Комментарий', f_comment_ph: 'Например: позвонить перед доставкой', send: 'Отправить заказ', sending: 'Отправляем заказ', err_contact: 'Укажите имя и телефон, чтобы мы могли подтвердить заказ.', err_send: 'Заказ не отправлен: нет связи с сервером. Корзина сохранена - попробуйте ещё раз.', err_reject: 'Заказ не отправлен: проверьте корзину и данные или напишите нам в Telegram. Корзина сохранена.', f_contact: 'Номер телефона', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Укажите имя и номер телефона, чтобы мы могли связаться с вами по заказу.', err_phone_tg: 'Укажите номер телефона, чтобы мы могли связаться с вами по заказу.', share_phone: 'Взять номер из Telegram', other_phone: 'Другой номер', f_floor: 'Этаж', f_apt: 'Квартира', f_code: 'Код домофона', f_cnote: 'Комментарий курьеру', geo_btn: 'Отправить геолокацию', map_btn: 'Указать на карте', map_title: 'Точка доставки', map_hint: 'Двигайте карту, чтобы метка встала на ваш дом', map_busy: 'Ищем адрес', map_none: 'Улицу тут не нашли - курьер получит точку', map_ok: 'Доставить сюда', map_me: 'Где я', map_fail: 'Карта не загрузилась. Напишите улицу и дом', pin_sent: 'Точка на карте', sug_label: 'Подсказки адреса', sug_none: 'Такую улицу не нашли. Напишите улицу и дом или укажите точку на карте', geo_nohouse: 'Улицу нашли, допишите номер дома', err_phone_bad: 'Проверьте номер телефона, например: +90 5xx xxx xx xx', err_name_empty: 'Напишите, как к вам обращаться', err_phone_empty: 'Введите номер телефона', err_phone_chars: 'Лишние символы - оставьте только цифры и +', err_phone_short: 'Не хватает цифр: в номере должно быть минимум 9', err_phone_long: 'Слишком много цифр: в номере не больше 15', err_phone_same: 'Проверьте номер - одна и та же цифра подряд', err_addr_short: 'Допишите адрес: район, улица и дом', err_addr_long: 'Адрес слишком длинный - не больше 200 знаков', err_floor: 'Укажите этаж', err_apt: 'Укажите квартиру', err_city_f: 'Укажите город для карго', wh_up: 'Раньше', wh_dn: 'Позже', dp_out: 'Сюда доставим карго по Турции', dp_out_btn: 'Выбрать карго по Турции', geo_sent: 'Геолокация отправлена', geo_busy: 'Определяем, где вы…',
       geo_denied: 'Геолокация заблокирована в браузере. Нажмите на значок слева от адреса сайта - «Геолокация» - «Разрешить» и нажмите кнопку ещё раз. Или напишите адрес', geo_denied_mac: 'На Mac ещё проверьте: Системные настройки - Конфиденциальность - Службы геолокации - ваш браузер', geo_denied_tg: 'Telegram не дал доступ к геолокации. Разрешите его в настройках Telegram или напишите адрес', geo_fail: 'Не получилось определить, где вы. Напишите улицу и дом',
       geo_nostreet: 'Точку получили, но улицу по ней не нашли. Напишите улицу и дом', err_floor_apt: 'Укажите этаж и квартиру', tg_note: 'После заказа откроется Telegram - там вы увидите заказ и подтвердите его одной кнопкой.', f_when_pickup: 'Когда удобно забрать?', f_when_courier: 'Когда удобно принять курьера?', day_today: 'Сегодня', day_tomorrow: 'Завтра', day_none: 'окон больше нет', day_closed: 'выходной', err_window: 'Выберите день и время, когда вам удобно.', done_when: 'Время', done_tg_msg: 'Ваш заказ - в Telegram', done_tg_hint: 'Статус, курьер и итоговая сумма', done_tg_btn: 'Открыть чат заказа', err_city: 'Укажите город для карго.',
       wz_step: 'Шаг {n} из {m}', wz_next: 'Дальше', wz_back: 'Назад', wz_how: 'Как получить заказ?', wz_where: 'Куда отправить?', wz_addr: 'Куда привезти?', addr_ph: 'Улица и дом', err_addr: 'Напишите адрес: район, улица и дом', wz_addr_h: 'Адрес', wz_pay: 'Как удобно оплатить?', wz_contact: 'Как с вами связаться?', wz_review: 'Проверьте заказ', wz_edit: 'Изменить', wz_items: 'Товары', wz_get: 'Получение', wz_card_note: 'Реквизиты и сумму в гривнах пришлём в Telegram', wz_contacts: 'Контакты', wz_tg_note: 'Вы в Telegram как {n}. Заказ придёт в этот чат с ботом.', done_in_tg: 'Заказ уже в вашем чате с ботом. Там же подтверждение и статус.', done_tg_back: 'Вернуться в чат', done_in_instagram: 'Заказ отправлен в ваш чат в Instagram. Там же подтверждение и статус.', done_in_whatsapp: 'Заказ отправлен в ваш чат в WhatsApp. Там же подтверждение и статус.', err_tg_auth: 'Telegram не подтвердил вход. Закройте магазин и откройте его снова из чата с ботом.', wz_no_comment: 'без комментария',
@@ -82,7 +82,7 @@
         ['Что мы получаем', 'Из заказа на сайте: имя, телефон, город и адрес доставки, геолокацию, если вы её отправили, способ оплаты, дату, комментарий и состав заказа. Из переписки в Telegram, Instagram и WhatsApp: ваши сообщения, голосовые, фото и имя из профиля. Из форм «Сообщить о поставке» и «Привезти под заказ»: имя, телефон и то, что вы написали.'],
         ['Зачем', 'Чтобы ответить на ваш вопрос, принять, подтвердить и доставить заказ. Рекламу и рассылки без вашего согласия не присылаем.'],
         ['Кто отвечает в чате', 'Сначала отвечает помощник магазина - программа с искусственным интеллектом. Он может ошибиться: если что-то важно, уточните у владельца. Сложные вопросы помощник передаёт владельцу. Помощника для магазина обслуживает подрядчик.'],
-        ['Какие сервисы обрабатывают данные', 'Ответы в чате пишет ИИ компании Anthropic. Если он не отвечает, запасной ИИ - OpenAI или Google. Anthropic и OpenAI не учат свой ИИ на ваших сообщениях. Голосовые сообщения переводит в текст Cloudflare. Если вы отправили геолокацию, улицу по ней находит сервис карт OpenStreetMap. Ссылки, которые вы присылаете в чат, проверяются на опасность сервисами Google и abuse.ch.'],
+        ['Какие сервисы обрабатывают данные', 'Ответы в чате пишет ИИ компании Anthropic. Если он не отвечает, запасной ИИ - OpenAI или Google. Anthropic и OpenAI не учат свой ИИ на ваших сообщениях. Голосовые сообщения переводит в текст Cloudflare. Если вы отправили геолокацию, указали точку на карте или выбрали подсказку адреса, улицу находит сервис карт Geoapify на данных OpenStreetMap (серверы в ЕС, запрос хранится не дольше суток); ему уходит только адрес или точка, без имени и телефона. Ссылки, которые вы присылаете в чат, проверяются на опасность сервисами Google и abuse.ch.'],
         ['Где хранятся данные', 'Заказы и переписка хранятся на защищённых серверах Cloudflare в Восточной Европе. Записи голоса и ваши картинки помощник не хранит, картинки передаются владельцу. Учёт товаров и заказов владелец может вести в своей Google-таблице.'],
         ['Кто ещё видит', 'Курьер или карго-служба получают только то, что нужно для доставки. Мы не продаём ваши данные.'],
         ['Что хранится в вашем браузере', 'Сайт запоминает корзину, язык и данные формы (имя, телефон, город, доставку и оплату) на вашем устройстве, чтобы в следующий раз не вводить их заново. Ещё там лежит одно случайное число: по нему магазин считает, какие товары из подборки к корзине смотрят и добавляют. Имя, телефон и адрес в нём не хранятся. Удалить всё это можно, очистив данные сайта в настройках браузера.'],
@@ -147,7 +147,7 @@
       total_dlv: 'Разом з доставкою', min_note: 'Мінімальне замовлення - {m}. Не вистачає {x}.', min_btn: 'Мінімальне замовлення - {m}', unpriced_note: 'Ціну уточнимо під час підтвердження замовлення: {n}', live_price: 'Ціна оновилася: {n} - тепер {p}', ph_new: 'Новинка', pos: ['позиція', 'позиції', 'позицій'],
       checkout: 'Оформлення', f_name: 'Ім\'я', f_name_ph: 'Як до вас звертатися', f_phone: 'Номер телефону (Telegram або WhatsApp)', f_city: 'Місто', city_alanya: 'Аланія', city_other: 'Інше місто', city_ph: 'Яке місто',
       f_dlv: 'Доставка', f_pay: 'Оплата', f_date: 'Бажана дата доставки (необов\'язково)', f_date_ph: 'Обрати в календарі', no_date: 'Без дати', prev_m: 'Попередній місяць', next_m: 'Наступний місяць',
-      f_comment: 'Коментар', f_comment_ph: 'Наприклад: подзвонити перед доставкою', send: 'Надіслати замовлення', sending: 'Надсилаємо замовлення', err_contact: 'Вкажіть ім\'я та номер телефону, щоб ми могли підтвердити замовлення.', err_send: 'Замовлення не надіслано: немає зв\'язку з сервером. Кошик збережено - спробуйте ще раз.', err_reject: 'Замовлення не надіслано: перевірте кошик і дані або напишіть нам у Telegram. Кошик збережено.', f_contact: 'Номер телефону', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Вкажіть ім\'я та номер телефону, щоб ми могли зв\'язатися з вами щодо замовлення.', err_phone_tg: 'Вкажіть номер телефону, щоб ми могли зв\'язатися з вами щодо замовлення.', share_phone: 'Взяти номер з Telegram', other_phone: 'Інший номер', f_floor: 'Поверх', f_apt: 'Квартира', f_code: 'Код домофону', f_cnote: 'Коментар кур\'єру', geo_btn: 'Надіслати геолокацію', geo_nohouse: 'Вулицю знайшли, допишіть номер будинку', err_phone_bad: 'Перевірте номер телефону, наприклад: +90 5xx xxx xx xx', err_name_empty: 'Напишіть, як до вас звертатися', err_phone_empty: 'Введіть номер телефону', err_phone_chars: 'Зайві символи - залиште лише цифри та +', err_phone_short: 'Не вистачає цифр: у номері має бути щонайменше 9', err_phone_long: 'Забагато цифр: у номері не більше 15', err_phone_same: 'Перевірте номер - одна й та сама цифра поспіль', err_addr_short: 'Допишіть адресу: район, вулиця і будинок', err_addr_long: 'Адреса задовга - не більше 200 знаків', err_floor: 'Вкажіть поверх', err_apt: 'Вкажіть квартиру', err_city_f: 'Вкажіть місто для карго', wh_up: 'Раніше', wh_dn: 'Пізніше', dp_out: 'Сюди доставимо карго по Туреччині', dp_out_btn: 'Обрати карго по Туреччині', geo_sent: 'Геолокацію надіслано', geo_busy: 'Визначаємо, де ви…',
+      f_comment: 'Коментар', f_comment_ph: 'Наприклад: подзвонити перед доставкою', send: 'Надіслати замовлення', sending: 'Надсилаємо замовлення', err_contact: 'Вкажіть ім\'я та номер телефону, щоб ми могли підтвердити замовлення.', err_send: 'Замовлення не надіслано: немає зв\'язку з сервером. Кошик збережено - спробуйте ще раз.', err_reject: 'Замовлення не надіслано: перевірте кошик і дані або напишіть нам у Telegram. Кошик збережено.', f_contact: 'Номер телефону', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Вкажіть ім\'я та номер телефону, щоб ми могли зв\'язатися з вами щодо замовлення.', err_phone_tg: 'Вкажіть номер телефону, щоб ми могли зв\'язатися з вами щодо замовлення.', share_phone: 'Взяти номер з Telegram', other_phone: 'Інший номер', f_floor: 'Поверх', f_apt: 'Квартира', f_code: 'Код домофону', f_cnote: 'Коментар кур\'єру', geo_btn: 'Надіслати геолокацію', map_btn: 'Вказати на карті', map_title: 'Точка доставки', map_hint: 'Рухайте карту, щоб мітка стала на ваш будинок', map_busy: 'Шукаємо адресу', map_none: 'Вулицю тут не знайшли - кур\'єр отримає точку', map_ok: 'Доставити сюди', map_me: 'Де я', map_fail: 'Карта не завантажилась. Напишіть вулицю й будинок', pin_sent: 'Точка на карті', sug_label: 'Підказки адреси', sug_none: 'Такої вулиці не знайшли. Напишіть вулицю й будинок або вкажіть точку на карті', geo_nohouse: 'Вулицю знайшли, допишіть номер будинку', err_phone_bad: 'Перевірте номер телефону, наприклад: +90 5xx xxx xx xx', err_name_empty: 'Напишіть, як до вас звертатися', err_phone_empty: 'Введіть номер телефону', err_phone_chars: 'Зайві символи - залиште лише цифри та +', err_phone_short: 'Не вистачає цифр: у номері має бути щонайменше 9', err_phone_long: 'Забагато цифр: у номері не більше 15', err_phone_same: 'Перевірте номер - одна й та сама цифра поспіль', err_addr_short: 'Допишіть адресу: район, вулиця і будинок', err_addr_long: 'Адреса задовга - не більше 200 знаків', err_floor: 'Вкажіть поверх', err_apt: 'Вкажіть квартиру', err_city_f: 'Вкажіть місто для карго', wh_up: 'Раніше', wh_dn: 'Пізніше', dp_out: 'Сюди доставимо карго по Туреччині', dp_out_btn: 'Обрати карго по Туреччині', geo_sent: 'Геолокацію надіслано', geo_busy: 'Визначаємо, де ви…',
       geo_denied: 'Геолокацію заблоковано в браузері. Натисніть на значок ліворуч від адреси сайту - «Геолокація» - «Дозволити» і натисніть кнопку ще раз. Або напишіть адресу', geo_denied_mac: 'На Mac ще перевірте: Системні параметри - Конфіденційність - Служби геолокації - ваш браузер', geo_denied_tg: 'Telegram не дав доступу до геолокації. Дозвольте його в налаштуваннях Telegram або напишіть адресу', geo_fail: 'Не вдалося визначити, де ви. Напишіть вулицю й будинок',
       geo_nostreet: 'Точку отримали, але вулицю за нею не знайшли. Напишіть вулицю й будинок', err_floor_apt: 'Вкажіть поверх і квартиру', tg_note: 'Після замовлення відкриється Telegram - там ви побачите замовлення і підтвердите його однією кнопкою.', f_when_pickup: 'Коли зручно забрати?', f_when_courier: 'Коли зручно прийняти кур\'єра?', day_today: 'Сьогодні', day_tomorrow: 'Завтра', day_none: 'вікон більше немає', day_closed: 'вихідний', err_window: 'Оберіть день і час, коли вам зручно.', done_when: 'Час', done_tg_msg: 'Ваше замовлення - в Telegram', done_tg_hint: 'Статус, кур\'єр і підсумкова сума', done_tg_btn: 'Відкрити чат замовлення', err_city: 'Вкажіть місто для карго.',
       wz_step: 'Крок {n} з {m}', wz_next: 'Далі', wz_back: 'Назад', wz_how: 'Як отримати замовлення?', wz_where: 'Куди надіслати?', wz_addr: 'Куди привезти?', addr_ph: 'Вулиця і будинок', err_addr: 'Напишіть адресу: район, вулицю і будинок', wz_addr_h: 'Адреса', wz_pay: 'Як зручно оплатити?', wz_contact: 'Як з вами зв\'язатися?', wz_review: 'Перевірте замовлення', wz_edit: 'Змінити', wz_items: 'Товари', wz_get: 'Отримання', wz_card_note: 'Реквізити та суму в гривнях надішлемо в Telegram', wz_contacts: 'Контакти', wz_tg_note: 'Ви в Telegram як {n}. Замовлення прийде в цей чат із ботом.', done_in_tg: 'Замовлення вже у вашому чаті з ботом. Там же підтвердження і статус.', done_tg_back: 'Повернутися в чат', done_in_instagram: 'Замовлення надіслано у ваш чат в Instagram. Там же підтвердження і статус.', done_in_whatsapp: 'Замовлення надіслано у ваш чат у WhatsApp. Там же підтвердження і статус.', err_tg_auth: 'Telegram не підтвердив вхід. Закрийте магазин і відкрийте його знову з чату з ботом.', wz_no_comment: 'без коментаря',
@@ -169,7 +169,7 @@
         ['Що ми отримуємо', 'Із замовлення на сайті: ім\'я, номер телефону, місто та адресу доставки, геолокацію, якщо ви її надіслали, спосіб оплати, дату, коментар і склад замовлення. Із листування в Telegram, Instagram і WhatsApp: ваші повідомлення, голосові, фото та ім\'я з профілю. З форм «Повідомити про поставку» і «Привезти під замовлення»: ім\'я, номер телефону і те, що ви написали.'],
         ['Навіщо', 'Щоб відповісти на ваше запитання, прийняти, підтвердити й доставити замовлення. Рекламу та розсилки без вашої згоди не надсилаємо.'],
         ['Хто відповідає в чаті', 'Спершу відповідає помічник магазину - програма зі штучним інтелектом. Він може помилитися: якщо щось важливо, уточніть у власника. Складні питання помічник передає власнику. Помічника для магазину обслуговує підрядник.'],
-        ['Які сервіси обробляють дані', 'Відповіді в чаті пише ШІ компанії Anthropic. Якщо він не відповідає, запасний ШІ - OpenAI або Google. Anthropic і OpenAI не навчають свій ШІ на ваших повідомленнях. Голосові повідомлення перетворює на текст Cloudflare. Якщо ви надіслали геолокацію, вулицю за нею знаходить сервіс карт OpenStreetMap. Посилання, які ви надсилаєте в чат, перевіряють на небезпеку сервіси Google і abuse.ch.'],
+        ['Які сервіси обробляють дані', 'Відповіді в чаті пише ШІ компанії Anthropic. Якщо він не відповідає, запасний ШІ - OpenAI або Google. Anthropic і OpenAI не навчають свій ШІ на ваших повідомленнях. Голосові повідомлення перетворює на текст Cloudflare. Якщо ви надіслали геолокацію, вказали точку на карті або обрали підказку адреси, вулицю знаходить сервіс карт Geoapify на даних OpenStreetMap (сервери в ЄС, запит зберігається не довше доби); йому йде лише адреса або точка, без імені й телефону. Посилання, які ви надсилаєте в чат, перевіряють на небезпеку сервіси Google і abuse.ch.'],
         ['Де зберігаються дані', 'Замовлення та листування зберігаються на захищених серверах Cloudflare у Східній Європі. Записи голосу й ваші картинки помічник не зберігає, картинки передаються власнику. Облік товарів і замовлень власник може вести у своїй Google-таблиці.'],
         ['Хто ще бачить', 'Кур\'єр або карго-служба отримують лише те, що потрібно для доставки. Ми не продаємо ваші дані.'],
         ['Що зберігається у вашому браузері', 'Сайт запам\'ятовує кошик, мову та дані форми (ім\'я, номер телефону, місто, доставку й оплату) на вашому пристрої, щоб наступного разу не вводити їх знову. Ще там зберігається одне випадкове число: за ним магазин рахує, які товари з добірки до кошика переглядають і додають. Ім\'я, номер телефону й адреса в ньому не зберігаються. Видалити все це можна, очистивши дані сайту в налаштуваннях браузера.'],
@@ -234,7 +234,7 @@
       total_dlv: 'Total with delivery', min_note: 'Minimum order is {m}. Add {x} more.', min_btn: 'Minimum order: {m}', unpriced_note: 'We will name the price when we confirm the order: {n}', live_price: 'Price updated: {n} - now {p}', ph_new: 'New', pos: ['item', 'items', 'items'],
       checkout: 'Checkout', f_name: 'Name', f_name_ph: 'Your name', f_phone: 'Phone (Telegram or WhatsApp)', f_city: 'City', city_alanya: 'Alanya', city_other: 'Other city', city_ph: 'Which city',
       f_dlv: 'Delivery', f_pay: 'Payment', f_date: 'Preferred delivery date (optional)', f_date_ph: 'Pick a date', no_date: 'No date', prev_m: 'Previous month', next_m: 'Next month',
-      f_comment: 'Comment', f_comment_ph: 'e.g. call me before delivery', send: 'Place order', sending: 'Placing your order', err_contact: 'Add your name and phone so we can confirm the order.', err_send: 'The order was not sent: no connection to the server. Your cart is saved - please try again.', err_reject: 'The order was not sent: please check your cart and details or message us on Telegram. Your cart is saved.', f_contact: 'Phone number', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Add your name and phone number so we can reach you about your order.', err_phone_tg: 'Add your phone number so we can reach you about your order.', share_phone: 'Use my Telegram number', other_phone: 'Another number', f_floor: 'Floor', f_apt: 'Apartment', f_code: 'Entry code', f_cnote: 'Note for the courier', geo_btn: 'Send my location', geo_nohouse: 'We found the street, please add your house number', err_phone_bad: 'Please check the phone number, e.g. +90 5xx xxx xx xx', err_name_empty: 'Add your name', err_phone_empty: 'Add your phone number', err_phone_chars: 'Extra characters - keep only digits and +', err_phone_short: 'Too few digits: the number needs at least 9', err_phone_long: 'Too many digits: the number has 15 at most', err_phone_same: 'Check the number - the same digit over and over', err_addr_short: 'Finish the address: area, street and house number', err_addr_long: 'The address is too long - 200 characters at most', err_floor: 'Add your floor', err_apt: 'Add your apartment number', err_city_f: 'Add your city for cargo', wh_up: 'Earlier', wh_dn: 'Later', dp_out: 'We deliver here by cargo across Turkey', dp_out_btn: 'Choose cargo across Turkey', geo_sent: 'Location sent', geo_busy: 'Finding your location…',
+      f_comment: 'Comment', f_comment_ph: 'e.g. call me before delivery', send: 'Place order', sending: 'Placing your order', err_contact: 'Add your name and phone so we can confirm the order.', err_send: 'The order was not sent: no connection to the server. Your cart is saved - please try again.', err_reject: 'The order was not sent: please check your cart and details or message us on Telegram. Your cart is saved.', f_contact: 'Phone number', f_contact_ph: '+90 5xx xxx xx xx', err_contact_ord: 'Add your name and phone number so we can reach you about your order.', err_phone_tg: 'Add your phone number so we can reach you about your order.', share_phone: 'Use my Telegram number', other_phone: 'Another number', f_floor: 'Floor', f_apt: 'Apartment', f_code: 'Entry code', f_cnote: 'Note for the courier', geo_btn: 'Send my location', map_btn: 'Pick on the map', map_title: 'Delivery point', map_hint: 'Move the map so the pin sits on your house', map_busy: 'Finding the address', map_none: 'No street here - the courier still gets the pin', map_ok: 'Deliver here', map_me: 'My location', map_fail: 'The map did not load. Type your street and house number', pin_sent: 'Pin on the map', sug_label: 'Address suggestions', sug_none: 'We could not find that street. Type the street and house number or pick the point on the map', geo_nohouse: 'We found the street, please add your house number', err_phone_bad: 'Please check the phone number, e.g. +90 5xx xxx xx xx', err_name_empty: 'Add your name', err_phone_empty: 'Add your phone number', err_phone_chars: 'Extra characters - keep only digits and +', err_phone_short: 'Too few digits: the number needs at least 9', err_phone_long: 'Too many digits: the number has 15 at most', err_phone_same: 'Check the number - the same digit over and over', err_addr_short: 'Finish the address: area, street and house number', err_addr_long: 'The address is too long - 200 characters at most', err_floor: 'Add your floor', err_apt: 'Add your apartment number', err_city_f: 'Add your city for cargo', wh_up: 'Earlier', wh_dn: 'Later', dp_out: 'We deliver here by cargo across Turkey', dp_out_btn: 'Choose cargo across Turkey', geo_sent: 'Location sent', geo_busy: 'Finding your location…',
       geo_denied: 'Location is blocked in your browser. Click the icon left of the site address - «Location» - «Allow», then tap the button again. Or type your address', geo_denied_mac: 'On a Mac also check: System Settings - Privacy - Location Services - your browser', geo_denied_tg: 'Telegram blocked location access. Allow it in Telegram settings or type your address', geo_fail: 'We couldn\'t find your location. Please type your street and house number',
       geo_nostreet: 'We got your location but couldn\'t find the street. Please type your street and house number', err_floor_apt: 'Add your floor and apartment number', tg_note: 'After you order, Telegram opens - you\'ll see your order there and confirm it with one tap.', f_when_pickup: 'When would you like to pick it up?', f_when_courier: 'When should we deliver?', day_today: 'Today', day_tomorrow: 'Tomorrow', day_none: 'no slots left', day_closed: 'closed', err_window: 'Pick a day and a time that suits you.', done_when: 'Time', done_tg_msg: 'Your order is in Telegram', done_tg_hint: 'Status, courier and final total', done_tg_btn: 'Open the order chat', err_city: 'Enter your city for cargo delivery.',
       wz_step: 'Step {n} of {m}', wz_next: 'Next', wz_back: 'Back', wz_how: 'How would you like to get your order?', wz_where: 'Where should we ship it?', wz_addr: 'Where should we deliver?', addr_ph: 'Street and house number', err_addr: 'Add your address: area, street and house number', wz_addr_h: 'Address', wz_pay: 'How would you like to pay?', wz_contact: 'How can we reach you?', wz_review: 'Check your order', wz_edit: 'Edit', wz_items: 'Items', wz_get: 'Delivery', wz_card_note: 'We\'ll send the card details and the amount in UAH on Telegram', wz_contacts: 'Contact details', wz_tg_note: 'You are in Telegram as {n}. The order will come to this chat with the bot.', done_in_tg: 'Your order is already in your chat with the bot. Confirmation and status are there too.', done_tg_back: 'Back to the chat', done_in_instagram: 'Your order is in your Instagram chat with us. Confirmation and status are there too.', done_in_whatsapp: 'Your order is in your WhatsApp chat with us. Confirmation and status are there too.', err_tg_auth: 'Telegram did not confirm your login. Close the shop and open it again from the chat with the bot.', wz_no_comment: 'No comment',
@@ -256,7 +256,7 @@
         ['What we receive', 'From an order on the site: your name, phone, city and delivery address, your location if you sent it, payment method, date, comment and the items in your order. From chats on Telegram, Instagram and WhatsApp: your messages, voice messages, photos and the name in your profile. From the "Notify me when back in stock" and "Special order" forms: name, phone and what you wrote.'],
         ['Why', 'To answer your question and to take, confirm and deliver your order. We do not send you ads or mailings without your consent.'],
         ['Who answers in the chat', 'First, the shop\'s assistant answers - a program that uses artificial intelligence. It can make mistakes: if something matters, check with the owner. It passes hard questions to the owner. A contractor runs the assistant for the shop.'],
-        ['Which services process the data', 'Chat replies are written by the AI of Anthropic. If it does not answer, the backup AI is OpenAI or Google. Anthropic and OpenAI do not train their AI on your messages. Cloudflare turns voice messages into text. If you sent your location, the map service OpenStreetMap finds the street for it. Links you send in the chat are checked for danger by Google and abuse.ch.'],
+        ['Which services process the data', 'Chat replies are written by the AI of Anthropic. If it does not answer, the backup AI is OpenAI or Google. Anthropic and OpenAI do not train their AI on your messages. Cloudflare turns voice messages into text. If you sent your location, picked a point on the map or chose an address suggestion, the map service Geoapify finds the street using OpenStreetMap data (servers in the EU, each request kept no longer than a day); it gets only the address or the point, never your name or phone. Links you send in the chat are checked for danger by Google and abuse.ch.'],
         ['Where the data is kept', 'Orders and chats are kept on secure Cloudflare servers in Eastern Europe. The assistant does not keep voice recordings or your pictures; pictures are passed to the owner. The owner may keep track of products and orders in their own Google Sheet.'],
         ['Who else sees it', 'The courier or cargo service gets only what the delivery needs. We do not sell your data.'],
         ['What is kept in your browser', 'The site remembers your cart, language and form details (name, phone, city, delivery and payment) on your device, so you do not have to type them again next time. It also keeps one random number, so the shop can count which suggested add-ons in the cart are seen and added. Your name, phone and address are not in it. You can delete all of this by clearing the site data in your browser settings.'],
@@ -1127,23 +1127,171 @@
          the EMPTY street field (editable), her place is decided from the point - the buyer never picks a district. No answer, or a point in
          none / several of her places = the one question (f.placeAsk). The button stays busy until then */
       var m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(link); b.disabled = true; b.setAttribute('aria-busy', 'true');
-      E.geoLookup(m ? +m[1] : NaN, m ? +m[2] : NaN).then(function (r) {
-        f.geo = link; f.geoFound = !!r.found; f.geoPlace = r.place || ''; f.geoSeveral = r.places && r.places.length > 1 ? r.places : null; f.geoStreet = '';
-        f.placeBy = ''; f.place = '';
-        if (r.street && !String(f.address || '').trim()) { f.address = r.street; f.geoStreet = r.street; }
-        /* item 6 + live look 17.11 (3): the point is in, the street is not -> say so; the street came without a house number -> ask for it */
-        f.geoMsg = !r.street && !String(f.address || '').trim() ? 'nostreet' : f.geoStreet && !/\d/.test(f.geoStreet) ? 'nohouse' : '';
-        placeSync(); if (dpPlaces().length && !f.place) f.placeAsk = true;
-        if (geoOut()) f.geoMsg = '';   /* a point outside her courier places: the cargo line is the only message, no «add the house number» */
-        var e = $('#formErr'); if (e) e.textContent = ''; dpRender();
-        if (askShow()) return;
-        if (f.geoMsg) { var ad2 = $('#fAddr'); if (ad2) { ad2.focus(); try { ad2.setSelectionRange(ad2.value.length, ad2.value.length); } catch (x) { /* old browser */ } return; } }   /* the street needs his hand first */
-        var nx = !String(f.floor || '').trim() ? $('#fFloor') : !String(f.apt || '').trim() ? $('#fApt') : null; if (nx) nx.focus(); else { var g = $('#geoOn'); if (g) g.focus(); }
-      });
+      E.geoLookup(m ? +m[1] : NaN, m ? +m[2] : NaN).then(function (r) { geoApply(link, r, 'geo'); });
     });
   }
+  /* the point is in (f.geo = its map link): the place and the street from the worker's /site-geo answer r. by = 'geo' (the location button: the
+     street fills only an EMPTY field), 'pin' (the map: the street the map showed under the pin replaces the field; no street there = the
+     field keeps his words, a street an older point wrote is cleared), 'pick' (a suggestion with a house: its own words, r only for the place) - addrmap-1120 */
+  function geoApply(link, r, by, words) {
+    var f = state.form, prev = f.geoStreet || '', cur = String(f.address || '').replace(/\s+/g, ' ').trim();
+    f.geo = link; f.geoBy = by; f.geoFound = !!r.found; f.geoPlace = r.place || ''; f.geoSeveral = r.places && r.places.length > 1 ? r.places : null; f.geoStreet = '';
+    f.placeBy = ''; f.place = '';
+    if (by === 'pick') { f.address = words; f.geoStreet = words; }
+    else if (r.street && (!cur || by === 'pin')) { f.address = r.street; f.geoStreet = r.street; }   /* the map showed this street before «Доставить сюда»: it goes in */
+    else if (by === 'pin' && !r.street && prev && cur === prev) f.address = '';   /* the old point's street does not belong to the new point */
+    /* item 6 + live look 17.11 (3): the point is in, the street is not -> say so; the street came without a house number -> ask for it */
+    f.geoMsg = !r.street && !String(f.address || '').trim() ? (amOn() ? 'nostreet' : '') : f.geoStreet && !/\d/.test(f.geoStreet) ? 'nohouse' : '';   /* round 3: no key = no map lookup, so no «улицу не нашли» either: the GPS point still goes to the courier */
+    placeSync(); if (dpPlaces().length && !f.place) f.placeAsk = true;
+    if (geoOut()) f.geoMsg = '';   /* a point outside her courier places: the cargo line is the only message, no «add the house number» */
+    var e = $('#formErr'); if (e) e.textContent = ''; dpRender();
+    if (askShow()) return;
+    if (f.geoMsg) { var ad2 = $('#fAddr'); if (ad2) { ad2.focus(); try { ad2.setSelectionRange(ad2.value.length, ad2.value.length); } catch (x) { /* old browser */ } return; } }   /* the street needs his hand first */
+    var nx = !String(f.floor || '').trim() ? $('#fFloor') : !String(f.apt || '').trim() ? $('#fApt') : null; if (nx) nx.focus(); else { var g = $('#geoOn'); if (g) g.focus(); }
+  }
+  function geoClear() { var f = state.form; if (f.geoStreet && String(f.address || '').trim() === f.geoStreet) f.address = ''; f.geo = ''; f.geoBy = ''; f.geoFound = false; f.geoPlace = ''; f.geoSeveral = null; f.geoStreet = ''; if (f.placeBy !== 'text') { f.placeBy = ''; f.place = ''; } f.placeAsk = false; }
+
+  /* ---------- addrmap-1120 (CEO TG 5833, D-1745): street / house suggestions under the field and «Указать на карте» ----------
+     Both only when the worker serves them (the live catalog says addr_map: the Geoapify key is set on the worker); else the step is exactly
+     as before. Suggestions: from 3 letters, 350 ms after the last key, the typed text only (+ the point the step already knows, rounded);
+     a tap fills the field - a house brings its point (the courier's link), a street asks for the house number (the existing line).
+     The map: Leaflet (assets/vendor, loaded on the first open), tiles through the worker (osm-bright: the familiar light street map, D-1766),
+     opens at zoom 18 on his point / his location (17 on the city centre until the location comes), the pin fixed in the middle - the map moves under
+     it (refs: Glovo, Bolt Food, Uber Eats - a finger on a small pin hides the pin); the street + house under the map is read at each stop */
+  function amOn() { return !!(LIVE && LIVE.addr_map) && !state.amOff; }
+  var amT = 0, amSeq = 0, amItems = [], amAct = -1;
+  function amBias() { var f = state.form, m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(f.geo || ''); return m ? { lat: +m[1], lon: +m[2] } : f.pt || null; }
+  function amType() {
+    clearTimeout(amT); var q = String(state.form.address || '').replace(/\s+/g, ' ').trim();
+    if (!amOn() || q.length < 3 || /https?:\/\//.test(q) || q === state.form.geoStreet) { amSeq++; return amShow([]); }
+    amT = setTimeout(function () {
+      var my = ++amSeq;
+      E.addrSuggest(q, amBias(), lang).then(function (r) { if (my !== amSeq) return; if (r === null) { state.amOff = true; amShow([]); var mb = $('#fMap'); if (mb) mb.hidden = true; return; } amShow(r);
+        /* round 3: nothing with a street (only a city / quarter, or none) - never fill the field with it; say «напишите улицу и дом или укажите на карте» */
+        var f0 = state.form, was = f0.geoMsg; if (!r.length && q.length >= 5 && !f0.geo) f0.geoMsg = 'nosug'; else if (f0.geoMsg === 'nosug') f0.geoMsg = ''; if (f0.geoMsg !== was) geoMsgShow(); });
+    }, 350);
+  }
+  function amShow(items) {
+    var box = $('#addrSug'), ta = $('#fAddr'); amItems = items || []; amAct = -1; if (!box || !ta) return;
+    box.textContent = '';
+    amItems.forEach(function (it, i) {
+      box.appendChild(el('li', { id: 'addrSug' + i, role: 'option', 'aria-selected': 'false', class: 'addr-opt', onmousedown: function (e) { e.preventDefault(); }, onclick: function () { amPick(i); } },
+        [icon('i-pin', 'addr-opt-i'), el('span', { class: 'addr-opt-t' }, [el('span', { class: 'addr-opt-s', text: it.street }), it.sub ? el('span', { class: 'addr-opt-sub', text: it.sub }) : null])]));
+    });
+    box.hidden = !amItems.length; ta.removeAttribute('aria-activedescendant');
+  }
+  function amKey(e) {
+    if (!amItems.length) return false;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault(); amAct = (amAct + (e.key === 'ArrowDown' ? 1 : -1) + amItems.length) % amItems.length;
+      [].forEach.call(document.querySelectorAll('#addrSug [role="option"]'), function (o, i) { o.setAttribute('aria-selected', i === amAct ? 'true' : 'false'); });
+      $('#fAddr').setAttribute('aria-activedescendant', 'addrSug' + amAct); return true;
+    }
+    if (e.key === 'Enter' && amAct >= 0) { e.preventDefault(); amPick(amAct); return true; }
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); amSeq++; amShow([]); return true; }
+    return false;
+  }
+  function amPick(i) {
+    var it = amItems[i], f = state.form, ta = $('#fAddr'); if (!it) return;
+    amSeq++; amShow([]); f.pt = { lat: it.lat, lon: it.lon };
+    if (it.exact) {   /* a house: its point is the door - the same path as the location button, the place decided from it */
+      f.address = it.street; if (ta) ta.value = it.street;
+      E.geoLookup(it.lat, it.lon).then(function (r) { geoApply('https://maps.google.com/?q=' + (+it.lat).toFixed(6) + ',' + (+it.lon).toFixed(6), r, 'pick', it.street); });
+      return;
+    }
+    /* a street: its words, and the house number is his to add (the point of a street is only near: never sent as the door) */
+    if (f.geo && f.geoBy === 'pick') geoClear();
+    f.address = it.street + ' '; f.geoMsg = 'nohouse';
+    placeSync(); dpRender(); var a = $('#fAddr'); if (a) { a.focus(); try { a.setSelectionRange(a.value.length, a.value.length); } catch (x) { /* old browser */ } }
+  }
+
+  var AM = { L: null, map: null, seq: 0, last: null, opener: null, t: 0, loading: null };
+  function amLoad() {
+    if (window.L && window.L.map) return Promise.resolve(window.L);
+    if (AM.loading) return AM.loading;
+    AM.loading = new Promise(function (res, rej) {
+      var base = 'assets/vendor/leaflet-1.9.4/';
+      if (!document.querySelector('link[data-leaflet]')) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = base + 'leaflet.css'; l.setAttribute('data-leaflet', '1'); document.head.appendChild(l); }
+      var s = document.createElement('script'); s.src = base + 'leaflet.js'; s.async = true;
+      s.onload = function () { window.L && window.L.map ? res(window.L) : rej(new Error('leaflet')); }; s.onerror = function () { AM.loading = null; rej(new Error('leaflet')); };
+      document.head.appendChild(s);
+    });
+    return AM.loading;
+  }
+  function amAddrLine(txt, kind) { var p = $('#amapAddr'); if (!p) return; p.textContent = txt; p.className = 'amap-addr' + (kind ? ' ' + kind : ''); }
+  function amLook() {
+    if (!AM.map) return; var c = AM.map.getCenter(), my = ++AM.seq; AM.last = null;
+    var ok = $('#amapOk'); if (ok) ok.disabled = true; amAddrLine(t('map_busy'), 'busy');
+    clearTimeout(AM.t);
+    AM.t = setTimeout(function () {
+      E.geoLookup(c.lat, c.lng).then(function (r) {
+        if (my !== AM.seq) return; AM.last = { lat: c.lat, lon: c.lng, r: r };
+        var o2 = $('#amapOk'); if (o2) o2.disabled = false;
+        amAddrLine(r.street || t('map_none'), r.street ? '' : 'none');
+      });
+    }, 450);
+  }
+  function amClose(back) {
+    var ov = $('#amap'); if (ov) ov.hidden = true; document.documentElement.classList.remove('amap-open'); AM.seq++;
+    var o = AM.opener; AM.opener = null; if (back && o && document.body.contains(o)) o.focus(); else { var b = $('#fMap') || $('#geoChg'); if (b) b.focus(); }
+  }
+  function amDone() {
+    var x = AM.last; if (!x) return;
+    amClose(false);
+    geoApply('https://maps.google.com/?q=' + (+x.lat).toFixed(6) + ',' + (+x.lon).toFixed(6), x.r, 'pin');
+  }
+  function amShell() {
+    var ov = $('#amap'); if (ov) return ov;
+    ov = el('div', { id: 'amap', class: 'amap', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'amapT', hidden: 'hidden',
+      onkeydown: function (e) {
+        if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); amClose(true); return; }
+        if (e.key !== 'Tab') return;   /* Tab stays inside the map while it is open */
+        var fs = [].filter.call(this.querySelectorAll('button:not([disabled]), a[href]'), function (n) { return n.offsetParent !== null; }); if (!fs.length) return;
+        var a = document.activeElement; if (e.shiftKey && a === fs[0]) { e.preventDefault(); fs[fs.length - 1].focus(); } else if (!e.shiftKey && a === fs[fs.length - 1]) { e.preventDefault(); fs[0].focus(); }
+      } }, [
+      el('div', { class: 'amap-top' }, [
+        el('button', { class: 'wz-back amap-back', type: 'button', id: 'amapBack', onclick: function () { amClose(true); } }, [el('span', { 'aria-hidden': 'true', text: '‹' }), el('span', { text: t('wz_back') })]),
+        el('h2', { id: 'amapT', class: 'amap-t', text: t('map_title') })]),
+      el('div', { class: 'amap-body' }, [
+        el('div', { id: 'amapMap', class: 'amap-map', 'aria-label': t('map_hint') }),
+        el('div', { class: 'amap-pin', 'aria-hidden': 'true', html: '<svg class="amap-pin-i" viewBox="0 0 36 48" width="36" height="48"><path d="M18 46c0 0 15-15.6 15-27.5C33 9.9 26.3 3 18 3S3 9.9 3 18.5C3 30.4 18 46 18 46z"/><circle cx="18" cy="18.5" r="5.5"/></svg>' }),
+        el('span', { class: 'amap-dot', 'aria-hidden': 'true' }),
+        el('button', { class: 'amap-me', type: 'button', id: 'amapMe', 'aria-label': t('map_me'), title: t('map_me'), onclick: function () { amLocate(true); } }, [icon('i-locate', 'ico')])]),
+      el('div', { class: 'amap-bar' }, [
+        el('p', { class: 'amap-hint', id: 'amapHint', text: t('map_hint') }),
+        el('p', { class: 'amap-addr', id: 'amapAddr', role: 'status', 'aria-live': 'polite' }),
+        el('button', { class: 'btn fill wide', type: 'button', id: 'amapOk', text: t('map_ok'), onclick: amDone })])]);
+    document.body.appendChild(ov);
+    return ov;
+  }
+  function amLocate(fly) {
+    if (!geoAvail()) return;
+    geoGet(function (link) { var m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(link || ''); if (m && AM.map && !$('#amap').hidden) AM.map.setView([+m[1], +m[2]], 18, { animate: !!fly }); });
+  }
+  function amOpen(btn) {
+    var f = state.form, ov = amShell(); AM.opener = btn || null;
+    $('#amapT').textContent = t('map_title'); $('#amapHint').textContent = t('map_hint'); $('#amapOk').textContent = t('map_ok'); $('#amapMe').setAttribute('aria-label', t('map_me')); $('#amapBack').lastChild.textContent = t('wz_back');
+    ov.hidden = false; document.documentElement.classList.add('amap-open'); amAddrLine(t('map_busy'), 'busy'); $('#amapOk').disabled = true; $('#amapBack').focus();
+    var start = amBias(), H = E.MAP_HOME;
+    amLoad().then(function (L) {
+      if (ov.hidden) return;
+      if (!AM.map) {
+        AM.map = L.map('amapMap', { zoomControl: false, attributionControl: true, minZoom: 10, maxZoom: 19, zoomSnap: 1 });
+        AM.map.attributionControl.setPrefix(false);
+        L.tileLayer(E.TILE_URL, { maxZoom: 19, tileSize: 256, crossOrigin: false, detectRetina: false, r: (window.devicePixelRatio || 1) > 1.4 ? '@2x' : '',   /* {r}: the sharp @2x tile on phone screens */
+          attribution: '<a href="https://www.geoapify.com/" target="_blank" rel="noopener">Powered by Geoapify</a> | <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>' }).addTo(AM.map);
+        L.control.zoom({ position: 'topright' }).addTo(AM.map);
+        AM.map.on('movestart', function () { ov.classList.add('moving'); var o = $('#amapOk'); if (o) o.disabled = true; });
+        AM.map.on('moveend', function () { ov.classList.remove('moving'); amLook(); });
+      }
+      AM.map.invalidateSize();
+      if (start) AM.map.setView([start.lat, start.lon], 18, { animate: false });   /* D-1766 (CEO TG 6012): house numbers readable */
+      else { AM.map.setView([H.lat, H.lon], H.zoom, { animate: false }); amLocate(false); }   /* the buyer's own place when he allows it */
+      amLook(); var bk = $('#amapBack'); if (bk) bk.focus();   /* focus inside the dialog at once («Доставить сюда» waits for the address) */
+    }, function () { amClose(true); f.geoMsg = 'mapfail'; geoMsgShow(); });
+  }
   /* CEO TG 5660 (20.11): a blocked permission gets no browser prompt again - say exactly where to unblock it (browser / Mac / Telegram) */
-  function geoMsgText(k) { return !k ? '' : k !== 'denied' ? t('geo_' + k) : inTg ? t('geo_denied_tg') : t('geo_denied') + (/Mac/i.test(navigator.platform || '') ? '\n\n' + t('geo_denied_mac') : ''); }
+  function geoMsgText(k) { return !k ? '' : k === 'mapfail' ? t('map_fail') : k === 'nosug' ? t('sug_none') : k !== 'denied' ? t('geo_' + k) : inTg ? t('geo_denied_tg') : t('geo_denied') + (/Mac/i.test(navigator.platform || '') ? '\n\n' + t('geo_denied_mac') : ''); }
   function geoMsgShow() { var m = $('#geoMsg'), k = state.form.geoMsg; if (!m) return; m.textContent = geoMsgText(k); m.hidden = !k; }
   function wzSteps() {
     var f = state.form, s = ['cart', 'how'];
@@ -1507,19 +1655,27 @@
       title.textContent = t('wz_addr');
       /* a textarea (2 rows): a full address is long; Enter = "Дальше", the bot gets one line anyway */
       var ad = el('textarea', { id: 'fAddr', rows: '2', maxlength: '120', autocomplete: 'street-address', enterkeyhint: 'next', 'aria-labelledby': 'sheetTitle', placeholder: t('addr_ph'),
-        oninput: function (e) { f.address = e.target.value; fieldLive(e, 'fAddr'); if (f.geoMsg && String(f.address).trim() && (f.geoMsg !== 'nohouse' || /\d/.test(f.address))) { f.geoMsg = ''; geoMsgShow(); } },
-        onblur: function () { fieldShow('fAddr', fieldMsg('fAddr')); },
-        onkeydown: function (e) { if (e.key === 'Enter') { e.preventDefault(); var fl = $('#fFloor'); if (fl) fl.focus(); else wzNext(); } } });
+        oninput: function (e) { f.address = e.target.value; fieldLive(e, 'fAddr'); if (f.geoMsg && String(f.address).trim() && (f.geoMsg !== 'nohouse' || /\d/.test(f.address))) { f.geoMsg = ''; geoMsgShow(); }
+          /* addrmap-1120: words changed after a picked house = that point is not his any more (the pin / location point stays: his words then lead) */
+          if (f.geo && f.geoBy === 'pick' && String(f.address).replace(/\s+/g, ' ').trim() !== f.geoStreet) { var hadPl = f.place; geoClear(); placeSync(); if (f.place !== hadPl) dpRender(); }
+          amType(); },
+        onblur: function () { fieldShow('fAddr', fieldMsg('fAddr')); setTimeout(function () { var a = document.activeElement; if (!a || !a.closest || !a.closest('#addrSug')) { amSeq++; amShow([]); } }, 150); },
+        onkeydown: function (e) { if (amKey(e)) return; if (e.key === 'Enter') { e.preventDefault(); var fl = $('#fFloor'); if (fl) fl.focus(); else wzNext(); } } });
+      if (amOn()) { ad.setAttribute('aria-autocomplete', 'list'); ad.setAttribute('aria-controls', 'addrSug'); }   /* a textarea keeps its textbox role (axe aria-allowed-role): the list is announced by aria-autocomplete + the active option */
       ad.value = f.address || '';
       ad.setAttribute('name', 'street-address');
       /* CEO TG 4770 (17.11): NO district chips - the street field first, as on a shop without places */
       ad.addEventListener('input', function () { var was = state.form.place || '', asked = !!state.form.placeAsk; placeSync(); if ((state.form.place || '') !== was || !!state.form.placeAsk !== asked) { var pos = ad.selectionStart; dpRender(); var a2 = $('#fAddr'); if (a2) { a2.focus({ preventScroll: true }); try { a2.setSelectionRange(pos, pos); } catch (e) { /* not a text field */ } } } });
-      box.appendChild(el('div', { class: 'f addr' }, [ad]));
+      var sug = el('ul', { id: 'addrSug', class: 'addr-sug', role: 'listbox', 'aria-label': t('sug_label') }); sug.hidden = true;
+      box.appendChild(el('div', { class: 'f addr' }, [ad, sug]));
       /* CEO live test 15.11 (D): «📍 Отправить геолокацию» when the address is hard to type - the map link of where he stands goes into the
          address field (Telegram LocationManager in the Mini App, the browser's geolocation elsewhere); floor and flat are still asked */
-      if (f.geo) box.appendChild(el('div', { class: 'geo-on', id: 'geoOn', tabindex: '-1', role: 'status' }, [icon('i-pin', 'rvx-bti'), el('span', { class: 'geo-t', text: t('geo_sent') }),
-        el('button', { class: 'geo-chg', type: 'button', id: 'geoChg', 'aria-label': t('wz_edit') + ': ' + t('geo_sent'), text: t('wz_edit'), onclick: function () { if (f.geoStreet && String(f.address || '').trim() === f.geoStreet) f.address = ''; f.geo = ''; f.geoFound = false; f.geoPlace = ''; f.geoSeveral = null; f.geoStreet = ''; if (f.placeBy !== 'text') { f.placeBy = ''; f.place = ''; } f.placeAsk = false; dpRender(); var b = $('#fGeo'); if (b) b.focus(); } })]));
+      /* addrmap-1120: a pin from the map shows «Точка на карте» and its «Изменить» opens the map again; a picked house needs no line (the field says it) */
+      var pinned = f.geo && f.geoBy === 'pin', gsent = pinned ? t('pin_sent') : t('geo_sent');
+      if (f.geo && f.geoBy !== 'pick') box.appendChild(el('div', { class: 'geo-on', id: 'geoOn', tabindex: '-1', role: 'status' }, [icon('i-pin', 'rvx-bti'), el('span', { class: 'geo-t', text: gsent }),
+        el('button', { class: 'geo-chg', type: 'button', id: 'geoChg', 'aria-label': t('wz_edit') + ': ' + gsent, text: t('wz_edit'), onclick: function () { if (pinned && amOn()) { amOpen(this); return; } geoClear(); dpRender(); var b = $('#fGeo'); if (b) b.focus(); } })]));
       else if (geoAvail()) box.appendChild(el('button', { class: 'btn wide wz-geo', type: 'button', id: 'fGeo', onclick: function () { geoFill(this); } }, [icon('i-pin', 'rvx-bti'), el('span', { text: t('geo_btn') })]));
+      if (amOn() && !pinned) box.appendChild(el('button', { class: 'btn wide wz-geo wz-map', type: 'button', id: 'fMap', onclick: function () { amOpen(this); } }, [icon('i-map', 'rvx-bti'), el('span', { text: t('map_btn') })]));
       var gm = el('p', { class: 'hint geo-msg', id: 'geoMsg', role: 'alert', text: geoMsgText(f.geoMsg) }); if (!f.geoMsg) gm.hidden = true; box.appendChild(gm);
       dpPlaceInfo(box, tt);
       /* floor + flat REQUIRED side by side, door code and a note for the courier optional (CEO 15.11) */
@@ -1644,7 +1800,7 @@
   function addrFull(lg) { var f = state.form; return E.courierAddress(addrStreet(), dpPlaces().length ? f.place : '', { floor: f.floor, apt: f.apt, code: f.code }, lg); }
   /* the buyer reads «Геолокация отправлена» in place of the link */
   function addrShown() {
-    var f = state.form, a = String(f.address || '').replace(/\s+/g, ' ').trim(), gs = t('geo_sent'), st = [a, f.geo ? (a || dpPlaces().length ? gs.charAt(0).toLowerCase() + gs.slice(1) : gs) : ''].filter(Boolean).join(', ');
+    var f = state.form, a = String(f.address || '').replace(/\s+/g, ' ').trim(), gs = t(f.geoBy === 'pin' ? 'pin_sent' : 'geo_sent'), st = [a, f.geo && f.geoBy !== 'pick' ? (a || dpPlaces().length ? gs.charAt(0).toLowerCase() + gs.slice(1) : gs) : ''].filter(Boolean).join(', ');
     var n = String(f.cnote || '').replace(/\s+/g, ' ').trim();
     return E.courierAddress(st, dpPlaces().length ? f.place : '', { floor: f.floor, apt: f.apt, code: f.code }, lang) + (n ? ' · ' + n : '');
   }
@@ -2313,6 +2469,7 @@
   });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
+    var am = $('#amap'); if (am && !am.hidden) { amClose(true); return; }
     if (closeRev()) return;
     var ov = !!document.querySelector('.ovl.on'), sh = $('#sheet').classList.contains('on');
     closeOverlays(); if (sh) closeSheet();
@@ -2325,6 +2482,7 @@
      Outside Telegram nothing changes (Esc above, the x buttons). */
   function tgLayer() { return $('#ovlRev').classList.contains('on') || !$('#qnSheet').hidden || !!document.querySelector('.ovl.on') || $('#sheet').classList.contains('on') || srchIsOpen(); }
   function tgBack() {
+    var am = $('#amap'); if (am && !am.hidden) { amClose(true); return; }   /* addrmap-1120: the map is the top layer over the checkout */
     if (closeRev() || qnClose()) return;
     if (document.querySelector('.ovl.on')) { closeOverlays(); return; }
     if ($('#sheet').classList.contains('on')) { if (state.view === 'cart' && $('#wzBack')) wzBack(); else closeSheet(); return; }
