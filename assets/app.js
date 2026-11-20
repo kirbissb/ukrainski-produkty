@@ -52,7 +52,7 @@
         '{F:courier}: {f:courier_fees}. Любой город Турции, карго {f:cargo_via}. {F:cargo_fee}. В корзине выберите «{F:cargo}».',
         '{F:pickup}: {f:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
       nb_none: 'день пока не назначен', nb_day: 'ближайшая: {d}',
-      foot_phone: 'Телефон', foot_wa: 'WhatsApp', legal_dlv_link: 'Доставка и оплата', legal_data_link: 'Персональные данные', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Вопросы',
+      foot_phone: 'Телефон', foot_wa: 'WhatsApp', legal_dlv_link: 'Доставка и оплата', legal_data_link: 'Персональные данные', legal_terms_link: 'Условия заказа', legal_ret_link: 'Возврат и замена', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Вопросы',
       owner_cap: 'Так владелец ведёт заказы, наличие и цены: чат в Telegram, без кабинета',
       usd_note: 'цена в $, в корзине - отдельной суммой в $',
       producer: 'Производитель: {b}',
@@ -67,7 +67,8 @@
       pay_card: '{F:pay}', pay_cash: '{F:pay_cash}',
       done_title: 'Заказ принят', ups_h: 'К этому часто берут', ups_add: 'Добавить', ups_added: 'Добавлено', done_no: 'Заказ', done_date: 'желаемая дата', tg_btn: 'Написать в Telegram', back: 'Вернуться в каталог',
       n_title: 'Сообщить о поставке', n_for: 'Когда привезём «{n}», напишем вам.', n_send: 'Сообщить мне', n_ok: 'Записали', n_ok_t: 'Напишем в Telegram или WhatsApp, как только «{n}» приедет.', n_close: 'Закрыть',
-      consent_pre: 'Отправляя заказ, вы соглашаетесь с ', consent_link: 'обработкой данных для доставки', consent_post: '.',
+      consent_pre: 'Данные нужны только для заказа и доставки. ', consent_link: 'Кто их видит', consent_post: '',
+      consent_notify: 'Имя и телефон нужны только, чтобы написать вам о поставке. ', consent_special: 'Данные нужны только, чтобы ответить на вашу просьбу. ',
       legal_dlv: { h: 'Доставка и оплата', items: [
         ['Как принимаем заказ', 'Заказ на сайте - это заявка. В течение часа мы подтверждаем его в Telegram или WhatsApp и называем точный вес и сумму: весовые продукты взвешиваем, поэтому итог может немного отличаться от суммы в корзине. {F:min}. Позиции «под заказ» привозим с ближайшей поставкой.'],
         ['{F:pickup}', '{F:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
@@ -76,16 +77,29 @@
         ['Оплата', '{F:pay_all}. Номер карты для перевода присылаем вместе с точной суммой после подтверждения. Цены - в турецких лирах (₺). Товары с ценой в долларах ($) указаны и считаются в долларах, отдельной суммой; реквизиты для оплаты присылаем вместе с подтверждением.'],
         ['При получении', 'Проверьте заказ при получении. Если что-то не так, напишите нам в Telegram t.me/ukrtovari.']] },
       legal_data: { h: 'Персональные данные', items: [
-        ['Кто получает данные', 'Владелец магазина «{brand}». Он принимает и собирает ваш заказ.'],
-        ['Что мы получаем', 'Из заказа на сайте: имя, телефон, город и адрес доставки, способ оплаты, дату, комментарий и состав заказа. Из переписки в Telegram, Instagram и WhatsApp: ваши сообщения, голосовые, фото и имя из профиля. Из формы «Сообщить о поставке»: имя и телефон.'],
+        ['Кто получает данные', 'Владелец магазина «{brand}». Он принимает и собирает ваш заказ и решает, как используются ваши данные.'],
+        ['Что мы получаем', 'Из заказа на сайте: имя, телефон, город и адрес доставки, геолокацию, если вы её отправили, способ оплаты, дату, комментарий и состав заказа. Из переписки в Telegram, Instagram и WhatsApp: ваши сообщения, голосовые, фото и имя из профиля. Из форм «Сообщить о поставке» и «Привезти под заказ»: имя, телефон и то, что вы написали.'],
         ['Зачем', 'Чтобы ответить на ваш вопрос, принять, подтвердить и доставить заказ. Рекламу и рассылки без вашего согласия не присылаем.'],
-        ['Кто отвечает в чате', 'Сначала отвечает помощник магазина - программа с искусственным интеллектом. Сложные вопросы он передаёт владельцу. Чтобы написать ответ, текст переписки обрабатывает сервис Anthropic (США). Он не использует ваши сообщения для обучения своих программ.'],
-        ['Где хранятся данные', 'Заказы и переписка хранятся на защищённых серверах Cloudflare. Там же голосовые сообщения переводятся в текст. Учёт товаров и заказов владелец может вести в своей Google-таблице.'],
+        ['Кто отвечает в чате', 'Сначала отвечает помощник магазина - программа с искусственным интеллектом. Он может ошибиться: если что-то важно, уточните у владельца. Сложные вопросы помощник передаёт владельцу. Помощника для магазина обслуживает подрядчик.'],
+        ['Какие сервисы обрабатывают данные', 'Ответы в чате пишет ИИ компании Anthropic. Если он не отвечает, запасной ИИ - OpenAI или Google. Anthropic и OpenAI не учат свой ИИ на ваших сообщениях. Голосовые сообщения переводит в текст Cloudflare. Если вы отправили геолокацию, улицу по ней находит сервис карт OpenStreetMap. Ссылки, которые вы присылаете в чат, проверяются на опасность сервисами Google и abuse.ch.'],
+        ['Где хранятся данные', 'Заказы и переписка хранятся на защищённых серверах Cloudflare в Восточной Европе. Записи голоса и ваши картинки помощник не хранит, картинки передаются владельцу. Учёт товаров и заказов владелец может вести в своей Google-таблице.'],
         ['Кто ещё видит', 'Курьер или карго-служба получают только то, что нужно для доставки. Мы не продаём ваши данные.'],
         ['Что хранится в вашем браузере', 'Сайт запоминает корзину, язык и данные формы (имя, телефон, город, доставку и оплату) на вашем устройстве, чтобы в следующий раз не вводить их заново. Ещё там лежит одно случайное число: по нему магазин считает, какие товары из подборки к корзине смотрят и добавляют. Имя, телефон и адрес в нём не хранятся. Удалить всё это можно, очистив данные сайта в настройках браузера.'],
         ['Счётчик посещений', 'Cloudflare, на серверах которого работает сайт, считает посещения страниц без куки и без данных, по которым можно узнать вас. Рекламных счётчиков на сайте нет.'],
-        ['Сколько храним и как удалить', 'Храним, пока вы не попросите удалить. Напишите нам в Telegram t.me/ukrtovari или в Instagram @ukr.product.alanya - исправим или удалим.'],
-        ['', 'Обновлено 14.11.2026']] }
+        ['Сколько храним и как удалить', 'Храним, пока вы не попросите удалить. Чтобы посмотреть, исправить или удалить свои данные, напишите нам в Telegram t.me/ukrtovari или в Instagram @ukr.product.alanya.'],
+        ['', 'Обновлено 20.11.2026']] },
+      legal_terms: { h: 'Условия заказа', items: [
+        ['Продавец', 'Магазин «{brand}». Связь с нами: Telegram t.me/ukrtovari, Instagram @ukr.product.alanya.'],
+        ['Как принимаем заказ', 'Заказ на сайте - это заявка. Заказ принят, когда мы подтвердили его в Telegram или WhatsApp и назвали точный вес и сумму. Позиции «под заказ» привозим с ближайшей поставкой.'],
+        ['Цены', 'Цены - в турецких лирах (₺). Товары с ценой в долларах ($) считаются в долларах, отдельной суммой. Весовые продукты взвешиваем, поэтому итог может немного отличаться от суммы в корзине. Точную сумму называем в подтверждении.'],
+        ['Оплата и доставка', 'Платите после подтверждения. Способы оплаты и доставки - в разделе «Доставка и оплата».'],
+        ['Ответы помощника', 'В чате сначала отвечает помощник на ИИ. Он может ошибиться. Вес, цена и сумма - такие, как в подтверждении заказа.'],
+        ['Если что-то не так', 'Проверьте заказ при получении. Подробнее - в разделе «Возврат и замена».'],
+        ['', 'Обновлено 20.11.2026']] },
+      legal_ret: { h: 'Возврат и замена', items: [
+        ['При получении', 'Проверьте заказ при получении.'],
+        ['Если что-то не так', 'Напишите нам в Telegram t.me/ukrtovari или в Instagram @ukr.product.alanya.'],
+        ['', 'Обновлено 20.11.2026']] }
     },
     uk: {
       brand: 'Українські продукти', brand_sub: 'Аланія', brand_full: 'Українські продукти · Аланія', foot_tag: 'доставка по всій Туреччині',
@@ -124,7 +138,7 @@
         '{F:courier}: {f:courier_fees}. Будь-яке місто Туреччини, карго {f:cargo_via}. {F:cargo_fee}. У кошику оберіть «{F:cargo}».',
         '{F:pickup}: {f:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
       nb_none: 'день поки не призначено', nb_day: 'найближча: {d}',
-      foot_phone: 'Номер телефону', foot_wa: 'WhatsApp', legal_dlv_link: 'Доставка та оплата', legal_data_link: 'Персональні дані', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Питання',
+      foot_phone: 'Номер телефону', foot_wa: 'WhatsApp', legal_dlv_link: 'Доставка та оплата', legal_data_link: 'Персональні дані', legal_terms_link: 'Умови замовлення', legal_ret_link: 'Повернення та заміна', nav_catalog: 'Каталог', nav_delivery: 'Доставка', nav_faq: 'Питання',
       owner_cap: 'Так власник веде замовлення, наявність і ціни: чат у Telegram, без кабінету',
       usd_note: 'ціна в $, у кошику - окремою сумою в $',
       producer: 'Виробник: {b}',
@@ -139,7 +153,8 @@
       pay_card: '{F:pay}', pay_cash: '{F:pay_cash}',
       done_title: 'Замовлення прийнято', ups_h: 'До цього часто беруть', ups_add: 'Додати', ups_added: 'Додано', done_no: 'Замовлення', done_date: 'бажана дата', tg_btn: 'Написати в Telegram', back: 'Повернутися в каталог',
       n_title: 'Повідомити про поставку', n_for: 'Коли привеземо «{n}», напишемо вам.', n_send: 'Повідомте мене', n_ok: 'Записали', n_ok_t: 'Напишемо в Telegram або WhatsApp, щойно «{n}» приїде.', n_close: 'Закрити',
-      consent_pre: 'Надсилаючи замовлення, ви погоджуєтеся з ', consent_link: 'обробкою даних для доставки', consent_post: '.',
+      consent_pre: 'Дані потрібні лише для замовлення й доставки. ', consent_link: 'Хто їх бачить', consent_post: '',
+      consent_notify: 'Ім\'я та номер телефону потрібні лише, щоб написати вам про поставку. ', consent_special: 'Дані потрібні лише, щоб відповісти на ваш запит. ',
       legal_dlv: { h: 'Доставка та оплата', items: [
         ['Як приймаємо замовлення', 'Замовлення на сайті - це заявка. Протягом години ми підтверджуємо його в Telegram або WhatsApp і називаємо точну вагу та суму: вагові продукти зважуємо, тому підсумок може трохи відрізнятися від суми в кошику. {F:min}. Позиції «під замовлення» привозимо з найближчою поставкою.'],
         ['{F:pickup}', '{F:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
@@ -148,16 +163,29 @@
         ['Оплата', '{F:pay_all}. Номер картки для переказу надсилаємо разом з точною сумою після підтвердження. Ціни - у турецьких лірах (₺). Товари з ціною в доларах ($) вказані й рахуються в доларах, окремою сумою; реквізити для оплати надсилаємо разом із підтвердженням.'],
         ['При отриманні', 'Перевірте замовлення при отриманні. Якщо щось не так, напишіть нам у Telegram t.me/ukrtovari.']] },
       legal_data: { h: 'Персональні дані', items: [
-        ['Хто отримує дані', 'Власник магазину «{brand}». Він приймає та збирає ваше замовлення.'],
-        ['Що ми отримуємо', 'Із замовлення на сайті: ім\'я, номер телефону, місто та адресу доставки, спосіб оплати, дату, коментар і склад замовлення. Із листування в Telegram, Instagram і WhatsApp: ваші повідомлення, голосові, фото та ім\'я з профілю. З форми «Повідомити про поставку»: ім\'я та номер телефону.'],
+        ['Хто отримує дані', 'Власник магазину «{brand}». Він приймає та збирає ваше замовлення і вирішує, як використовуються ваші дані.'],
+        ['Що ми отримуємо', 'Із замовлення на сайті: ім\'я, номер телефону, місто та адресу доставки, геолокацію, якщо ви її надіслали, спосіб оплати, дату, коментар і склад замовлення. Із листування в Telegram, Instagram і WhatsApp: ваші повідомлення, голосові, фото та ім\'я з профілю. З форм «Повідомити про поставку» і «Привезти під замовлення»: ім\'я, номер телефону і те, що ви написали.'],
         ['Навіщо', 'Щоб відповісти на ваше запитання, прийняти, підтвердити й доставити замовлення. Рекламу та розсилки без вашої згоди не надсилаємо.'],
-        ['Хто відповідає в чаті', 'Спершу відповідає помічник магазину - програма зі штучним інтелектом. Складні питання він передає власнику. Щоб написати відповідь, текст листування обробляє сервіс Anthropic (США). Він не використовує ваші повідомлення для навчання своїх програм.'],
-        ['Де зберігаються дані', 'Замовлення та листування зберігаються на захищених серверах Cloudflare. Там само голосові повідомлення перетворюються на текст. Облік товарів і замовлень власник може вести у своїй Google-таблиці.'],
+        ['Хто відповідає в чаті', 'Спершу відповідає помічник магазину - програма зі штучним інтелектом. Він може помилитися: якщо щось важливо, уточніть у власника. Складні питання помічник передає власнику. Помічника для магазину обслуговує підрядник.'],
+        ['Які сервіси обробляють дані', 'Відповіді в чаті пише ШІ компанії Anthropic. Якщо він не відповідає, запасний ШІ - OpenAI або Google. Anthropic і OpenAI не навчають свій ШІ на ваших повідомленнях. Голосові повідомлення перетворює на текст Cloudflare. Якщо ви надіслали геолокацію, вулицю за нею знаходить сервіс карт OpenStreetMap. Посилання, які ви надсилаєте в чат, перевіряють на небезпеку сервіси Google і abuse.ch.'],
+        ['Де зберігаються дані', 'Замовлення та листування зберігаються на захищених серверах Cloudflare у Східній Європі. Записи голосу й ваші картинки помічник не зберігає, картинки передаються власнику. Облік товарів і замовлень власник може вести у своїй Google-таблиці.'],
         ['Хто ще бачить', 'Кур\'єр або карго-служба отримують лише те, що потрібно для доставки. Ми не продаємо ваші дані.'],
         ['Що зберігається у вашому браузері', 'Сайт запам\'ятовує кошик, мову та дані форми (ім\'я, номер телефону, місто, доставку й оплату) на вашому пристрої, щоб наступного разу не вводити їх знову. Ще там зберігається одне випадкове число: за ним магазин рахує, які товари з добірки до кошика переглядають і додають. Ім\'я, номер телефону й адреса в ньому не зберігаються. Видалити все це можна, очистивши дані сайту в налаштуваннях браузера.'],
         ['Лічильник відвідувань', 'Cloudflare, на серверах якого працює сайт, рахує відвідування сторінок без кукі й без даних, за якими можна впізнати вас. Рекламних лічильників на сайті немає.'],
-        ['Скільки зберігаємо і як видалити', 'Зберігаємо, доки ви не попросите видалити. Напишіть нам у Telegram t.me/ukrtovari або в Instagram @ukr.product.alanya - виправимо або видалимо.'],
-        ['', 'Оновлено 14.11.2026']] }
+        ['Скільки зберігаємо і як видалити', 'Зберігаємо, доки ви не попросите видалити. Щоб переглянути, виправити або видалити свої дані, напишіть нам у Telegram t.me/ukrtovari або в Instagram @ukr.product.alanya.'],
+        ['', 'Оновлено 20.11.2026']] },
+      legal_terms: { h: 'Умови замовлення', items: [
+        ['Продавець', 'Магазин «{brand}». Зв\'язок з нами: Telegram t.me/ukrtovari, Instagram @ukr.product.alanya.'],
+        ['Як приймаємо замовлення', 'Замовлення на сайті - це заявка. Замовлення прийнято, коли ми підтвердили його в Telegram або WhatsApp і назвали точну вагу та суму. Позиції «під замовлення» привозимо з найближчою поставкою.'],
+        ['Ціни', 'Ціни - у турецьких лірах (₺). Товари з ціною в доларах ($) рахуються в доларах, окремою сумою. Вагові продукти зважуємо, тому підсумок може трохи відрізнятися від суми в кошику. Точну суму називаємо в підтвердженні.'],
+        ['Оплата та доставка', 'Платите після підтвердження. Способи оплати та доставки - у розділі «Доставка та оплата».'],
+        ['Відповіді помічника', 'У чаті спершу відповідає помічник на ШІ. Він може помилитися. Вага, ціна й сума - такі, як у підтвердженні замовлення.'],
+        ['Якщо щось не так', 'Перевірте замовлення при отриманні. Докладніше - у розділі «Повернення та заміна».'],
+        ['', 'Оновлено 20.11.2026']] },
+      legal_ret: { h: 'Повернення та заміна', items: [
+        ['При отриманні', 'Перевірте замовлення при отриманні.'],
+        ['Якщо щось не так', 'Напишіть нам у Telegram t.me/ukrtovari або в Instagram @ukr.product.alanya.'],
+        ['', 'Оновлено 20.11.2026']] }
     },
     en: {
       brand: 'Ukrainian products', brand_sub: 'Alanya', brand_full: 'Ukrainian products · Alanya', foot_tag: 'delivery across Turkey',
@@ -196,7 +224,7 @@
         '{F:courier}: {f:courier_fees}. Any city in Turkey, {F:cargo_via}. {F:cargo_fee}. Choose "{F:cargo}" in the cart.',
         '{F:pickup}: {f:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
       nb_none: 'no day set yet', nb_day: 'next: {d}',
-      foot_phone: 'Phone', foot_wa: 'WhatsApp', legal_dlv_link: 'Delivery and payment', legal_data_link: 'Personal data', nav_catalog: 'Catalog', nav_delivery: 'Delivery', nav_faq: 'Questions',
+      foot_phone: 'Phone', foot_wa: 'WhatsApp', legal_dlv_link: 'Delivery and payment', legal_data_link: 'Personal data', legal_terms_link: 'Order terms', legal_ret_link: 'Returns and replacement', nav_catalog: 'Catalog', nav_delivery: 'Delivery', nav_faq: 'Questions',
       owner_cap: 'This is how the owner runs orders, stock and prices: a Telegram chat, no back office',
       usd_note: 'price in $, totalled separately in $ in the cart',
       producer: 'Producer: {b}',
@@ -211,7 +239,8 @@
       pay_card: '{F:pay}', pay_cash: '{F:pay_cash}',
       done_title: 'Order received', ups_h: 'Often added to this', ups_add: 'Add', ups_added: 'Added', done_no: 'Order', done_date: 'preferred date', tg_btn: 'Message us on Telegram', back: 'Back to catalog',
       n_title: 'Notify me when back in stock', n_for: 'We\'ll let you know when "{n}" is back in stock.', n_send: 'Notify me', n_ok: 'You\'re on the list', n_ok_t: 'We\'ll message you on Telegram or WhatsApp as soon as "{n}" is back.', n_close: 'Close',
-      consent_pre: 'By confirming your order, you agree to the ', consent_link: 'processing of your data for delivery', consent_post: '.',
+      consent_pre: 'Your details are used only for the order and delivery. ', consent_link: 'Who sees them', consent_post: '',
+      consent_notify: 'Your name and phone are used only to tell you it is back. ', consent_special: 'Your details are used only to answer your request. ',
       legal_dlv: { h: 'Delivery and payment', items: [
         ['How we take an order', 'An order placed on the site is a request. Within an hour we confirm it on Telegram or WhatsApp with the exact weight and total: weighed goods are weighed, so the total can differ slightly from the cart. {F:min}. Pre-order items arrive with the next batch.'],
         ['{F:pickup}', '{F:pickup_addr}. {F:pickup_fee}, {f:pickup_hours}.'],
@@ -220,16 +249,29 @@
         ['Payment', '{F:pay_all}. We send the card number for the transfer together with the exact total after confirmation. Prices are in Turkish lira (₺). Goods priced in dollars ($) are priced and totalled in dollars, as a separate sum; we send the payment details with the confirmation.'],
         ['On receipt', 'Check your order when you receive it. If something is wrong, write to us on Telegram t.me/ukrtovari.']] },
       legal_data: { h: 'Personal data', items: [
-        ['Who receives the data', 'The owner of the shop "{brand}". The owner takes and packs your order.'],
-        ['What we receive', 'From an order on the site: your name, phone, city and delivery address, payment method, date, comment and the items in your order. From chats on Telegram, Instagram and WhatsApp: your messages, voice messages, photos and the name in your profile. From the "Notify me when back in stock" form: name and phone.'],
+        ['Who receives the data', 'The owner of the shop "{brand}". The owner takes and packs your order and decides how your data is used.'],
+        ['What we receive', 'From an order on the site: your name, phone, city and delivery address, your location if you sent it, payment method, date, comment and the items in your order. From chats on Telegram, Instagram and WhatsApp: your messages, voice messages, photos and the name in your profile. From the "Notify me when back in stock" and "Special order" forms: name, phone and what you wrote.'],
         ['Why', 'To answer your question and to take, confirm and deliver your order. We do not send you ads or mailings without your consent.'],
-        ['Who answers in the chat', 'First, the shop\'s assistant answers - a program that uses artificial intelligence. It passes hard questions to the owner. To write a reply, the chat text is processed by Anthropic (USA). Anthropic does not use your messages to train its programs.'],
-        ['Where the data is kept', 'Orders and chats are kept on secure Cloudflare servers. Voice messages are turned into text there too. The owner may keep track of products and orders in their own Google Sheet.'],
+        ['Who answers in the chat', 'First, the shop\'s assistant answers - a program that uses artificial intelligence. It can make mistakes: if something matters, check with the owner. It passes hard questions to the owner. A contractor runs the assistant for the shop.'],
+        ['Which services process the data', 'Chat replies are written by the AI of Anthropic. If it does not answer, the backup AI is OpenAI or Google. Anthropic and OpenAI do not train their AI on your messages. Cloudflare turns voice messages into text. If you sent your location, the map service OpenStreetMap finds the street for it. Links you send in the chat are checked for danger by Google and abuse.ch.'],
+        ['Where the data is kept', 'Orders and chats are kept on secure Cloudflare servers in Eastern Europe. The assistant does not keep voice recordings or your pictures; pictures are passed to the owner. The owner may keep track of products and orders in their own Google Sheet.'],
         ['Who else sees it', 'The courier or cargo service gets only what the delivery needs. We do not sell your data.'],
         ['What is kept in your browser', 'The site remembers your cart, language and form details (name, phone, city, delivery and payment) on your device, so you do not have to type them again next time. It also keeps one random number, so the shop can count which suggested add-ons in the cart are seen and added. Your name, phone and address are not in it. You can delete all of this by clearing the site data in your browser settings.'],
         ['Visit counter', 'Cloudflare, whose servers run this site, counts page visits without cookies and without data that could identify you. There are no advertising trackers on the site.'],
-        ['How long we keep it and how to delete it', 'We keep it until you ask us to delete it. Write to us on Telegram t.me/ukrtovari or on Instagram @ukr.product.alanya - we will correct or delete it.'],
-        ['', 'Updated 14.11.2026']] }
+        ['How long we keep it and how to delete it', 'We keep it until you ask us to delete it. To see, correct or delete your data, write to us on Telegram t.me/ukrtovari or on Instagram @ukr.product.alanya.'],
+        ['', 'Updated 20.11.2026']] },
+      legal_terms: { h: 'Order terms', items: [
+        ['Seller', 'The shop "{brand}". Contact us: Telegram t.me/ukrtovari, Instagram @ukr.product.alanya.'],
+        ['How we take an order', 'An order placed on the site is a request. The order is accepted when we have confirmed it on Telegram or WhatsApp with the exact weight and total. Pre-order items arrive with the next batch.'],
+        ['Prices', 'Prices are in Turkish lira (₺). Goods priced in dollars ($) are totalled in dollars, as a separate sum. Weighed goods are weighed, so the total can differ slightly from the cart. We give the exact total in the confirmation.'],
+        ['Payment and delivery', 'You pay after the confirmation. Payment and delivery options are in "Delivery and payment".'],
+        ['Assistant replies', 'In the chat, an AI assistant answers first. It can make mistakes. The weight, price and total are the ones in the order confirmation.'],
+        ['If something is wrong', 'Check your order when you receive it. More in "Returns and replacement".'],
+        ['', 'Updated 20.11.2026']] },
+      legal_ret: { h: 'Returns and replacement', items: [
+        ['On receipt', 'Check your order when you receive it.'],
+        ['If something is wrong', 'Write to us on Telegram t.me/ukrtovari or on Instagram @ukr.product.alanya.'],
+        ['', 'Updated 20.11.2026']] }
     }
   };
 
@@ -505,7 +547,7 @@
   });
   function renderLegal(which) {
     if (which) state.legal = which;
-    var doc = I18N[lang][state.legal === 'data' ? 'legal_data' : 'legal_dlv'];
+    var doc = I18N[lang][{ data: 'legal_data', terms: 'legal_terms', ret: 'legal_ret' }[state.legal] || 'legal_dlv'];
     var v = { brand: t('brand_full') };
     var b = $('#legalBody'); b.innerHTML = '';
     b.appendChild(el('h2', { text: doc.h }));
@@ -1472,7 +1514,8 @@
     if (primary) row.appendChild(primary);
     foot.appendChild(row);
     if (st === 'review' && rvxAfter) { foot.appendChild(rvxAfter); rvxAfter = null; }
-    if (st === 'review') foot.appendChild(consentLine());
+    /* D-1708: the notice where the data is typed (address + geolocation, city, name + phone) and where the order is sent */
+    if (st === 'review' || st === 'addr' || st === 'where' || st === 'contact') foot.appendChild(consentLine());
     foot.appendChild(el('p', { class: 'err', id: 'formErr', role: 'alert' }));
   }
   /* v5 (CEO 11.10): day chips (today / tomorrow, real dates, Alanya time) + window chips from the bot settings; a window that ends
@@ -1914,6 +1957,7 @@
         var e = $('#nErr'); if (e) e.textContent = t('err_contact');
       });
     } }));
+    foot.appendChild(consentLine('notify'));   /* W-DATA-04: the notify form had no notice */
     foot.appendChild(el('p', { class: 'err', id: 'nErr' }));
   }
 
@@ -2033,8 +2077,8 @@
     if (tgHand) rvxAfter = el('p', { class: 'tgnote rvx-tg2', id: 'tgNote' }, [icon('c-tg', 'rvx-tgi'), el('span', { text: t('tg_note') })]);
     return el('button', { class: 'btn fill', type: 'button', id: 'sendBtn', onclick: submit }, [el('span', { text: t('send') })]);
   }
-  function consentLine() {
-    return el('p', { class: 'consent' }, [t('consent_pre'), el('a', { href: '#personal-data', text: t('consent_link'), onclick: function (e) { e.preventDefault(); openOverlay('legal', 'data'); } }), t('consent_post')]);
+  function consentLine(kind) {   /* D-1708 (20.11): a notice at every form - what the data is for + who sees it; no checkbox (no consent-only use) */
+    return el('p', { class: 'consent' }, [t(kind ? 'consent_' + kind : 'consent_pre'), el('a', { href: '#personal-data', text: t('consent_link'), onclick: function (e) { e.preventDefault(); openOverlay('legal', 'data'); } }), t('consent_post')]);
   }
   function renderSpecial(body, foot) {
     $('#sheetTitle').textContent = t('cta_special');
@@ -2062,7 +2106,7 @@
       n.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); var all = body.querySelectorAll('input, textarea'), i = Array.prototype.indexOf.call(all, n); if (all[i + 1]) all[i + 1].focus(); } });
     });
     foot.appendChild(el('button', { class: 'btn fill wide', type: 'button', id: 'spSend', text: t('sp_send'), onclick: submitSpecial }));
-    foot.appendChild(consentLine());
+    foot.appendChild(consentLine('special'));
     foot.appendChild(el('p', { class: 'err', id: 'spErr', role: 'alert' }));
   }
   function submitSpecial() {
@@ -2129,15 +2173,18 @@
     [$('#ovlBot'), $('#ovlLegal')].forEach(function (o) { o.classList.remove('on'); o.setAttribute('aria-hidden', 'true'); });
     $('#botFrame').src = 'about:blank';
     $('#bar').style.visibility = '';
-    if (location.hash === '#personal-data') history.replaceState(null, '', location.pathname + location.search);
+    if (LEGAL_HASH[location.hash]) history.replaceState(null, '', location.pathname + location.search);
     if (!$('#sheet').classList.contains('on')) document.body.classList.remove('locked');
     refresh();
   }
   document.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', closeOverlays); });
-  $('#legalDlvLink').addEventListener('click', function (e) { e.preventDefault(); openOverlay('legal', 'dlv'); });
-  $('#legalDataLink').addEventListener('click', function (e) { e.preventDefault(); openOverlay('legal', 'data'); });
+  /* D-1708 (20.11): footer documents - order terms, returns, delivery and payment, personal data; each has a deep link */
+  var LEGAL_HASH = { '#terms': 'terms', '#returns': 'ret', '#delivery-terms': 'dlv', '#personal-data': 'data' };
+  [['#legalTermsLink', 'terms'], ['#legalRetLink', 'ret'], ['#legalDlvLink', 'dlv'], ['#legalDataLink', 'data']].forEach(function (p) {
+    var a = $(p[0]); if (a) a.addEventListener('click', function (e) { e.preventDefault(); openOverlay('legal', p[1]); });
+  });
   /* 22.10 deep link: #personal-data opens the personal-data text (privacy policy URL for the bot, Meta app, footer) */
-  function legalFromHash() { if (location.hash === '#personal-data') openOverlay('legal', 'data'); }
+  function legalFromHash() { if (LEGAL_HASH[location.hash]) openOverlay('legal', LEGAL_HASH[location.hash]); }
   window.addEventListener('hashchange', legalFromHash);
   window.addEventListener('message', function (e) {
     if (e.source !== $('#botFrame').contentWindow) return;

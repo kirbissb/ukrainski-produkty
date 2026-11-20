@@ -1575,3 +1575,11 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
 .wz-foot .btn.fill:active:not([disabled]) { transform: scale(0.97); }
 /* 17.11: at 320 px «Подтвердить в Telegram» ran 6 px past its button (icon + 17 px label in a 198 px button); narrow phones get a tighter button and the label may take two lines */
 @media (max-width: 340px) { .sheet.rvx #sendBtn { padding: 0 10px; gap: 8px; font-size: 15px; } .sheet.rvx #sendBtn > span { white-space: normal; text-align: center; min-width: 0; } }
+
+/* D-1708 (20.11): the data notice on the checkout steps where data is typed (address + geolocation, city, contacts) is the SAME quiet
+   one-line footnote as on the check screen (CEO TG 1502 look), not a centred two-line paragraph under the buttons */
+.sheet.wz-on .foot { container-type: inline-size; }
+.sheet.wz-on .foot .consent { white-space: nowrap; margin: 20px -8px 0; text-align: left; letter-spacing: 0; line-height: 1.3; color: var(--ink-3);
+  font-size: min(10.5px, calc((100cqi + 16px) / 35.6)); }
+.sheet.wz-on .foot .consent:is(:lang(uk), :lang(en)) { font-size: min(10.5px, calc((100cqi + 16px) / 38)); }
+.sheet.wz-on .foot .consent a { color: var(--ink-3); text-decoration: underline; text-underline-offset: 2px; padding: 17px 0; margin: -17px 0; }
