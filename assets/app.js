@@ -1089,6 +1089,7 @@
         /* item 6 + live look 17.11 (3): the point is in, the street is not -> say so; the street came without a house number -> ask for it */
         f.geoMsg = !r.street && !String(f.address || '').trim() ? 'nostreet' : f.geoStreet && !/\d/.test(f.geoStreet) ? 'nohouse' : '';
         placeSync(); if (dpPlaces().length && !f.place) f.placeAsk = true;
+        if (geoFar()) f.geoMsg = '';   /* a far point: the cargo line is the only message, no «add the house number» */
         var e = $('#formErr'); if (e) e.textContent = ''; dpRender();
         if (askShow()) return;
         if (f.geoMsg) { var ad2 = $('#fAddr'); if (ad2) { ad2.focus(); try { ad2.setSelectionRange(ad2.value.length, ad2.value.length); } catch (x) { /* old browser */ } return; } }   /* the street needs his hand first */
