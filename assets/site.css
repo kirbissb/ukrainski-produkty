@@ -1588,3 +1588,12 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
 .wz-addr .dp-far p { margin: 0 4px 10px; color: var(--ink-2); font-size: 15px; line-height: 1.4; }
 .wz-addr .dp-far .btn { min-height: 48px; }
 .wz-addr .dp-pl > .dp-pl-fee:only-child { grid-column: 1 / -1; }
+/* item 3 (CEO TG 5436): the time wheel on a computer shows an up and a down arrow on its right edge (hidden on touch screens) */
+.dwh-ar { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .dwh-ar { display: flex; position: absolute; right: 4px; width: 44px; height: 44px; align-items: center; justify-content: center; padding: 0;
+    border: 0; border-radius: var(--r); background: transparent; color: var(--ink-2); font-size: 22px; line-height: 1; cursor: pointer; }
+  .dwh-ar.up { top: 0; } .dwh-ar.dn { bottom: 0; }
+  .dwh-ar.up span { transform: translateY(5px); } .dwh-ar.dn span { transform: translateY(-5px); }
+  .dwh-ar:hover { color: var(--acc); background: var(--card-2); }
+}
