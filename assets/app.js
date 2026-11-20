@@ -864,10 +864,14 @@
         el('span', { class: 'cb-tl' }, [el('b', { text: g.cat['name_' + lang] || g.cat.name_ru }), el('small', { text: cnt(g.items.length) })])
       ]));
     });
-    if (hiddenN) tiles.appendChild(el('button', { class: 'cb-tile more', type: 'button', 'aria-expanded': 'false', onclick: function () {
+    /* item 10 (CEO TG 5436): «Ещё» was an empty square - it now shows a 2 x 2 mosaic of the hidden sections' own tile photos (any shop,
+       no extra picture to make); a section without a photo leaves its quarter to the next one */
+    var mos = groups.slice(SHOWN).map(function (g) { var ph = C.byId[TILE_PHOTO[g.cat.id]] || g.items[0]; return ph && ph.photo; }).filter(Boolean).slice(0, 4);
+    if (hiddenN) tiles.appendChild(el('button', { class: 'cb-tile more' + (mos.length >= 4 ? ' has-mos' : ''), type: 'button', 'aria-expanded': 'false', onclick: function () {
       state.tilesAll = true; tiles.querySelectorAll('.cb-extra').forEach(function (n) { n.hidden = false; }); this.remove();
       var first = tiles.querySelector('.cb-extra'); if (first) first.focus({ preventScroll: true });
-    } }, [el('span', { text: t('cb_more') }), el('small', { text: cnt(hiddenN) })]));
+    } }, [mos.length >= 4 ? el('span', { class: 'cb-mos', 'aria-hidden': 'true' }, mos.map(function (src) { return rimg(src, '25vw', { class: 'cb-mos-i', alt: '', loading: 'lazy' }); })) : null,
+      el('span', { class: 'cb-mt', text: t('cb_more') }), el('small', { text: cnt(hiddenN) })]));
     grid.appendChild(tiles);
     groups.forEach(function (g) {
       var sec = el('section', { class: 'cb-cat', id: 'cat-' + g.cat.id, 'data-name': g.cat['name_' + lang] || g.cat.name_ru, 'data-n': cnt(g.items.length) });

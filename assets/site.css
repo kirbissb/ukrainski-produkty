@@ -1602,3 +1602,10 @@ html:has(body.locked) body, html:has(body.srch-on) body { overflow: visible; }
 .doc-body p a { color: var(--acc); text-decoration: underline; text-underline-offset: 2px; display: inline-block; padding: 12px 0; margin: -12px 0; }
 /* item 8: the pickup address in the FAQ opens the maps app - accent link (S-PAGE-08), the inline padding widens the hit area without moving lines */
 .faq .map-a { color: var(--acc); text-decoration: underline; text-underline-offset: 2px; padding: 12px 0; }
+/* item 10 (CEO TG 5436): «Ещё» tile = a 2 x 2 mosaic of the hidden sections' photos under the same flat tint as the other tiles, the photo tiles label colours */
+.cb-tile.more.has-mos { position: relative; overflow: hidden; }
+.cb-tile.more .cb-mos { position: absolute; inset: 0; z-index: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; background: var(--bg); }
+.cb-tile.more .cb-mos-i { width: 100%; height: 100%; object-fit: cover; min-width: 0; min-height: 0; display: block; }
+.cb-tile.more.has-mos::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: rgba(0, 0, 0, 0.5); }
+.cb-tile.more.has-mos .cb-mt, .cb-tile.more.has-mos small { position: relative; z-index: 2; color: var(--ink); }
+.cb-tile.more.has-mos small { color: rgba(240, 232, 216, 0.78); }   /* the same tokens as the photo tiles (.cb-tl) */
